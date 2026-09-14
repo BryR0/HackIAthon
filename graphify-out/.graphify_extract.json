@@ -1,0 +1,2139 @@
+{
+  "nodes": [
+    {
+      "id": "hackiathon_retos_filtro_hackiathon",
+      "label": "hackIAthon",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "La evaluaci\u00c3\u00b3n busca conocer la capacidad de an\u00c3\u00a1lisis, el criterio t\u00c3\u00a9cnico y la ejecuci\u00c3\u00b3n con herramientas de IA de cada participante."
+    },
+    {
+      "id": "hackiathon_retos_filtro_participante",
+      "label": "Participante del hackIAthon",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "label": "Selecci\u00c3\u00b3n de un \u00c3\u00banico reto",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_solucion_funcional",
+      "label": "Soluci\u00c3\u00b3n funcional",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_capacidad_de_analisis",
+      "label": "Capacidad de an\u00c3\u00a1lisis",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_criterio_tecnico",
+      "label": "Criterio t\u00c3\u00a9cnico",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_ejecucion_con_herramientas_de_ia",
+      "label": "Ejecuci\u00c3\u00b3n con herramientas de IA",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "label": "Enlace p\u00c3\u00bablico del agente funcional",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Detalle de los entregables",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_enlace_del_repositorio",
+      "label": "Enlace del repositorio en GitHub o GitLab",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Detalle de los entregables",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_correo_de_entrega",
+      "label": "hackiathon@viamatica.com",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "label": "Reto 1: Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Reducir de horas o d\u00c3\u00adas a una respuesta instant\u00c3\u00a1nea la espera del paciente por la autorizaci\u00c3\u00b3n del seguro para una cirug\u00c3\u00ada."
+    },
+    {
+      "id": "hackiathon_retos_filtro_paciente",
+      "label": "Paciente",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1 y 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_hospital",
+      "label": "Hospital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1, 3 y 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_aseguradora",
+      "label": "Aseguradora",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1, 2 y 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_informe_medico_digital",
+      "label": "Informe m\u00c3\u00a9dico digital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_poliza_del_paciente",
+      "label": "P\u00c3\u00b3liza del paciente",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "label": "Base de datos de Notion",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "label": "An\u00c3\u00a1lisis de cobertura del procedimiento",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_requisitos_de_carencia",
+      "label": "Requisitos de carencia",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "label": "Preaprobaci\u00c3\u00b3n quir\u00c3\u00bargica",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_solicitud_de_documentos_faltantes",
+      "label": "Solicitud de documentos faltantes",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_respuesta_instantanea",
+      "label": "Respuesta instant\u00c3\u00a1nea",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "label": "Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Detectar discrepancias o cobros duplicados antes de que una persona revise la cuenta."
+    },
+    {
+      "id": "hackiathon_retos_filtro_taller",
+      "label": "Taller",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_documentacion_del_siniestro",
+      "label": "Documentaci\u00c3\u00b3n del siniestro",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_facturas_del_taller",
+      "label": "Facturas del taller",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "label": "Insumos y honorarios cobrados",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_tarifario_acordado",
+      "label": "Tarifario acordado",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_siniestralidad_reportada",
+      "label": "Siniestralidad reportada",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_deteccion_de_discrepancias",
+      "label": "Detecci\u00c3\u00b3n de discrepancias",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_deteccion_de_cobros_duplicados",
+      "label": "Detecci\u00c3\u00b3n de cobros duplicados",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_revision_humana_de_la_cuenta",
+      "label": "Revisi\u00c3\u00b3n humana de la cuenta",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "label": "Reto 3: Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Ayudar al paciente a entender su beneficio y comparar econ\u00c3\u00b3micamente hospitales de la red antes de atenderse."
+    },
+    {
+      "id": "hackiathon_retos_filtro_agente_conversacional",
+      "label": "Agente conversacional",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_sintoma_del_paciente",
+      "label": "S\u00c3\u00adntoma ingresado por el paciente",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "label": "Especialidad hospitalaria sugerida",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_plan_de_seguro",
+      "label": "Plan de seguro",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "label": "C\u00c3\u00a1lculo exacto del copago",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_hospital_de_la_red",
+      "label": "Hospital de la red",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_recomendacion_economica_de_hospital",
+      "label": "Recomendaci\u00c3\u00b3n econ\u00c3\u00b3mica de hospital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "label": "Reto 4: Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Validar informaci\u00c3\u00b3n cr\u00c3\u00adtica y coordinar simult\u00c3\u00a1neamente al hospital y al seguro cuando ocurre un ingreso a emergencias."
+    },
+    {
+      "id": "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+      "label": "Webhook de ingreso a emergencias",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_asegurado",
+      "label": "Asegurado",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Retos 4 y 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "label": "Ingreso a la emergencia del hospital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_validez_de_la_poliza",
+      "label": "Validez de la p\u00c3\u00b3liza",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_historial_de_preexistencias",
+      "label": "Historial de pre-existencias",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_departamento_de_admisiones",
+      "label": "Departamento de admisiones del hospital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_gestor_de_casos",
+      "label": "Gestor de casos del seguro",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_notificacion_simultanea",
+      "label": "Notificaci\u00c3\u00b3n simult\u00c3\u00a1nea",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "label": "Reto 5: Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Convertir patrones diagn\u00c3\u00b3sticos an\u00c3\u00b3nimos en campa\u00c3\u00b1as preventivas y premiar el cumplimiento de chequeos con incentivos autom\u00c3\u00a1ticos."
+    },
+    {
+      "id": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "label": "Diagn\u00c3\u00b3sticos frecuentes anonimizados",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_campanas_de_prevencion",
+      "label": "Campa\u00c3\u00b1as de prevenci\u00c3\u00b3n espec\u00c3\u00adficas",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_chequeos_preventivos",
+      "label": "Chequeos preventivos de pr\u00c3\u00b3stata o mamas",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "label": "Cumplimiento del chequeo en el hospital",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "label": "Beneficios o descuentos autom\u00c3\u00a1ticos",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_prima_del_seguro",
+      "label": "Prima del seguro",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_crm_de_notion",
+      "label": "CRM de Notion",
+      "file_type": "paper",
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_viamatica",
+      "label": "Viamatica",
+      "file_type": "document",
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_espera_de_autorizacion_quirurgica",
+      "label": "Espera de horas o d\u00c3\u00adas por autorizaci\u00c3\u00b3n quir\u00c3\u00bargica",
+      "file_type": "document",
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_documentacion_y_facturas_del_siniestro",
+      "label": "Documentaci\u00c3\u00b3n y facturas del siniestro",
+      "file_type": "document",
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hackiathon_retos_filtro_deteccion_de_discrepancias_y_duplicados",
+      "label": "Detecci\u00c3\u00b3n de discrepancias o cobros duplicados",
+      "file_type": "document",
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "hackiathon_retos_filtro_hackiathon",
+      "target": "hackiathon_retos_filtro_participante",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_participante",
+      "target": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_solucion_funcional",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_capacidad_de_analisis",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_criterio_tecnico",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_ejecucion_con_herramientas_de_ia",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_enlace_del_repositorio",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "target": "hackiathon_retos_filtro_correo_de_entrega",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n y Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_enlace_del_repositorio",
+      "target": "hackiathon_retos_filtro_correo_de_entrega",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Introducci\u00c3\u00b3n y Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_paciente",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_informe_medico_digital",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_informe_medico_digital",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_poliza_del_paciente",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_poliza_del_paciente",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_requisitos_de_carencia",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_solicitud_de_documentos_faltantes",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "target": "hackiathon_retos_filtro_respuesta_instantanea",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solicitud_de_documentos_faltantes",
+      "target": "hackiathon_retos_filtro_respuesta_instantanea",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 1",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_documentacion_del_siniestro",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_facturas_del_taller",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_documentacion_del_siniestro",
+      "target": "hackiathon_retos_filtro_taller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_facturas_del_taller",
+      "target": "hackiathon_retos_filtro_taller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "target": "hackiathon_retos_filtro_tarifario_acordado",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "target": "hackiathon_retos_filtro_siniestralidad_reportada",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_deteccion_de_discrepancias",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_deteccion_de_cobros_duplicados",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_deteccion_de_discrepancias",
+      "target": "hackiathon_retos_filtro_revision_humana_de_la_cuenta",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_deteccion_de_cobros_duplicados",
+      "target": "hackiathon_retos_filtro_revision_humana_de_la_cuenta",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 1, Reto 2",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_paciente",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_agente_conversacional",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_conversacional",
+      "target": "hackiathon_retos_filtro_sintoma_del_paciente",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_plan_de_seguro",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_hospital_de_la_red",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_recomendacion_economica_de_hospital",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+      "target": "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "target": "hackiathon_retos_filtro_asegurado",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_validez_de_la_poliza",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_historial_de_preexistencias",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_notificacion_simultanea",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_notificacion_simultanea",
+      "target": "hackiathon_retos_filtro_departamento_de_admisiones",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_notificacion_simultanea",
+      "target": "hackiathon_retos_filtro_gestor_de_casos",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_campanas_de_prevencion",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_campanas_de_prevencion",
+      "target": "hackiathon_retos_filtro_chequeos_preventivos",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "target": "hackiathon_retos_filtro_asegurado",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "target": "hackiathon_retos_filtro_prima_del_seguro",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_crm_de_notion",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "page 2, Reto 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "target": "hackiathon_retos_filtro_crm_de_notion",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1 y 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "target": "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1 y 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_poliza_del_paciente",
+      "target": "hackiathon_retos_filtro_validez_de_la_poliza",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "hackIAthon-retos-filtro.pdf",
+      "source_location": "pages 1-2, Retos 1 y 4",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_hackiathon",
+      "target": "hackiathon_retos_filtro_participante",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_hackiathon",
+      "target": "hackiathon_retos_filtro_viamatica",
+      "relation": "references",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_participante",
+      "target": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_solucion_funcional",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_capacidad_de_analisis",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_criterio_tecnico",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_ejecucion_con_herramientas_de_ia",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solucion_funcional",
+      "target": "hackiathon_retos_filtro_enlace_del_repositorio",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "target": "hackiathon_retos_filtro_correo_de_entrega",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n y Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_enlace_del_repositorio",
+      "target": "hackiathon_retos_filtro_correo_de_entrega",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n y Detalle de los entregables",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_correo_de_entrega",
+      "target": "hackiathon_retos_filtro_viamatica",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Introducci\u00c3\u00b3n",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "target": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Listado de retos",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_paciente",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_espera_de_autorizacion_quirurgica",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_informe_medico_digital",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_informe_medico_digital",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_poliza_del_paciente",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_poliza_del_paciente",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_requisitos_de_carencia",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "target": "hackiathon_retos_filtro_solicitud_de_documentos_faltantes",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "target": "hackiathon_retos_filtro_respuesta_instantanea",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_solicitud_de_documentos_faltantes",
+      "target": "hackiathon_retos_filtro_respuesta_instantanea",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "1. Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_documentacion_y_facturas_del_siniestro",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_documentacion_y_facturas_del_siniestro",
+      "target": "hackiathon_retos_filtro_taller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "target": "hackiathon_retos_filtro_tarifario_acordado",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_insumos_y_honorarios",
+      "target": "hackiathon_retos_filtro_siniestralidad_reportada",
+      "relation": "evaluated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "target": "hackiathon_retos_filtro_deteccion_de_discrepancias_y_duplicados",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_deteccion_de_discrepancias_y_duplicados",
+      "target": "hackiathon_retos_filtro_revision_humana_de_la_cuenta",
+      "relation": "constrained_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "2. Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_paciente",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_agente_conversacional",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_conversacional",
+      "target": "hackiathon_retos_filtro_sintoma_del_paciente",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_plan_de_seguro",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "target": "hackiathon_retos_filtro_recomendacion_economica_de_hospital",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "3. Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+      "target": "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "target": "hackiathon_retos_filtro_asegurado",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_validez_de_la_poliza",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_historial_de_preexistencias",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "target": "hackiathon_retos_filtro_notificacion_simultanea",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_notificacion_simultanea",
+      "target": "hackiathon_retos_filtro_departamento_de_admisiones",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_notificacion_simultanea",
+      "target": "hackiathon_retos_filtro_gestor_de_casos",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "4. Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "target": "hackiathon_retos_filtro_hospital",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "target": "hackiathon_retos_filtro_aseguradora",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_campanas_de_prevencion",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_campanas_de_prevencion",
+      "target": "hackiathon_retos_filtro_chequeos_preventivos",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "target": "hackiathon_retos_filtro_asegurado",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "relation": "delivers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "target": "hackiathon_retos_filtro_prima_del_seguro",
+      "relation": "targets",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "target": "hackiathon_retos_filtro_crm_de_notion",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "5. Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "target": "hackiathon_retos_filtro_crm_de_notion",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Retos 1 y 5",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "target": "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Retos 1 y 3",
+      "weight": 1.0
+    },
+    {
+      "source": "hackiathon_retos_filtro_poliza_del_paciente",
+      "target": "hackiathon_retos_filtro_validez_de_la_poliza",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "hackIAthon-retos-filtro.md",
+      "source_location": "Retos 1 y 4",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "flujo_preautorizacion_quirurgica_tiempo_real",
+      "label": "Flujo de preautorizaci\u00c3\u00b3n quir\u00c3\u00bargica en tiempo real",
+      "nodes": [
+        "hackiathon_retos_filtro_informe_medico_digital",
+        "hackiathon_retos_filtro_poliza_del_paciente",
+        "hackiathon_retos_filtro_base_de_datos_de_notion",
+        "hackiathon_retos_filtro_preaprobacion_quirurgica",
+        "hackiathon_retos_filtro_solicitud_de_documentos_faltantes"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf"
+    },
+    {
+      "id": "flujo_alerta_emergencia_simultanea",
+      "label": "Flujo de alerta simult\u00c3\u00a1nea por ingreso a emergencias",
+      "nodes": [
+        "hackiathon_retos_filtro_ingreso_a_emergencias",
+        "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+        "hackiathon_retos_filtro_validez_de_la_poliza",
+        "hackiathon_retos_filtro_historial_de_preexistencias",
+        "hackiathon_retos_filtro_departamento_de_admisiones",
+        "hackiathon_retos_filtro_gestor_de_casos"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf"
+    },
+    {
+      "id": "ciclo_prevencion_e_incentivos",
+      "label": "Ciclo de prevenci\u00c3\u00b3n e incentivos de salud",
+      "nodes": [
+        "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+        "hackiathon_retos_filtro_campanas_de_prevencion",
+        "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+        "hackiathon_retos_filtro_beneficios_o_descuentos",
+        "hackiathon_retos_filtro_crm_de_notion"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.pdf"
+    },
+    {
+      "id": "flujo_preautorizacion_quirurgica_tiempo_real",
+      "label": "Flujo de preautorizaci\u00c3\u00b3n quir\u00c3\u00bargica en tiempo real",
+      "nodes": [
+        "hackiathon_retos_filtro_informe_medico_digital",
+        "hackiathon_retos_filtro_poliza_del_paciente",
+        "hackiathon_retos_filtro_base_de_datos_de_notion",
+        "hackiathon_retos_filtro_preaprobacion_quirurgica",
+        "hackiathon_retos_filtro_solicitud_de_documentos_faltantes"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md"
+    },
+    {
+      "id": "flujo_alerta_emergencia_simultanea",
+      "label": "Flujo de alerta simult\u00c3\u00a1nea por ingreso a emergencias",
+      "nodes": [
+        "hackiathon_retos_filtro_ingreso_a_emergencias",
+        "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias",
+        "hackiathon_retos_filtro_validez_de_la_poliza",
+        "hackiathon_retos_filtro_historial_de_preexistencias",
+        "hackiathon_retos_filtro_departamento_de_admisiones",
+        "hackiathon_retos_filtro_gestor_de_casos"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md"
+    },
+    {
+      "id": "ciclo_prevencion_e_incentivos",
+      "label": "Ciclo de prevenci\u00c3\u00b3n e incentivos de salud",
+      "nodes": [
+        "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+        "hackiathon_retos_filtro_campanas_de_prevencion",
+        "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+        "hackiathon_retos_filtro_beneficios_o_descuentos",
+        "hackiathon_retos_filtro_crm_de_notion"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "hackIAthon-retos-filtro.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

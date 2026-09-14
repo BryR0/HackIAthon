@@ -1,0 +1,224 @@
+{
+  "communities": {
+    "0": [
+      "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "hackiathon_retos_filtro_deteccion_de_cobros_duplicados",
+      "hackiathon_retos_filtro_deteccion_de_discrepancias",
+      "hackiathon_retos_filtro_deteccion_de_discrepancias_y_duplicados",
+      "hackiathon_retos_filtro_documentacion_del_siniestro",
+      "hackiathon_retos_filtro_documentacion_y_facturas_del_siniestro",
+      "hackiathon_retos_filtro_facturas_del_taller",
+      "hackiathon_retos_filtro_insumos_y_honorarios",
+      "hackiathon_retos_filtro_revision_humana_de_la_cuenta",
+      "hackiathon_retos_filtro_siniestralidad_reportada",
+      "hackiathon_retos_filtro_taller",
+      "hackiathon_retos_filtro_tarifario_acordado"
+    ],
+    "1": [
+      "hackiathon_retos_filtro_capacidad_de_analisis",
+      "hackiathon_retos_filtro_correo_de_entrega",
+      "hackiathon_retos_filtro_criterio_tecnico",
+      "hackiathon_retos_filtro_ejecucion_con_herramientas_de_ia",
+      "hackiathon_retos_filtro_enlace_del_repositorio",
+      "hackiathon_retos_filtro_enlace_publico_del_agente_funcional",
+      "hackiathon_retos_filtro_hackiathon",
+      "hackiathon_retos_filtro_participante",
+      "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "hackiathon_retos_filtro_solucion_funcional",
+      "hackiathon_retos_filtro_viamatica"
+    ],
+    "2": [
+      "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "hackiathon_retos_filtro_asegurado",
+      "hackiathon_retos_filtro_cumplimiento_del_chequeo",
+      "hackiathon_retos_filtro_departamento_de_admisiones",
+      "hackiathon_retos_filtro_gestor_de_casos",
+      "hackiathon_retos_filtro_historial_de_preexistencias",
+      "hackiathon_retos_filtro_ingreso_a_emergencias",
+      "hackiathon_retos_filtro_notificacion_simultanea",
+      "hackiathon_retos_filtro_poliza_del_paciente",
+      "hackiathon_retos_filtro_validez_de_la_poliza",
+      "hackiathon_retos_filtro_webhook_de_ingreso_a_emergencias"
+    ],
+    "3": [
+      "hackiathon_retos_filtro_agente_conversacional",
+      "hackiathon_retos_filtro_analisis_de_cobertura_quirurgica",
+      "hackiathon_retos_filtro_calculo_exacto_del_copago",
+      "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "hackiathon_retos_filtro_hospital_de_la_red",
+      "hackiathon_retos_filtro_paciente",
+      "hackiathon_retos_filtro_plan_de_seguro",
+      "hackiathon_retos_filtro_recomendacion_economica_de_hospital",
+      "hackiathon_retos_filtro_sintoma_del_paciente"
+    ],
+    "4": [
+      "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "hackiathon_retos_filtro_base_de_datos_de_notion",
+      "hackiathon_retos_filtro_beneficios_o_descuentos",
+      "hackiathon_retos_filtro_campanas_de_prevencion",
+      "hackiathon_retos_filtro_chequeos_preventivos",
+      "hackiathon_retos_filtro_crm_de_notion",
+      "hackiathon_retos_filtro_prima_del_seguro"
+    ],
+    "5": [
+      "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "hackiathon_retos_filtro_espera_de_autorizacion_quirurgica",
+      "hackiathon_retos_filtro_preaprobacion_quirurgica",
+      "hackiathon_retos_filtro_requisitos_de_carencia",
+      "hackiathon_retos_filtro_respuesta_instantanea",
+      "hackiathon_retos_filtro_solicitud_de_documentos_faltantes"
+    ],
+    "6": [
+      "hackiathon_retos_filtro_aseguradora",
+      "hackiathon_retos_filtro_diagnosticos_frecuentes_anonimizados",
+      "hackiathon_retos_filtro_especialidad_hospitalaria",
+      "hackiathon_retos_filtro_hospital",
+      "hackiathon_retos_filtro_informe_medico_digital"
+    ]
+  },
+  "cohesion": {
+    "0": 0.23,
+    "1": 0.22,
+    "2": 0.18,
+    "3": 0.22,
+    "4": 0.29,
+    "5": 0.4,
+    "6": 0.4
+  },
+  "gods": [
+    {
+      "id": "hackiathon_retos_filtro_agente_de_pre_autorizacion_quirurgica",
+      "label": "Reto 1: Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "degree": 10
+    },
+    {
+      "id": "hackiathon_retos_filtro_auditor_agentico_de_facturacion",
+      "label": "Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "degree": 9
+    },
+    {
+      "id": "hackiathon_retos_filtro_estimador_agentico_de_copago",
+      "label": "Reto 3: Estimador Ag\u00c3\u00a9ntico de Copago y Cobertura para el Paciente",
+      "degree": 8
+    },
+    {
+      "id": "hackiathon_retos_filtro_seleccion_de_un_unico_reto",
+      "label": "Selecci\u00c3\u00b3n de un \u00c3\u00banico reto",
+      "degree": 7
+    },
+    {
+      "id": "hackiathon_retos_filtro_solucion_funcional",
+      "label": "Soluci\u00c3\u00b3n funcional",
+      "degree": 6
+    },
+    {
+      "id": "hackiathon_retos_filtro_agente_de_bienestar_preventivo",
+      "label": "Reto 5: Agente de Bienestar Preventivo y Gamificaci\u00c3\u00b3n de Salud",
+      "degree": 6
+    },
+    {
+      "id": "hackiathon_retos_filtro_alerta_temprana_de_emergencias",
+      "label": "Reto 4: Sistema de Alerta Temprana de Ingresos a Emergencias",
+      "degree": 5
+    },
+    {
+      "id": "hackiathon_retos_filtro_correo_de_entrega",
+      "label": "hackiathon@viamatica.com",
+      "degree": 3
+    },
+    {
+      "id": "hackiathon_retos_filtro_hospital",
+      "label": "Hospital",
+      "degree": 3
+    },
+    {
+      "id": "hackiathon_retos_filtro_aseguradora",
+      "label": "Aseguradora",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "hackIAthon",
+      "target": "Viamatica",
+      "source_files": [
+        "hackIAthon-retos-filtro.pdf",
+        "hackIAthon-retos-filtro.md"
+      ],
+      "confidence": "AMBIGUOUS",
+      "relation": "references",
+      "why": "ambiguous connection - not explicitly stated in source; crosses file types (paper \u2194 doc); connects across different repos/directories"
+    },
+    {
+      "source": "Reto 1: Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real",
+      "target": "Espera de horas o d\u00c3\u00adas por autorizaci\u00c3\u00b3n quir\u00c3\u00bargica",
+      "source_files": [
+        "hackIAthon-retos-filtro.pdf",
+        "hackIAthon-retos-filtro.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "targets",
+      "why": "crosses file types (paper \u2194 doc); connects across different repos/directories; peripheral node `Espera de horas o d\u00c3\u00adas por autorizaci\u00c3\u00b3n quir\u00c3\u00bargica` unexpectedly reaches hub `Reto 1: Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real`"
+    },
+    {
+      "source": "Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "target": "Documentaci\u00c3\u00b3n y facturas del siniestro",
+      "source_files": [
+        "hackIAthon-retos-filtro.pdf",
+        "hackIAthon-retos-filtro.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "requires",
+      "why": "crosses file types (paper \u2194 doc); connects across different repos/directories; peripheral node `Documentaci\u00c3\u00b3n y facturas del siniestro` unexpectedly reaches hub `Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros`"
+    },
+    {
+      "source": "Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros",
+      "target": "Detecci\u00c3\u00b3n de discrepancias o cobros duplicados",
+      "source_files": [
+        "hackIAthon-retos-filtro.pdf",
+        "hackIAthon-retos-filtro.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "delivers",
+      "why": "crosses file types (paper \u2194 doc); connects across different repos/directories; peripheral node `Detecci\u00c3\u00b3n de discrepancias o cobros duplicados` unexpectedly reaches hub `Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros`"
+    },
+    {
+      "source": "hackiathon@viamatica.com",
+      "target": "Viamatica",
+      "source_files": [
+        "hackIAthon-retos-filtro.pdf",
+        "hackIAthon-retos-filtro.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (paper \u2194 doc); connects across different repos/directories"
+    }
+  ],
+  "questions": [
+    {
+      "type": "ambiguous_edge",
+      "question": "What is the exact relationship between `hackIAthon` and `Viamatica`?",
+      "why": "Edge tagged AMBIGUOUS (relation: references) - confidence is low."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Selecci\u00c3\u00b3n de un \u00c3\u00banico reto` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`?",
+      "why": "High betweenness centrality (0.718) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Reto 2: Auditor Ag\u00c3\u00a9ntico de Facturaci\u00c3\u00b3n de Siniestros` connect `Community 0` to `Community 1`, `Community 6`?",
+      "why": "High betweenness centrality (0.341) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Reto 1: Agente de Pre-Autorizaci\u00c3\u00b3n Quir\u00c3\u00bargica en Tiempo Real` connect `Community 5` to `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 6`?",
+      "why": "High betweenness centrality (0.266) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Capacidad de an\u00c3\u00a1lisis`, `Criterio t\u00c3\u00a9cnico`, `Ejecuci\u00c3\u00b3n con herramientas de IA` to the rest of the system?",
+      "why": "16 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}
