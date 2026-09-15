@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Log del servidor de pruebas E2E
 next-start.log
+
+# Logs de sondas locales
+dev-probe.log

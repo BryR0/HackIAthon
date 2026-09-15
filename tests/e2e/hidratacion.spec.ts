@@ -35,3 +35,31 @@ test('el formulario se maneja en cliente, no navega al enviar', async ({ page })
   // Un submit nativo habria anadido "?" y recargado.
   expect(page.url()).toBe(urlBefore)
 })
+
+/**
+ * Regresion: las utilidades de Tailwind deben llegar al navegador.
+ *
+ * Cuando la deteccion de fuentes de Tailwind no encuentra los .tsx, se emite
+ * el preflight sin una sola utilidad y la pagina sale como texto plano. Todo
+ * lo demas sigue pasando: el HTML es correcto, no hay errores de consola, y
+ * axe no reporta contraste insuficiente porque negro sobre blanco cumple.
+ * Por eso hace falta comprobar los estilos calculados.
+ */
+test('el CSS de utilidades se aplica, no solo el preflight', async ({ page }) => {
+  await page.goto('/')
+
+  const header = page.locator('header').first()
+  await expect(header).toHaveCSS('background-color', 'rgb(255, 255, 255)')
+
+  // max-w-5xl sobre el contenedor principal: sin utilidades seria "none".
+  const maxWidth = await page
+    .locator('main')
+    .evaluate((el) => getComputedStyle(el).maxWidth)
+  expect(maxWidth).not.toBe('none')
+
+  // El boton primario lleva fondo del token, no el gris por defecto.
+  const buttonBackground = await page
+    .getByRole('button', { name: 'Sugerir especialidad' })
+    .evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(buttonBackground).toBe('rgb(14, 108, 130)')
+})
