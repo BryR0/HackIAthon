@@ -8,12 +8,25 @@ import AxeBuilder from '@axe-core/playwright'
  * clasificacion es determinista y estos casos no dependen de la red.
  */
 
+async function asegurarModalAbierto(page: Page) {
+  const modal = page.locator('#consulta-flujo')
+  if (!(await modal.isVisible())) {
+    const btn = page.getByRole('button', { name: 'Iniciar consulta ahora' })
+    if (await btn.isVisible()) {
+      await btn.click()
+      await expect(modal).toBeVisible()
+    }
+  }
+}
+
 async function describirSintoma(page: Page, texto: string) {
+  await asegurarModalAbierto(page)
   await page.getByLabel('Describe tu sintoma').fill(texto)
   await page.getByRole('button', { name: 'Sugerir especialidad' }).click()
 }
 
 async function elegirPaciente(page: Page, patientDemoId: string) {
+  await asegurarModalAbierto(page)
   await page.getByLabel('Paciente de demostracion').selectOption(patientDemoId)
 }
 
@@ -80,6 +93,7 @@ test('sin hospitales compatibles: no deja pantalla vacia', async ({ page }) => {
 })
 
 test('entrada invalida: el foco va al resumen de errores', async ({ page }) => {
+  await asegurarModalAbierto(page)
   await page.getByLabel('Describe tu sintoma').fill('ay')
   await page.getByRole('button', { name: 'Sugerir especialidad' }).click()
 
@@ -92,6 +106,7 @@ test('el flujo completo funciona solo con teclado', async ({ page }) => {
   await page.keyboard.press('Tab') // skip link
   await expect(page.getByRole('link', { name: 'Saltar al contenido principal' })).toBeFocused()
 
+  await asegurarModalAbierto(page)
   await page.getByLabel('Describe tu sintoma').focus()
   await page.keyboard.type('me torci el tobillo jugando y sigue hinchado')
   await page.keyboard.press('Tab')

@@ -28,6 +28,7 @@ test('el formulario se maneja en cliente, no navega al enviar', async ({ page })
   await page.goto('/')
   const urlBefore = page.url()
 
+  await page.getByRole('button', { name: 'Iniciar consulta ahora' }).click()
   await page.getByLabel('Describe tu sintoma').fill('me pica la piel hace dias')
   await page.getByRole('button', { name: 'Sugerir especialidad' }).click()
 
@@ -58,6 +59,7 @@ test('el CSS de utilidades se aplica, no solo el preflight', async ({ page }) =>
   expect(maxWidth).not.toBe('none')
 
   // El boton primario lleva fondo del token, no el gris por defecto.
+  await page.getByRole('button', { name: 'Iniciar consulta ahora' }).click()
   const buttonBackground = await page
     .getByRole('button', { name: 'Sugerir especialidad' })
     .evaluate((el) => getComputedStyle(el).backgroundColor)
