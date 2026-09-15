@@ -29,6 +29,35 @@ const MISSING_LABEL: Readonly<Record<string, string>> = {
   coverage_rule_expired: 'la regla de cobertura de tu plan esta vencida',
 }
 
+function WarningNotice({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div
+      role="status"
+      className="flex gap-3 rounded border border-l-4 border-warn bg-warn-soft p-4"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="mt-0.5 shrink-0 text-warn"
+      >
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+        <path d="M12 9v4M12 17h.01" />
+      </svg>
+      <div className="[&>*:last-child]:mb-0">
+        <h2 className="mb-2 font-heading text-lg text-warn">{title}</h2>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function ExcludedList({
   excluded,
   hospitalNames,
@@ -38,9 +67,11 @@ function ExcludedList({
 }) {
   if (excluded.length === 0) return null
   return (
-    <details className="excluded">
-      <summary>Por que no aparecen los demas hospitales ({excluded.length})</summary>
-      <ul>
+    <details className="text-[0.9375rem] text-muted">
+      <summary className="cursor-pointer py-2 font-semibold">
+        Por que no aparecen los demas hospitales ({excluded.length})
+      </summary>
+      <ul className="mt-2 list-disc ps-6">
         {excluded.map((item) => (
           <li key={item.hospitalId}>
             {hospitalNames[item.hospitalId] ?? item.hospitalId}: {EXCLUSION_LABEL[item.reason]}
@@ -59,114 +90,153 @@ export function EstimateResultView({
 }: Props) {
   if (result.status === 'needs_information') {
     return (
-      <div className="notice notice--warning" role="status">
-        <h2 className="notice__title">No podemos calcular un valor exacto</h2>
-        <p>
+      <WarningNotice title="No podemos calcular un valor exacto">
+        <p className="mb-3">
           Para {specialtyName}, {MISSING_LABEL[result.missing[0] ?? ''] ?? 'falta un dato'}. No
           mostramos un monto aproximado porque seria inventarlo.
         </p>
         <p>Consulta con tu aseguradora antes de agendar para confirmar la cobertura.</p>
-      </div>
+      </WarningNotice>
     )
   }
 
   if (result.status === 'not_covered') {
     return (
-      <div className="notice notice--warning" role="status">
-        <h2 className="notice__title">Tu plan no cubre esta consulta</h2>
-        <p>
+      <WarningNotice title="Tu plan no cubre esta consulta">
+        <p className="mb-3">
           La regla <code>{result.appliedRuleId}</code> de tu plan excluye {specialtyName}. Puedes
           atenderte pagando el valor particular del hospital.
         </p>
         <p>No prometemos ninguna cobertura para este servicio.</p>
-      </div>
+      </WarningNotice>
     )
   }
 
   if (result.status === 'no_compatible_hospitals') {
     return (
-      <div className="notice notice--warning" role="status">
-        <h2 className="notice__title">Ningun hospital de tu red puede atender esto hoy</h2>
-        <p>
+      <WarningNotice title="Ningun hospital de tu red puede atender esto hoy">
+        <p className="mb-3">
           Tu plan si cubre {specialtyName}, pero ningun hospital de tu red tiene una tarifa valida
           registrada para esta consulta.
         </p>
-        <p>Siguiente paso: pide a tu aseguradora un hospital autorizado por excepcion.</p>
+        <p className="mb-3">
+          Siguiente paso: pide a tu aseguradora un hospital autorizado por excepcion.
+        </p>
         <ExcludedList excluded={result.excluded} hospitalNames={hospitalNames} />
-      </div>
+      </WarningNotice>
     )
   }
 
   const { currency } = result
   const coveragePercent = Math.round((result.coveredAmountMinor / result.referenceCostMinor) * 100)
+  const location = hospitalLocations[result.recommendedHospitalId]
 
   return (
     <div>
-      <div className="copay">
-        <span className="copay__label">Tu copago estimado</span>
-        <strong className="copay__value">{formatMinor(result.patientCopayMinor, currency)}</strong>
-        <span className="copay__meta">
+      <div className="mb-8 grid gap-2 rounded-lg bg-ink p-6">
+        <span className="font-heading text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-[#a5f3fc]">
+          Tu copago estimado
+        </span>
+        <strong className="num font-heading text-display font-semibold tracking-tight text-white">
+          {formatMinor(result.patientCopayMinor, currency)}
+        </strong>
+        <span className="text-[0.9375rem] text-[#e0f7fa]">
           {specialtyName} en {hospitalNames[result.recommendedHospitalId]}
-          {hospitalLocations[result.recommendedHospitalId]
-            ? `, ${hospitalLocations[result.recommendedHospitalId]}`
-            : ''}
+          {location ? `, ${location}` : ''}
         </span>
       </div>
 
-      <h3>Como se calcula</h3>
-      <ul className="breakdown">
-        <li className="breakdown__row">
+      <h3 className="mb-3 text-lg">Como se calcula</h3>
+      <ul className="mb-4 list-none rounded border border-line p-0">
+        <li className="flex items-baseline justify-between gap-4 border-b border-line p-3 px-4">
           <span>Costo de referencia de la consulta</span>
-          <span className="breakdown__value">
+          <span className="num whitespace-nowrap">
             {formatMinor(result.referenceCostMinor, currency)}
           </span>
         </li>
-        <li className="breakdown__row">
+        <li className="flex items-baseline justify-between gap-4 border-b border-line p-3 px-4">
           <span>Cubre tu plan ({coveragePercent} %)</span>
-          <span className="breakdown__value">
+          <span className="num whitespace-nowrap">
             &minus; {formatMinor(result.coveredAmountMinor, currency)}
           </span>
         </li>
-        <li className="breakdown__row breakdown__row--total">
+        <li className="flex items-baseline justify-between gap-4 border-t-2 border-ink bg-sunken p-3 px-4 font-heading font-semibold text-strong">
           <span>Pagas tu</span>
-          <span className="breakdown__value">{formatMinor(result.patientCopayMinor, currency)}</span>
+          <span className="num whitespace-nowrap">
+            {formatMinor(result.patientCopayMinor, currency)}
+          </span>
         </li>
       </ul>
-      <p className="field__hint">
-        Regla aplicada <code>{result.appliedRuleId}</code> &middot; version de reglas{' '}
-        <code>{result.ruleVersion}</code>
+
+      <p className="mb-8 flex flex-wrap gap-x-4 gap-y-2 text-[0.8125rem] text-muted">
+        <span>
+          Regla aplicada <code>{result.appliedRuleId}</code>
+        </span>
+        <span>
+          Version de reglas <code>{result.ruleVersion}</code>
+        </span>
       </p>
 
-      <h3>Hospitales de tu red</h3>
+      <h3 className="mb-3 text-lg">Hospitales de tu red</h3>
       {/* La tabla desborda en pantallas angostas. Un contenedor que scrollea
           debe ser alcanzable por teclado, o quien no usa raton no ve las
           columnas de la derecha. */}
       <div
-        className="table-scroll"
+        className="mb-4 overflow-x-auto"
         tabIndex={0}
         role="region"
         aria-label="Comparacion de hospitales, desplazable horizontalmente"
       >
-        <table className="hospitals">
-          <caption>Ordenados por lo que pagarias tu, de menor a mayor.</caption>
+        <table className="w-full min-w-[32rem] border-collapse">
+          <caption className="pb-3 text-start text-[0.9375rem] text-muted">
+            Ordenados por lo que pagarias tu, de menor a mayor.
+          </caption>
           <thead>
             <tr>
-              <th scope="col">Hospital</th>
-              <th scope="col">Costo de referencia</th>
-              <th scope="col">Tu copago</th>
+              <th
+                scope="col"
+                className="border-b-2 border-ink p-3 px-4 text-start font-heading text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-muted"
+              >
+                Hospital
+              </th>
+              <th
+                scope="col"
+                className="border-b-2 border-ink p-3 px-4 text-start font-heading text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-muted"
+              >
+                Costo de referencia
+              </th>
+              <th
+                scope="col"
+                className="border-b-2 border-ink p-3 px-4 text-end font-heading text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-muted"
+              >
+                Tu copago
+              </th>
             </tr>
           </thead>
           <tbody>
             {result.alternatives.map((option) => {
               const recommended = option.hospitalId === result.recommendedHospitalId
               return (
-                <tr key={option.hospitalId} data-recommended={String(recommended)}>
-                  <th scope="row">
+                <tr key={option.hospitalId} className={recommended ? 'bg-accent-soft' : undefined}>
+                  <th
+                    scope="row"
+                    className="border-b border-line p-3 px-4 text-start font-normal text-strong"
+                  >
                     {hospitalNames[option.hospitalId] ?? option.hospitalId}
-                    {recommended ? <span className="tag-recommended">Mas economico</span> : null}
+                    {/* Texto, no solo color: la recomendacion se lee igual sin
+                        percibir el tono de fondo. */}
+                    {recommended ? (
+                      <span className="ms-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-accent px-2 py-0.5 text-[0.8125rem] font-bold text-white">
+                        Mas economico
+                      </span>
+                    ) : null}
                   </th>
-                  <td>{formatMinor(option.referenceCostMinor, currency)}</td>
-                  <td>{formatMinor(option.patientCopayMinor, currency)}</td>
+                  <td className="num border-b border-line p-3 px-4">
+                    {formatMinor(option.referenceCostMinor, currency)}
+                  </td>
+                  <td className="num border-b border-line p-3 px-4 text-end">
+                    {formatMinor(option.patientCopayMinor, currency)}
+                  </td>
                 </tr>
               )
             })}

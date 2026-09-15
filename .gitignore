@@ -40,3 +40,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Log del servidor de pruebas E2E
+next-start.log

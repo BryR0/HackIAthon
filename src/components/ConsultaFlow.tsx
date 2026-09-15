@@ -69,7 +69,14 @@ const PHASE_STEP: Readonly<Record<Phase, number>> = {
   error: 0,
 }
 
-function stepStateFor(index: number, phase: Phase): 'done' | 'current' | 'todo' {
+/** Barra superior + color: el estado no se comunica solo con el tono. */
+const STEP_STYLE = {
+  done: 'text-accent before:bg-accent',
+  current: 'text-primary before:bg-primary',
+  todo: 'text-muted before:bg-transparent',
+} as const
+
+function stepStateFor(index: number, phase: Phase): keyof typeof STEP_STYLE {
   const active = PHASE_STEP[phase]
   if (index < active) return 'done'
   if (index === active) return 'current'
@@ -237,14 +244,24 @@ export function ConsultaFlow({
 
   return (
     <div>
-      <ol className="stepper" aria-label="Progreso de la consulta">
+      <ol
+        aria-label="Progreso de la consulta"
+        className="mb-8 grid list-none grid-flow-col auto-cols-fr border-t-2 border-line p-0 max-sm:grid-flow-row max-sm:auto-cols-auto max-sm:border-t-0"
+      >
         {STEPS.map((step, index) => {
           const state = stepStateFor(index, phase)
           return (
-            <li key={step} className="stepper__item" data-state={state}>
-              <span className="stepper__dot" aria-hidden="true" />
+            <li
+              key={step}
+              className={`relative pe-2 pt-3 text-[0.8125rem] font-semibold before:absolute before:inset-x-0 before:-top-0.5 before:end-2 before:h-0.5 before:content-[''] max-sm:border-s-2 max-sm:border-line max-sm:py-2 max-sm:pe-0 max-sm:ps-3 max-sm:before:inset-y-0 max-sm:before:inset-x-auto max-sm:before:-start-0.5 max-sm:before:h-full max-sm:before:w-0.5 ${STEP_STYLE[state]}`}
+            >
+              {/* Sin opacidad: atenuar este texto lo dejaba en 3.48:1. El
+                  color heredado de cada estado ya cumple AA por si solo. */}
+              <span className="block font-heading text-[0.8125rem]">Paso {index + 1}</span>
               {step}
-              {state === 'current' ? <span className="visually-hidden">(paso actual)</span> : null}
+              {state === 'current' ? (
+                <span className="sr-only"> (paso actual)</span>
+              ) : null}
             </li>
           )
         })}
@@ -252,19 +269,21 @@ export function ConsultaFlow({
 
       {fieldError || errorMessage ? (
         <div
-          className="card error-summary"
           ref={errorSummaryRef}
           tabIndex={-1}
           role="alert"
           aria-labelledby="error-summary-title"
+          className="card border-2 border-danger"
         >
-          <h2 className="notice__title" id="error-summary-title">
+          <h2 id="error-summary-title" className="mb-2 font-heading text-lg text-danger">
             Revisa lo siguiente
           </h2>
-          <ul>
+          <ul className="mt-2 list-disc ps-6">
             {fieldError ? (
               <li>
-                <a href={`#${symptomId}`}>{fieldError}</a>
+                <a href={`#${symptomId}`} className="font-semibold text-danger underline">
+                  {fieldError}
+                </a>
               </li>
             ) : null}
             {errorMessage ? <li>{errorMessage}</li> : null}
@@ -274,30 +293,47 @@ export function ConsultaFlow({
 
       {phase === 'emergency' ? (
         <div className="card">
-          <div className="notice notice--danger" role="alert" aria-labelledby="emergencia-titulo">
-            <h2 className="notice__title" id="emergencia-titulo">
-              Esto puede ser una emergencia
-            </h2>
-            <p>
-              Lo que describes menciona{' '}
-              {EMERGENCY_MESSAGE[emergencyCode ?? ''] ?? 'una senal de alarma'}. No vamos a calcular
-              un copago ni a compararte hospitales: eso puede esperar, tu no.
-            </p>
-            <p>
-              <strong>Llama al ECU 911</strong> o acude ahora a emergencias del centro de salud mas
-              cercano.
-            </p>
-            <p>
-              Que no detectemos una senal tampoco descarta una emergencia. Si te sientes en peligro,
-              busca atencion inmediata aunque esta herramienta no lo advierta.
-            </p>
-          </div>
-          <div className="button-row">
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={resetForNewConsultation}
+          <div
+            role="alert"
+            aria-labelledby="emergencia-titulo"
+            className="flex gap-3 rounded border border-l-4 border-danger bg-danger-soft p-4"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="mt-0.5 shrink-0 text-danger"
             >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v5M12 16h.01" />
+            </svg>
+            <div>
+              <h2 id="emergencia-titulo" className="mb-2 font-heading text-lg text-danger">
+                Esto puede ser una emergencia
+              </h2>
+              <p className="mb-3">
+                Lo que describes menciona{' '}
+                {EMERGENCY_MESSAGE[emergencyCode ?? ''] ?? 'una senal de alarma'}. No vamos a
+                calcular un copago ni a compararte hospitales: eso puede esperar, tu no.
+              </p>
+              <p className="mb-3">
+                <strong>Llama al ECU 911</strong> o acude ahora a emergencias del centro de salud
+                mas cercano.
+              </p>
+              <p className="mb-0">
+                Que no detectemos una senal tampoco descarta una emergencia. Si te sientes en
+                peligro, busca atencion inmediata aunque esta herramienta no lo advierta.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="button" className="btn-secondary" onClick={resetForNewConsultation}>
               Empezar una consulta nueva
             </button>
           </div>
@@ -306,20 +342,20 @@ export function ConsultaFlow({
 
       {phase === 'collecting' || phase === 'clarifying' ? (
         <form className="card" onSubmit={handleTriage} noValidate>
-          <h2 className="card__title">
+          <h2 className="mb-6 text-xl">
             {phase === 'clarifying' ? 'Necesitamos un dato mas' : 'Cuentanos que sientes'}
           </h2>
 
-          <div className="field">
-            <label className="field__label" htmlFor={patientId}>
+          <div className="mb-6 grid gap-2">
+            <label className="font-heading font-semibold text-strong" htmlFor={patientId}>
               Paciente de demostracion
             </label>
-            <p className="field__hint" id={`${patientId}-hint`}>
+            <p id={`${patientId}-hint`} className="m-0 text-[0.9375rem] text-muted">
               Personas ficticias. No uses datos personales reales.
             </p>
             <select
-              className="field__control"
               id={patientId}
+              className="field-control"
               aria-describedby={`${patientId}-hint`}
               value={patient}
               onChange={(event) => setPatient(event.target.value)}
@@ -334,23 +370,41 @@ export function ConsultaFlow({
           </div>
 
           {clarification ? (
-            <div className="notice notice--info" role="status">
-              <p>{clarification}</p>
+            <div
+              role="status"
+              className="mb-4 flex gap-3 rounded border border-l-4 border-info bg-info-soft p-4"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="mt-0.5 shrink-0 text-info"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" />
+              </svg>
+              <p className="m-0">{clarification}</p>
             </div>
           ) : null}
 
-          <div className="field">
-            <label className="field__label" htmlFor={symptomId}>
+          <div className="mb-6 grid gap-2">
+            <label className="font-heading font-semibold text-strong" htmlFor={symptomId}>
               Describe tu sintoma
             </label>
-            <p className="field__hint" id={`${symptomId}-hint`}>
+            <p id={`${symptomId}-hint`} className="m-0 text-[0.9375rem] text-muted">
               Tu texto se envia al clasificador configurado para sugerir la especialidad y no se
               guarda en ningun lado. Maximo {MAX_SYMPTOM_LENGTH} caracteres.
             </p>
             <textarea
-              className="field__control"
               id={symptomId}
               ref={symptomRef}
+              className="field-control min-h-[7.5rem] resize-y"
               value={symptom}
               onChange={(event) => setSymptom(event.target.value)}
               aria-describedby={`${symptomId}-hint`}
@@ -359,17 +413,19 @@ export function ConsultaFlow({
               disabled={busy}
               placeholder="Ejemplo: tengo una mancha en la piel que no se va hace tres semanas"
             />
-            {fieldError ? <p className="field__error">{fieldError}</p> : null}
+            {fieldError ? (
+              <p className="m-0 text-[0.9375rem] font-semibold text-danger">{fieldError}</p>
+            ) : null}
           </div>
 
           {phase === 'clarifying' ? (
-            <div className="field">
-              <label className="field__label" htmlFor={specialtySelectId}>
+            <div className="mb-6 grid gap-2">
+              <label className="font-heading font-semibold text-strong" htmlFor={specialtySelectId}>
                 O elige la especialidad tu mismo
               </label>
               <select
-                className="field__control"
                 id={specialtySelectId}
+                className="field-control"
                 value={specialtyId}
                 onChange={(event) => setSpecialtyId(event.target.value)}
                 disabled={busy}
@@ -384,14 +440,14 @@ export function ConsultaFlow({
             </div>
           ) : null}
 
-          <div className="button-row">
-            <button type="submit" className="button button--primary" disabled={busy}>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="submit" className="btn-primary" disabled={busy}>
               Sugerir especialidad
             </button>
             {phase === 'clarifying' && specialtyId ? (
               <button
                 type="button"
-                className="button button--secondary"
+                className="btn-secondary"
                 onClick={handleEstimate}
                 disabled={busy}
               >
@@ -404,22 +460,45 @@ export function ConsultaFlow({
 
       {phase === 'confirming' ? (
         <div className="card">
-          <h2 className="card__title">Confirma la especialidad</h2>
-          <div className="notice notice--info" role="status">
-            <p>
+          <h2 className="mb-6 text-xl">Confirma la especialidad</h2>
+
+          <div
+            role="status"
+            className="mb-4 flex gap-3 rounded border border-l-4 border-info bg-info-soft p-4"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="mt-0.5 shrink-0 text-info"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            <p className="m-0">
               Segun lo que describiste, la especialidad sugerida es{' '}
               <strong>{specialtyLabel}</strong>. Puedes cambiarla si no corresponde.
             </p>
           </div>
-          {providerNote ? <p className="provider-chip">{providerNote}</p> : null}
 
-          <div className="field">
-            <label className="field__label" htmlFor={specialtySelectId}>
+          {providerNote ? (
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-inset px-3 py-2 text-[0.8125rem] text-muted">
+              {providerNote}
+            </p>
+          ) : null}
+
+          <div className="mb-6 grid gap-2">
+            <label className="font-heading font-semibold text-strong" htmlFor={specialtySelectId}>
               Especialidad
             </label>
             <select
-              className="field__control"
               id={specialtySelectId}
+              className="field-control"
               value={specialtyId}
               onChange={(event) => setSpecialtyId(event.target.value)}
               disabled={busy}
@@ -432,20 +511,11 @@ export function ConsultaFlow({
             </select>
           </div>
 
-          <div className="button-row">
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={handleEstimate}
-              disabled={busy}
-            >
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="button" className="btn-primary" onClick={handleEstimate} disabled={busy}>
               Calcular mi copago
             </button>
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={resetForNewConsultation}
-            >
+            <button type="button" className="btn-secondary" onClick={resetForNewConsultation}>
               Volver a empezar
             </button>
           </div>
@@ -453,10 +523,10 @@ export function ConsultaFlow({
       ) : null}
 
       {busy ? (
-        <div className="card loading" aria-busy="true" role="status">
-          <p>Aplicando las reglas de tu plan y comparando los hospitales de tu red…</p>
-          <div className="loading__bar">
-            <div className="loading__fill" />
+        <div className="card grid gap-4" aria-busy="true" role="status">
+          <p className="m-0">Aplicando las reglas de tu plan y comparando los hospitales…</p>
+          <div className="h-1.5 overflow-hidden rounded-full bg-inset">
+            <div className="loading-fill h-full w-[35%] rounded-full bg-primary-line" />
           </div>
         </div>
       ) : null}
@@ -469,12 +539,8 @@ export function ConsultaFlow({
             hospitalLocations={hospitalLocations}
             specialtyName={specialtyLabel}
           />
-          <div className="button-row">
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={resetForNewConsultation}
-            >
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="button" className="btn-primary" onClick={resetForNewConsultation}>
               Hacer otra consulta
             </button>
           </div>
@@ -483,21 +549,38 @@ export function ConsultaFlow({
 
       {phase === 'error' ? (
         <div className="card">
-          <div className="notice notice--danger" role="alert" aria-labelledby="error-calculo-titulo">
-            <h2 className="notice__title" id="error-calculo-titulo">
-              No pudimos completar el calculo
-            </h2>
-            <p>{errorMessage}</p>
+          <div
+            role="alert"
+            aria-labelledby="error-calculo-titulo"
+            className="flex gap-3 rounded border border-l-4 border-danger bg-danger-soft p-4"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="mt-0.5 shrink-0 text-danger"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v5M12 16h.01" />
+            </svg>
+            <div>
+              <h2 id="error-calculo-titulo" className="mb-2 font-heading text-lg text-danger">
+                No pudimos completar el calculo
+              </h2>
+              <p className="m-0">{errorMessage}</p>
+            </div>
           </div>
-          <div className="button-row">
-            <button type="button" className="button button--primary" onClick={handleEstimate}>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="button" className="btn-primary" onClick={handleEstimate}>
               Reintentar
             </button>
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={resetForNewConsultation}
-            >
+            <button type="button" className="btn-secondary" onClick={resetForNewConsultation}>
               Empezar de nuevo
             </button>
           </div>
@@ -506,17 +589,21 @@ export function ConsultaFlow({
 
       {history.length > 0 ? (
         <section className="card" aria-labelledby="historial-titulo">
-          <h2 className="card__title" id="historial-titulo">
+          <h2 id="historial-titulo" className="mb-4 text-xl">
             Consultas de esta sesion
           </h2>
-          <p className="field__hint">
+          <p className="mb-4 text-[0.9375rem] text-muted">
             Solo se guardan la especialidad y el monto, en memoria del navegador. Tus sintomas no se
             registran y desaparecen al cerrar la pestana.
           </p>
-          <ul>
+          <ul className="m-0 list-none p-0">
             {history.map((entry) => (
-              <li key={entry.key}>
-                {entry.specialtyLabel}: {entry.summary}
+              <li
+                key={entry.key}
+                className="flex justify-between gap-4 border-b border-line py-3 last:border-b-0"
+              >
+                <span>{entry.specialtyLabel}</span>
+                <span className="num font-semibold text-strong">{entry.summary}</span>
               </li>
             ))}
           </ul>

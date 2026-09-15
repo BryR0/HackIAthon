@@ -112,7 +112,10 @@ async function postJson(
 }
 
 async function callGemini(text: string): Promise<unknown> {
-  const model = env('AI_MODEL') || 'gemini-2.0-flash'
+  // Alias que Google mantiene apuntando al flash vigente. Un pin concreto
+  // caduca sin aviso (gemini-2.0-flash se retiro y devolvia 404), y eso rompe
+  // el enlace publico en silencio durante la semana de evaluacion.
+  const model = env('AI_MODEL') || 'gemini-flash-latest'
   const payload = await postJson(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
