@@ -1,0 +1,42 @@
+{
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "note": "Tarifas ficticias de consulta inicial. Casos sembrados a proposito: HR-ANDES-GAS-A/B duplicadas vigentes, HR-CUMBRES-PSI vencida, HR-VALLE-OFT en moneda distinta, HOSP-VALLE sin tarifa de ginecologia.",
+  "items": [
+    { "id": "HR-ANDES-MG",  "hospitalId": "HOSP-ANDES", "serviceId": "SVC-MEDICINA-GENERAL-CI",  "referenceCostMinor": 4000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-DER", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-DERMATOLOGIA-CI",      "referenceCostMinor": 8500,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-TRA", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-TRAUMATOLOGIA-CI",     "referenceCostMinor": 9000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-GAS-A", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-GASTROENTEROLOGIA-CI", "referenceCostMinor": 9500, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-GAS-B", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-GASTROENTEROLOGIA-CI", "referenceCostMinor": 9800, "currency": "USD", "effectiveFrom": "2026-02-01", "effectiveTo": null },
+    { "id": "HR-ANDES-CAR", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-CARDIOLOGIA-CI",      "referenceCostMinor": 11000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-NEU", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-NEUROLOGIA-CI",       "referenceCostMinor": 12000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-PED", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-PEDIATRIA-CI",        "referenceCostMinor": 6000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-ANDES-PSI", "hospitalId": "HOSP-ANDES", "serviceId": "SVC-PSICOLOGIA-CI",       "referenceCostMinor": 5000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+
+    { "id": "HR-CUMBRES-MG",  "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-MEDICINA-GENERAL-CI", "referenceCostMinor": 3500,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-DER", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-DERMATOLOGIA-CI",     "referenceCostMinor": 7000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-TRA", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-TRAUMATOLOGIA-CI",    "referenceCostMinor": 8000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-OFT", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-OFTALMOLOGIA-CI",     "referenceCostMinor": 7500,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-GIN", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-GINECOLOGIA-CI",      "referenceCostMinor": 7000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-NEU", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-NEUROLOGIA-CI",       "referenceCostMinor": 10500, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-CUMBRES-PSI", "hospitalId": "HOSP-CUMBRES", "serviceId": "SVC-PSICOLOGIA-CI",       "referenceCostMinor": 4500,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": "2026-03-31" },
+
+    { "id": "HR-LITORAL-MG",  "hospitalId": "HOSP-LITORAL", "serviceId": "SVC-MEDICINA-GENERAL-CI",  "referenceCostMinor": 3000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-LITORAL-DER", "hospitalId": "HOSP-LITORAL", "serviceId": "SVC-DERMATOLOGIA-CI",      "referenceCostMinor": 6000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-LITORAL-GAS", "hospitalId": "HOSP-LITORAL", "serviceId": "SVC-GASTROENTEROLOGIA-CI", "referenceCostMinor": 8000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-LITORAL-URO", "hospitalId": "HOSP-LITORAL", "serviceId": "SVC-UROLOGIA-CI",          "referenceCostMinor": 8000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-LITORAL-PED", "hospitalId": "HOSP-LITORAL", "serviceId": "SVC-PEDIATRIA-CI",         "referenceCostMinor": 5000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+
+    { "id": "HR-PACIFICO-MG",  "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-MEDICINA-GENERAL-CI",     "referenceCostMinor": 3200,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-PACIFICO-DER", "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-DERMATOLOGIA-CI",         "referenceCostMinor": 6505,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-PACIFICO-CAR", "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-CARDIOLOGIA-CI",          "referenceCostMinor": 10000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-PACIFICO-OTO", "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-OTORRINOLARINGOLOGIA-CI", "referenceCostMinor": 6800,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-PACIFICO-URO", "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-UROLOGIA-CI",             "referenceCostMinor": 7500,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-PACIFICO-PSI", "hospitalId": "HOSP-PACIFICO", "serviceId": "SVC-PSICOLOGIA-CI",           "referenceCostMinor": 4000,  "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+
+    { "id": "HR-VALLE-MG",  "hospitalId": "HOSP-VALLE", "serviceId": "SVC-MEDICINA-GENERAL-CI", "referenceCostMinor": 2800, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-VALLE-DER", "hospitalId": "HOSP-VALLE", "serviceId": "SVC-DERMATOLOGIA-CI",     "referenceCostMinor": 5500, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-VALLE-TRA", "hospitalId": "HOSP-VALLE", "serviceId": "SVC-TRAUMATOLOGIA-CI",    "referenceCostMinor": 8000, "currency": "USD", "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "HR-VALLE-OFT", "hospitalId": "HOSP-VALLE", "serviceId": "SVC-OFTALMOLOGIA-CI",     "referenceCostMinor": 6500, "currency": "EUR", "effectiveFrom": "2026-01-01", "effectiveTo": null }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "./schemas/patients.schema.json",
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "items": [
+    { "id": "ANA-PLUS",      "displayName": "Ana (demo ficticia)",   "planId": "PLAN-PLUS" },
+    { "id": "BRUNO-BASICO",  "displayName": "Bruno (demo ficticio)", "planId": "PLAN-BASICO" },
+    { "id": "CARLA-PREMIUM", "displayName": "Carla (demo ficticia)", "planId": "PLAN-PREMIUM" },
+    { "id": "DIEGO-CORP",    "displayName": "Diego (demo ficticio)", "planId": "PLAN-CORP" }
+  ]
+}

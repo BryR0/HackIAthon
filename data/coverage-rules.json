@@ -1,0 +1,41 @@
+{
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "note": "precedence: menor gana. fixed_copay usa fixedCopayMinor; coinsurance usa coverageBasisPoints; not_covered no usa ninguno.",
+  "items": [
+    { "id": "CR-BAS-MG",  "planId": "PLAN-BASICO", "serviceId": "SVC-MEDICINA-GENERAL-CI",  "coverageType": "fixed_copay", "fixedCopayMinor": 2000, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-DER", "planId": "PLAN-BASICO", "serviceId": "SVC-DERMATOLOGIA-CI",      "coverageType": "fixed_copay", "fixedCopayMinor": 2500, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-GAS", "planId": "PLAN-BASICO", "serviceId": "SVC-GASTROENTEROLOGIA-CI", "coverageType": "fixed_copay", "fixedCopayMinor": 3000, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-PED", "planId": "PLAN-BASICO", "serviceId": "SVC-PEDIATRIA-CI",         "coverageType": "fixed_copay", "fixedCopayMinor": 2000, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-TRA", "planId": "PLAN-BASICO", "serviceId": "SVC-TRAUMATOLOGIA-CI",     "coverageType": "fixed_copay", "fixedCopayMinor": 3500, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-URO", "planId": "PLAN-BASICO", "serviceId": "SVC-UROLOGIA-CI",          "coverageType": "fixed_copay", "fixedCopayMinor": 9900, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-OFT", "planId": "PLAN-BASICO", "serviceId": "SVC-OFTALMOLOGIA-CI",      "coverageType": "fixed_copay", "fixedCopayMinor": 3000, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-BAS-PSI", "planId": "PLAN-BASICO", "serviceId": "SVC-PSICOLOGIA-CI",        "coverageType": "not_covered", "fixedCopayMinor": null, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+
+    { "id": "CR-PLUS-MG",  "planId": "PLAN-PLUS", "serviceId": "SVC-MEDICINA-GENERAL-CI",     "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-DER", "planId": "PLAN-PLUS", "serviceId": "SVC-DERMATOLOGIA-CI",         "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-TRA", "planId": "PLAN-PLUS", "serviceId": "SVC-TRAUMATOLOGIA-CI",        "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 6000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-CAR", "planId": "PLAN-PLUS", "serviceId": "SVC-CARDIOLOGIA-CI",          "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-NEU", "planId": "PLAN-PLUS", "serviceId": "SVC-NEUROLOGIA-CI",           "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-GAS", "planId": "PLAN-PLUS", "serviceId": "SVC-GASTROENTEROLOGIA-CI",    "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-OTO", "planId": "PLAN-PLUS", "serviceId": "SVC-OTORRINOLARINGOLOGIA-CI", "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-URO", "planId": "PLAN-PLUS", "serviceId": "SVC-UROLOGIA-CI",             "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-GIN", "planId": "PLAN-PLUS", "serviceId": "SVC-GINECOLOGIA-CI",          "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 7000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-PSI", "planId": "PLAN-PLUS", "serviceId": "SVC-PSICOLOGIA-CI",           "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 0,    "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-PED-BASE",    "planId": "PLAN-PLUS", "serviceId": "SVC-PEDIATRIA-CI",    "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 5000, "precedence": 200, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PLUS-PED-CAMPANA", "planId": "PLAN-PLUS", "serviceId": "SVC-PEDIATRIA-CI",    "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 8000, "precedence": 10,  "effectiveFrom": "2026-06-01", "effectiveTo": "2026-12-31" },
+
+    { "id": "CR-PREM-MG",  "planId": "PLAN-PREMIUM", "serviceId": "SVC-MEDICINA-GENERAL-CI", "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 10000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-DER", "planId": "PLAN-PREMIUM", "serviceId": "SVC-DERMATOLOGIA-CI",     "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 9000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-TRA", "planId": "PLAN-PREMIUM", "serviceId": "SVC-TRAUMATOLOGIA-CI",    "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 9000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-OFT", "planId": "PLAN-PREMIUM", "serviceId": "SVC-OFTALMOLOGIA-CI",     "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 9000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-GIN", "planId": "PLAN-PREMIUM", "serviceId": "SVC-GINECOLOGIA-CI",      "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 9000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-CAR", "planId": "PLAN-PREMIUM", "serviceId": "SVC-CARDIOLOGIA-CI",      "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 9000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-PREM-PSI", "planId": "PLAN-PREMIUM", "serviceId": "SVC-PSICOLOGIA-CI",       "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 8000,  "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+
+    { "id": "CR-CORP-DER", "planId": "PLAN-CORP", "serviceId": "SVC-DERMATOLOGIA-CI",     "coverageType": "fixed_copay", "fixedCopayMinor": 1500, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-CORP-MG",  "planId": "PLAN-CORP", "serviceId": "SVC-MEDICINA-GENERAL-CI", "coverageType": "fixed_copay", "fixedCopayMinor": 1000, "coverageBasisPoints": null, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-CORP-CAR", "planId": "PLAN-CORP", "serviceId": "SVC-CARDIOLOGIA-CI",      "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 5000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": null },
+    { "id": "CR-CORP-NEU-VENCIDA", "planId": "PLAN-CORP", "serviceId": "SVC-NEUROLOGIA-CI", "coverageType": "coinsurance", "fixedCopayMinor": null, "coverageBasisPoints": 6000, "precedence": 100, "effectiveFrom": "2026-01-01", "effectiveTo": "2026-01-31" }
+  ]
+}

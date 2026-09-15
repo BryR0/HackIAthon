@@ -1,0 +1,11 @@
+{
+  "$schema": "./schemas/plans.schema.json",
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "items": [
+    { "id": "PLAN-BASICO",  "name": "Plan Basico (ficticio)",  "currency": "USD", "networkId": "RED-BASICA", "ruleVersion": "2026.09.1" },
+    { "id": "PLAN-PLUS",    "name": "Plan Plus (ficticio)",    "currency": "USD", "networkId": "RED-AMPLIA", "ruleVersion": "2026.09.1" },
+    { "id": "PLAN-PREMIUM", "name": "Plan Premium (ficticio)", "currency": "USD", "networkId": "RED-TOTAL",  "ruleVersion": "2026.09.1" },
+    { "id": "PLAN-CORP",    "name": "Plan Corporativo (ficticio)", "currency": "USD", "networkId": "RED-AMPLIA", "ruleVersion": "2026.09.1" }
+  ]
+}

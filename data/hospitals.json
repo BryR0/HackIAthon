@@ -1,0 +1,32 @@
+{
+  "$schema": "./schemas/hospitals.schema.json",
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "items": [
+    {
+      "id": "HOSP-ANDES", "name": "Hospital Los Andes (ficticio)", "location": "Quito",
+      "networkIds": ["RED-BASICA", "RED-AMPLIA", "RED-TOTAL"],
+      "specialtyIds": ["ESP-MEDICINA-GENERAL","ESP-DERMATOLOGIA","ESP-TRAUMATOLOGIA","ESP-GASTROENTEROLOGIA","ESP-CARDIOLOGIA","ESP-NEUROLOGIA","ESP-PEDIATRIA","ESP-PSICOLOGIA"]
+    },
+    {
+      "id": "HOSP-CUMBRES", "name": "Clinica Cumbres (ficticia)", "location": "Quito",
+      "networkIds": ["RED-AMPLIA", "RED-TOTAL"],
+      "specialtyIds": ["ESP-MEDICINA-GENERAL","ESP-DERMATOLOGIA","ESP-TRAUMATOLOGIA","ESP-OFTALMOLOGIA","ESP-GINECOLOGIA","ESP-NEUROLOGIA","ESP-PSICOLOGIA"]
+    },
+    {
+      "id": "HOSP-LITORAL", "name": "Hospital Litoral (ficticio)", "location": "Guayaquil",
+      "networkIds": ["RED-BASICA", "RED-TOTAL"],
+      "specialtyIds": ["ESP-MEDICINA-GENERAL","ESP-DERMATOLOGIA","ESP-GASTROENTEROLOGIA","ESP-UROLOGIA","ESP-PEDIATRIA"]
+    },
+    {
+      "id": "HOSP-PACIFICO", "name": "Centro Medico Pacifico (ficticio)", "location": "Guayaquil",
+      "networkIds": ["RED-AMPLIA", "RED-TOTAL"],
+      "specialtyIds": ["ESP-MEDICINA-GENERAL","ESP-DERMATOLOGIA","ESP-CARDIOLOGIA","ESP-OTORRINOLARINGOLOGIA","ESP-UROLOGIA","ESP-PSICOLOGIA"]
+    },
+    {
+      "id": "HOSP-VALLE", "name": "Hospital del Valle (ficticio)", "location": "Cuenca",
+      "networkIds": ["RED-TOTAL"],
+      "specialtyIds": ["ESP-MEDICINA-GENERAL","ESP-DERMATOLOGIA","ESP-TRAUMATOLOGIA","ESP-OFTALMOLOGIA","ESP-GINECOLOGIA"]
+    }
+  ]
+}

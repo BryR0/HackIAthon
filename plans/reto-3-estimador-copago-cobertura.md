@@ -1,7 +1,7 @@
 # Blueprint de implementación — Reto 3: Estimador Agéntico de Copago y Cobertura
 
-Estado: revisado y listo para confirmación  
-Modo: directo (el repositorio no tiene remoto ni GitHub CLI configurado)  
+Estado: Gate 0 cerrado — ver `docs/adr/0001-mvp-stack-and-rules.md`  
+Modo: directo sobre `main` (remoto `origin` = BryR0/HackIAthon; `gh` CLI aun no instalado)  
 Fuente: `hackIAthon-retos-filtro.md` y `hackIAthon-retos-filtro.pdf`  
 Producto propuesto: **Cobertura Clara**
 
@@ -142,7 +142,7 @@ Navegador
 - Elegir el proveedor/modelo disponible para el evento y documentar su variable de entorno; nunca exponer la clave al navegador.
 - Confirmar que el despliegue será una sola aplicación y que el modo demo puede operar con el doble local.
 - Confirmar moneda, regla de redondeo y fórmula del dataset; si no existen, adoptar USD, unidades menores enteras y redondeo half-up documentado.
-- Registrar estas decisiones en `docs/adr/0001-mvp-stack-and-rules.md` antes del Paso 1.
+- Registrar estas decisiones en `docs/adr/0001-mvp-stack-and-rules.md` antes del Paso 1. **HECHO** (2026-09-15).
 
 ## 6. Modelo de datos mínimo
 

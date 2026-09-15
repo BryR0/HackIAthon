@@ -1,0 +1,42 @@
+# Secretos — nunca commitear
+.env
+.env.*
+!.env.example
+
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Build / cache
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+.turbo/
+.swc/
+
+# Pruebas
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Deploy
+.vercel/
+
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

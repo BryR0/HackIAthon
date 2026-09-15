@@ -1,0 +1,19 @@
+{
+  "$schema": "./schemas/services.schema.json",
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "items": [
+    { "id": "SVC-MEDICINA-GENERAL-CI", "specialtyId": "ESP-MEDICINA-GENERAL", "name": "Consulta inicial de medicina general", "serviceType": "initial_consultation" },
+    { "id": "SVC-DERMATOLOGIA-CI", "specialtyId": "ESP-DERMATOLOGIA", "name": "Consulta inicial de dermatologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-TRAUMATOLOGIA-CI", "specialtyId": "ESP-TRAUMATOLOGIA", "name": "Consulta inicial de traumatologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-GASTROENTEROLOGIA-CI", "specialtyId": "ESP-GASTROENTEROLOGIA", "name": "Consulta inicial de gastroenterologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-CARDIOLOGIA-CI", "specialtyId": "ESP-CARDIOLOGIA", "name": "Consulta inicial de cardiologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-OTORRINOLARINGOLOGIA-CI", "specialtyId": "ESP-OTORRINOLARINGOLOGIA", "name": "Consulta inicial de otorrinolaringologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-OFTALMOLOGIA-CI", "specialtyId": "ESP-OFTALMOLOGIA", "name": "Consulta inicial de oftalmologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-GINECOLOGIA-CI", "specialtyId": "ESP-GINECOLOGIA", "name": "Consulta inicial de ginecologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-PEDIATRIA-CI", "specialtyId": "ESP-PEDIATRIA", "name": "Consulta inicial de pediatria", "serviceType": "initial_consultation" },
+    { "id": "SVC-NEUROLOGIA-CI", "specialtyId": "ESP-NEUROLOGIA", "name": "Consulta inicial de neurologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-UROLOGIA-CI", "specialtyId": "ESP-UROLOGIA", "name": "Consulta inicial de urologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-PSICOLOGIA-CI", "specialtyId": "ESP-PSICOLOGIA", "name": "Consulta inicial de psicologia clinica", "serviceType": "initial_consultation" }
+  ]
+}

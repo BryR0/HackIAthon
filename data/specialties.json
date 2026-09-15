@@ -1,0 +1,19 @@
+{
+  "$schema": "./schemas/specialties.schema.json",
+  "ruleVersion": "2026.09.1",
+  "fictional": true,
+  "items": [
+    { "id": "ESP-MEDICINA-GENERAL", "name": "Medicina general", "aliases": ["medicina general", "consulta general", "medico general"], "safetyNotes": "Puerta de entrada cuando el sintoma no mapea a una especialidad concreta." },
+    { "id": "ESP-DERMATOLOGIA", "name": "Dermatologia", "aliases": ["piel", "dermatologia", "sarpullido", "acne", "lunar"], "safetyNotes": "Lesiones que cambian rapido de color o tamano requieren valoracion presencial." },
+    { "id": "ESP-TRAUMATOLOGIA", "name": "Traumatologia", "aliases": ["traumatologia", "huesos", "esguince", "fractura", "rodilla", "tobillo"], "safetyNotes": "Deformidad visible o imposibilidad de apoyar peso puede ser urgencia." },
+    { "id": "ESP-GASTROENTEROLOGIA", "name": "Gastroenterologia", "aliases": ["gastroenterologia", "estomago", "digestivo", "acidez", "gastritis"], "safetyNotes": "Vomito con sangre o heces negras es urgencia." },
+    { "id": "ESP-CARDIOLOGIA", "name": "Cardiologia", "aliases": ["cardiologia", "corazon", "palpitaciones", "presion alta"], "safetyNotes": "Dolor toracico opresivo es urgencia hasta descartar lo contrario." },
+    { "id": "ESP-OTORRINOLARINGOLOGIA", "name": "Otorrinolaringologia", "aliases": ["otorrino", "oido", "garganta", "nariz", "sinusitis"], "safetyNotes": "Obstruccion aguda de via aerea es urgencia." },
+    { "id": "ESP-OFTALMOLOGIA", "name": "Oftalmologia", "aliases": ["oftalmologia", "ojos", "vista", "vision borrosa"], "safetyNotes": "Perdida subita de vision es urgencia." },
+    { "id": "ESP-GINECOLOGIA", "name": "Ginecologia", "aliases": ["ginecologia", "menstruacion", "control ginecologico"], "safetyNotes": "Sangrado abundante con mareo es urgencia." },
+    { "id": "ESP-PEDIATRIA", "name": "Pediatria", "aliases": ["pediatria", "nino", "nina", "bebe"], "safetyNotes": "Fiebre en menor de 3 meses es urgencia." },
+    { "id": "ESP-NEUROLOGIA", "name": "Neurologia", "aliases": ["neurologia", "migrana", "cefalea", "mareo", "hormigueo"], "safetyNotes": "Cefalea subita de maxima intensidad es urgencia." },
+    { "id": "ESP-UROLOGIA", "name": "Urologia", "aliases": ["urologia", "orina", "rinon", "prostata"], "safetyNotes": "Imposibilidad total de orinar es urgencia." },
+    { "id": "ESP-PSICOLOGIA", "name": "Psicologia clinica", "aliases": ["psicologia", "ansiedad", "estres", "animo"], "safetyNotes": "Ideacion suicida activa es urgencia; derivar a linea de crisis." }
+  ]
+}
