@@ -14,6 +14,13 @@
     { "id": "ESP-PEDIATRIA", "name": "Pediatria", "aliases": ["pediatria", "nino", "nina", "bebe"], "safetyNotes": "Fiebre en menor de 3 meses es urgencia." },
     { "id": "ESP-NEUROLOGIA", "name": "Neurologia", "aliases": ["neurologia", "migrana", "cefalea", "mareo", "hormigueo"], "safetyNotes": "Cefalea subita de maxima intensidad es urgencia." },
     { "id": "ESP-UROLOGIA", "name": "Urologia", "aliases": ["urologia", "orina", "rinon", "prostata"], "safetyNotes": "Imposibilidad total de orinar es urgencia." },
-    { "id": "ESP-PSICOLOGIA", "name": "Psicologia clinica", "aliases": ["psicologia", "ansiedad", "estres", "animo"], "safetyNotes": "Ideacion suicida activa es urgencia; derivar a linea de crisis." }
+    { "id": "ESP-PSICOLOGIA", "name": "Psicologia clinica", "aliases": ["psicologia", "ansiedad", "estres", "animo"], "safetyNotes": "Ideacion suicida activa es urgencia; derivar a linea de crisis." },
+    { "id": "ESP-ODONTOLOGIA", "name": "Odontologia", "aliases": ["odontologia", "dentista", "odontologo", "muela", "muelas", "diente", "dientes", "dental", "encia", "encias", "caries"], "safetyNotes": "Inflamacion facial con fiebre o dificultad para tragar es urgencia." },
+    { "id": "ESP-ENDOCRINOLOGIA", "name": "Endocrinologia", "aliases": ["endocrinologia", "endocrinologo", "diabetes", "tiroides", "azucar alta", "glucosa", "hormonas"], "safetyNotes": "Glucosa muy alta con vomito y somnolencia es urgencia." },
+    { "id": "ESP-NEUMOLOGIA", "name": "Neumologia", "aliases": ["neumologia", "neumologo", "pulmon", "pulmones", "asma", "bronquitis", "tos cronica"], "safetyNotes": "Dificultad respiratoria en reposo es urgencia." },
+    { "id": "ESP-NUTRICION", "name": "Nutricion", "aliases": ["nutricion", "nutricionista", "dieta", "bajar de peso", "sobrepeso", "obesidad", "alimentacion"], "safetyNotes": "Perdida de peso rapida sin causa requiere valoracion medica antes que dietetica." },
+    { "id": "ESP-REUMATOLOGIA", "name": "Reumatologia", "aliases": ["reumatologia", "reumatologo", "artritis", "artrosis", "lupus", "dolor en las articulaciones", "reuma"], "safetyNotes": "Articulacion caliente, roja y con fiebre puede ser infeccion: urgencia." },
+    { "id": "ESP-ALERGOLOGIA", "name": "Alergologia", "aliases": ["alergologia", "alergia", "alergias", "rinitis alergica", "estornudos", "alergico"], "safetyNotes": "Hinchazon de labios o lengua tras un contacto es urgencia." },
+    { "id": "ESP-FISIOTERAPIA", "name": "Fisioterapia y rehabilitacion", "aliases": ["fisioterapia", "fisioterapista", "rehabilitacion", "terapia fisica", "kinesiologia", "contractura"], "safetyNotes": "Dolor tras un trauma reciente se valora primero en traumatologia." }
   ]
 }

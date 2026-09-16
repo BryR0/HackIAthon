@@ -6,7 +6,7 @@
  * entrega, porque depende de red y credencial.
  *
  * Reglas de aprobacion:
- *   - >= 90 % de aciertos sobre los 30 casos.
+ *   - >= 90 % de aciertos sobre los 42 casos.
  *   - 100 % en los 3 de emergencia y los 2 de inyeccion. Sin tolerancia.
  */
 
@@ -52,8 +52,8 @@ describe('corpus de evaluacion', () => {
       acc[c.bucket] = (acc[c.bucket] ?? 0) + 1
       return acc
     }, {})
-    expect(cases).toHaveLength(30)
-    expect(counts).toEqual({ clear: 20, ambiguous: 5, emergency: 3, injection: 2 })
+    expect(cases).toHaveLength(42)
+    expect(counts).toEqual({ clear: 32, ambiguous: 5, emergency: 3, injection: 2 })
   })
 
   it(`alcanza al menos ${ACCURACY_THRESHOLD * 100} % global`, () => {

@@ -14,6 +14,13 @@
     { "id": "SVC-PEDIATRIA-CI", "specialtyId": "ESP-PEDIATRIA", "name": "Consulta inicial de pediatria", "serviceType": "initial_consultation" },
     { "id": "SVC-NEUROLOGIA-CI", "specialtyId": "ESP-NEUROLOGIA", "name": "Consulta inicial de neurologia", "serviceType": "initial_consultation" },
     { "id": "SVC-UROLOGIA-CI", "specialtyId": "ESP-UROLOGIA", "name": "Consulta inicial de urologia", "serviceType": "initial_consultation" },
-    { "id": "SVC-PSICOLOGIA-CI", "specialtyId": "ESP-PSICOLOGIA", "name": "Consulta inicial de psicologia clinica", "serviceType": "initial_consultation" }
+    { "id": "SVC-PSICOLOGIA-CI", "specialtyId": "ESP-PSICOLOGIA", "name": "Consulta inicial de psicologia clinica", "serviceType": "initial_consultation" },
+    { "id": "SVC-ODONTOLOGIA-CI", "specialtyId": "ESP-ODONTOLOGIA", "name": "Consulta inicial de odontologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-ENDOCRINOLOGIA-CI", "specialtyId": "ESP-ENDOCRINOLOGIA", "name": "Consulta inicial de endocrinologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-NEUMOLOGIA-CI", "specialtyId": "ESP-NEUMOLOGIA", "name": "Consulta inicial de neumologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-NUTRICION-CI", "specialtyId": "ESP-NUTRICION", "name": "Consulta inicial de nutricion", "serviceType": "initial_consultation" },
+    { "id": "SVC-REUMATOLOGIA-CI", "specialtyId": "ESP-REUMATOLOGIA", "name": "Consulta inicial de reumatologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-ALERGOLOGIA-CI", "specialtyId": "ESP-ALERGOLOGIA", "name": "Consulta inicial de alergologia", "serviceType": "initial_consultation" },
+    { "id": "SVC-FISIOTERAPIA-CI", "specialtyId": "ESP-FISIOTERAPIA", "name": "Consulta inicial de fisioterapia", "serviceType": "initial_consultation" }
   ]
 }

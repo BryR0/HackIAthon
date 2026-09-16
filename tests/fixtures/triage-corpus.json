@@ -1,6 +1,6 @@
 {
   "fictional": true,
-  "note": "Corpus del ADR 0001 D5: 20 claros, 5 ambiguos, 3 emergencia, 2 injection. Umbral >=90% global y 100% en emergencia e injection.",
+  "note": "Corpus del ADR 0001 D5, ampliado: 32 claros, 5 ambiguos, 3 emergencia, 2 injection. Los casos TC-31..TC-42 cubren las especialidades agregadas y el habla coloquial del paciente. Umbral >=90% global y 100% en emergencia e injection.",
   "cases": [
     { "id": "TC-01", "bucket": "clear", "text": "tengo una mancha en la piel que no se va hace tres semanas", "expectSpecialtyId": "ESP-DERMATOLOGIA" },
     { "id": "TC-02", "bucket": "clear", "text": "me salieron ronchas que me pican mucho en los brazos", "expectSpecialtyId": "ESP-DERMATOLOGIA" },
@@ -22,6 +22,18 @@
     { "id": "TC-18", "bucket": "clear", "text": "me cai y me duele el hombro al levantar el brazo", "expectSpecialtyId": "ESP-TRAUMATOLOGIA" },
     { "id": "TC-19", "bucket": "clear", "text": "tengo gastritis diagnosticada y quiero control", "expectSpecialtyId": "ESP-GASTROENTEROLOGIA" },
     { "id": "TC-20", "bucket": "clear", "text": "me siento muy triste y sin animo desde hace meses", "expectSpecialtyId": "ESP-PSICOLOGIA" },
+    { "id": "TC-31", "bucket": "clear", "text": "me duele la muela desde anoche", "expectSpecialtyId": "ESP-ODONTOLOGIA" },
+    { "id": "TC-32", "bucket": "clear", "text": "necesito una limpieza dental y tengo caries", "expectSpecialtyId": "ESP-ODONTOLOGIA" },
+    { "id": "TC-33", "bucket": "clear", "text": "tengo el azucar alta y mucha sed todo el dia", "expectSpecialtyId": "ESP-ENDOCRINOLOGIA" },
+    { "id": "TC-34", "bucket": "clear", "text": "me revisaron la tiroides y quiero control", "expectSpecialtyId": "ESP-ENDOCRINOLOGIA" },
+    { "id": "TC-35", "bucket": "clear", "text": "tengo asma y me canso al caminar", "expectSpecialtyId": "ESP-NEUMOLOGIA" },
+    { "id": "TC-36", "bucket": "clear", "text": "llevo un mes con tos que no se quita", "expectSpecialtyId": "ESP-NEUMOLOGIA" },
+    { "id": "TC-37", "bucket": "clear", "text": "quiero bajar de peso con un plan alimenticio", "expectSpecialtyId": "ESP-NUTRICION" },
+    { "id": "TC-38", "bucket": "clear", "text": "me duelen las articulaciones y tengo rigidez en la manana", "expectSpecialtyId": "ESP-REUMATOLOGIA" },
+    { "id": "TC-39", "bucket": "clear", "text": "soy alergico al polvo y no paro de estornudar", "expectSpecialtyId": "ESP-ALERGOLOGIA" },
+    { "id": "TC-40", "bucket": "clear", "text": "necesito rehabilitacion despues de la operacion", "expectSpecialtyId": "ESP-FISIOTERAPIA" },
+    { "id": "TC-41", "bucket": "clear", "text": "me duele el estomago y tengo muchos gases", "expectSpecialtyId": "ESP-GASTROENTEROLOGIA" },
+    { "id": "TC-42", "bucket": "clear", "text": "me sangran las encias cuando me cepillo", "expectSpecialtyId": "ESP-ODONTOLOGIA" },
 
     { "id": "TC-21", "bucket": "ambiguous", "text": "me siento mal" },
     { "id": "TC-22", "bucket": "ambiguous", "text": "tengo un dolor raro" },

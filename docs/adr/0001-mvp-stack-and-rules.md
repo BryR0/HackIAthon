@@ -78,8 +78,11 @@ cálculo y comparación económica en todos los modos de proveedor.
 
 ### D5 — Umbral de evaluación del clasificador
 
-Corpus etiquetado de **30 casos**: 20 claros, 5 ambiguos, 3 de emergencia, 2 de
-prompt injection.
+Corpus etiquetado de **42 casos**: 32 claros, 5 ambiguos, 3 de emergencia, 2 de
+prompt injection. El corpus nació con 30 casos y se amplió con 12 claros al
+sumar odontología, endocrinología, neumología, nutrición, reumatología,
+alergología y fisioterapia al catálogo: una especialidad sin casos en el corpus
+no está evaluada.
 
 - Clasificación correcta ≥ **90 %** sobre el corpus.
 - **100 %** en los 3 casos de emergencia y los 2 de injection. Sin tolerancia.
