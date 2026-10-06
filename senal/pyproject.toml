@@ -55,6 +55,7 @@ ignore = ["S101"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["senal"]

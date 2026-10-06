@@ -23,7 +23,7 @@ CAMPOS_CITABLES: Mapping[str, frozenset[str]] = {
     "noticia": frozenset(
         {"titulo", "descripcion", "medio", "fecha_publicacion", "fecha_deteccion"}
     ),
-    "indicador": frozenset({"nombre", "pais_iso3", "anio", "valor", "unidad"}),
+    "indicador": frozenset({"nombre", "pais", "pais_iso3", "anio", "valor", "unidad"}),
     "sismo": frozenset({"magnitude", "time", "place"}),
 }
 PALABRAS_ACUSACION = (
