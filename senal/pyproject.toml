@@ -41,7 +41,7 @@ explicit = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["network: llama a internet; se excluye por defecto"]
-addopts = "-m 'not network'"
+addopts = "-m 'not network' --basetemp=.pytest_tmp"
 
 [tool.ruff]
 line-length = 100
@@ -55,3 +55,6 @@ ignore = ["S101"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["senal"]

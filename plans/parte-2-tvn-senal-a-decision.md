@@ -189,7 +189,7 @@ Archivos de la sección 7 del reto (`noticias.csv`, `fuentes.json`,
 `diccionario.md`, `benchmark.jsonl`, `reporte_calidad.json`, `excluidos.csv`.
 
 - UTF-8, IDs estables (prueba de estabilidad), `.gitattributes` con `data/** eol=lf`, JSON con claves ordenadas para hash estable.
-- Nulos del Banco Mundial = `null`, nunca `0`; cuadrícula 6 × 6 × 15 = 1.350 filas.
+- Nulos del Banco Mundial = `null`, nunca `0`; cuadrícula 6 × 6 × 15 = **540** filas (el reto dice "1.350": error aritmético, confirmado al construir el snapshot; preguntado al organizador).
 - `fichas.jsonl` lo genera la aplicación al aprobar/descartar; se versiona.
 - Solo titular/metadatos → la salida dice literalmente "basado únicamente en titular/metadatos".
 - Fuentes con redistribución restringida (TVN, medios vía GDELT): se entregan metadatos + receta, no contenido.
@@ -280,7 +280,7 @@ Regla: **rebanada vertical funcional al cierre del Día 1**, luego profundizar.
 - Si el organizador entrega paquete: validarlo y usarlo; extractores solo como receta.
 - Si no (timebox 2 h): `extract-tvn-rss`, `extract-gdelt` (ventanas, ≤ 250/consulta, dedupe por URL), `extract-worldbank` (una consulta por indicador, cuadrícula completa), `extract-usgs` (lat 5–12, lon −86 a −76, M ≥ 3, 2024).
 - `build-snapshot`: manifest, reporte de calidad, excluidos.
-- **Salida:** ≥ 100 noticias (≥ 20 TVN); 1.350 filas de indicadores; T01 verde; hash estable en dos corridas.
+- **Salida:** ≥ 100 noticias (≥ 20 TVN); 540 filas de indicadores; T01 verde; hash estable en dos corridas.
 
 ### Paso 2 — Etiquetado y benchmark (en paralelo a Paso 3)
 - Si el organizador entrega el set reservado, el equipo solo escribe las 40 de desarrollo y nunca abre el reservado hasta la evaluación final.

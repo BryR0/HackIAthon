@@ -22,6 +22,7 @@ Reto: "De la señal a la decisión" (TVN Media). Prioridad: **A** bloquea, **B**
 10. **(A)** ¿Entregan el snapshot congelado "Panamá · Señales y Evidencias v1"? ¿Cuándo?
 11. **(A)** Conflicto de fechas: el reto pide noticias de `[2024-01-01, 2025-10-01)` y a la vez "30–90 días previos a la extracción". Ni el RSS de TVN ni GDELT alcanzan 2024 hoy. ¿Qué ventana vale?
 12. **(B)** ¿Entregan ustedes el set reservado de 20 consultas, o lo prepara cada equipo? ¿Cómo y cuándo se corre?
+13a. **(C)** El reto dice "cuadrícula de 1.350 combinaciones país × indicador × año", pero 6 países × 6 indicadores × 15 años (2010–2024) = 540. ¿Es una errata o falta algún país o indicador?
 13. **(B)** Derechos TVN: ¿podemos usar la descripción del RSS como `alcance_texto`, o solo el titular?
 
 ## Evaluación
