@@ -6,7 +6,7 @@ Reto: "De la señal a la decisión" (TVN Media). Prioridad: **A** bloquea, **B**
 
 1. **(A)** ¿Se puede preparar código, datos y Notion **antes** del evento, o todo debe construirse durante él? El reto pide "registro durante la ejecución, no solo un resumen final".
 2. **(A)** ¿Fecha, duración (24–48 h o 3 días) y hora exacta de cierre?
-3. **(B)** ¿El pitch es presencial o remoto? ¿Hay internet y proyector en la sala?
+3. **(B)** ¿El pitch es presencial o remoto? ¿Se presenta desde nuestra laptop?
 
 ## Notion Business
 
@@ -29,9 +29,7 @@ Reto: "De la señal a la decisión" (TVN Media). Prioridad: **A** bloquea, **B**
 
 14. **(B)** ¿Habrá una persona editorial de TVN disponible para la selección independiente (Precision@5) y para revisar afirmaciones?
 15. **(C)** ¿La modalidad bancaria suma puntos si se agrega como extensión?
-16. **(C)** ¿El costo de APIs de IA corre por cuenta del equipo? ¿Se acepta un LLM local (Ollama) como proveedor principal?
 
 ## Entrega
 
 17. **(B)** ¿El repositorio debe ser público, o privado con acceso a usuarios de GitHub del jurado? ¿Cuáles son esos usuarios?
-18. **(C)** ¿Hace falta un despliegue público, o basta la demo local offline? (El reto acepta interfaz web, dashboard o notebook.)
