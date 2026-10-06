@@ -199,3 +199,19 @@ def test_t07_fuente_sospechosa_se_senala_y_no_alimenta_el_borrador() -> None:
     assert r.sospechosas == ("N-mal",)
     assert all(c.id_evidencia != "N-mal" for a in r.aceptadas for c in a.citas)
     assert r.aceptadas
+
+
+def test_t04_anio_pedido_que_no_esta_en_la_evidencia_obliga_a_abstenerse() -> None:
+    evidencias = (
+        Evidencia(
+            "WB:PAN:NY.GDP.MKTP.KD.ZG:2024",
+            "indicador",
+            {"nombre": "crecimiento del PIB", "pais": "Panamá", "anio": "2024", "valor": "2.9"},
+        ),
+        Evidencia("N-1", "noticia", {"titulo": "Turismo crece en Bocas del Toro"}),
+        Evidencia("N-2", "noticia", {"titulo": "Lluvias afectan a Chiriquí"}),
+    )
+    buscador = Buscador(evidencias, None)
+
+    assert responder("crecimiento del PIB de Panamá en 2026", buscador, None).abstencion
+    assert not responder("crecimiento del PIB de Panamá en 2024", buscador, None).abstencion

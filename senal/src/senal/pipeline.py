@@ -305,6 +305,8 @@ def evidencias_de(snapshot: Snapshot) -> list[Evidencia]:
                 "anio": str(i.anio),
                 "valor": f"{i.valor:.4g}",
                 "unidad": i.unidad or "",
+                "fuente": "Banco Mundial",
+                "periodicidad": "dato anual",
                 "url": i.fuente_url or "",
             },
         )
@@ -317,6 +319,7 @@ def evidencias_de(snapshot: Snapshot) -> list[Evidencia]:
             "sismo",
             {
                 "nombre": "sismo",
+                "fuente": "USGS catálogo sísmico",
                 "magnitude": str(e.get("magnitude")),
                 "time": str(e.get("time")),
                 "place": str(e.get("place")),

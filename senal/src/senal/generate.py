@@ -42,6 +42,7 @@ MAX_PALABRAS_COPY = 80
 GUION_PALABRAS = (110, 150)  # 45–60 s a ~2,5 palabras por segundo
 PREGUNTAS_REQUERIDAS = 3
 EXTRACTIVO = ("extractivo", "plantilla-v1")
+_ANIO = re.compile(r"\b(?:19|20)\d{2}\b")
 _CITA_TEXTUAL = re.compile(r"[«\"“]([^»\"”]{12,})[»\"”]")
 
 SISTEMA = f"""Eres un asistente de la redacción de TVN Panamá. Preparas borradores para
@@ -159,8 +160,8 @@ def _afirmacion_extractiva(e: Evidencia) -> _Afirmacion:
         campos = ["titulo", "medio"]
     elif e.tipo == "indicador":
         texto = (
-            f"Según el Banco Mundial, {c['nombre']} de {c.get('pais', c['pais_iso3'])} "
-            f"fue {c['valor']} ({c['unidad']}) en {c['anio']}; es un dato anual, no actual."
+            f"Según el Banco Mundial, {c['nombre']} de {c.get('pais') or c.get('pais_iso3', '')} "
+            f"fue {c['valor']} ({c.get('unidad', '')}) en {c['anio']}; es un dato anual, no actual."
         )
         campos = ["nombre", "pais", "valor", "unidad", "anio"]
     else:
@@ -303,8 +304,25 @@ def cobertura_lexica(consulta: str, resultados: Sequence[Resultado]) -> float:
     )
 
 
+def _anio_sin_respaldo(consulta: str, relevantes: Sequence[Resultado]) -> bool:
+    """Si la consulta pide un año, una misma evidencia pertinente debe contenerlo (T04):
+    un dato de 2024 no responde una pregunta sobre 2026."""
+    anios = set(_ANIO.findall(consulta))
+    if not anios:
+        return False
+    terminos = set(tokenizar(consulta)) - anios
+    for r in relevantes:
+        tokens = set(tokenizar(r.evidencia.texto))
+        cubre = not terminos or len(terminos & tokens) / len(terminos) >= COBERTURA_MINIMA
+        if cubre and anios <= tokens:
+            return False
+    return True
+
+
 def _sin_sustento(consulta: str, relevantes: Sequence[Resultado]) -> bool:
     if debe_abstenerse(relevantes, umbral_bm25=UMBRAL_BM25, umbral_coseno=UMBRAL_COSENO):
+        return True
+    if _anio_sin_respaldo(consulta, relevantes):
         return True
     semantica_fuerte = any(
         r.coseno is not None and r.coseno >= UMBRAL_COSENO_FUERTE for r in relevantes
