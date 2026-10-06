@@ -3,7 +3,7 @@
 - Baseline (§8 del reto): reglas de palabras clave.
 - IA: prototipos por tema sobre embeddings multilingües, con abstención por
   umbral y margen: si no hay tema claro se devuelve ``SIN_TEMA``; no se fuerza.
-- Agrupación: union-find sobre similitud coseno dentro de una ventana temporal,
+- Agrupación: enlace promedio sobre similitud coseno dentro de una ventana temporal,
   para que tres copias del mismo hecho cuenten como un evento (T02).
 """
 
@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import numpy as np
+from sklearn.cluster import AgglomerativeClustering
 
 from senal.embed import Codificador, Matriz
 
@@ -57,32 +58,38 @@ PALABRAS_CLAVE: Mapping[str, tuple[str, ...]] = {
     ),
 }  # fmt: skip
 
+# Ejemplares por tema, sin "Panamá": el topónimo común dominaba la similitud y
+# borraba el margen entre temas (calibración 2026-10-06 con 3049 titulares reales).
 PROTOTIPOS: Mapping[str, tuple[str, ...]] = {
     "economia": (
-        "Economía de Panamá: inflación, crecimiento del PIB, empleo, precios y finanzas públicas",
-        "Panama economy: inflation, GDP growth, jobs and public debt",
+        "inflación y precios", "crecimiento económico del PIB", "desempleo y empleo",
+        "deuda pública y presupuesto del Estado", "inversión extranjera y comercio",
+        "economy inflation GDP",
     ),
     "logistica_canal": (
-        "Canal de Panamá: tránsitos de buques, calado, puertos, navieras y comercio marítimo",
-        "Panama Canal shipping transits, ports and maritime logistics",
+        "tránsitos de buques por el Canal", "puertos y contenedores",
+        "navieras y transporte marítimo", "esclusas y calado del Canal",
+        "shipping canal transits ports",
     ),
     "turismo": (
-        "Turismo en Panamá: llegada de visitantes, hoteles, vuelos y cruceros",
-        "Tourism in Panama: visitors, hotels, airlines and cruises",
+        "llegada de turistas y visitantes", "ocupación hotelera", "vuelos y aerolíneas",
+        "cruceros y destinos turísticos", "tourism travel hotels",
     ),
     "servicios_publicos": (
-        "Servicios públicos en Panamá: agua potable, electricidad, salud, CSS y transporte",
-        "Public services in Panama: water supply, electricity, healthcare and transit",
+        "suministro de agua potable", "cortes de electricidad",
+        "hospitales y Caja de Seguro Social", "transporte público y metro",
+        "recolección de basura", "escuelas y educación pública",
     ),
     "eventos_naturales": (
-        "Eventos naturales en Panamá: sismos, lluvias, inundaciones, sequía y deslizamientos",
-        "Natural events in Panama: earthquakes, floods, drought and storms",
+        "sismo o terremoto", "lluvias e inundaciones", "sequía y falta de lluvia",
+        "deslizamientos y tormentas", "earthquake flood storm",
     ),
     "regulacion": (
-        "Regulación en Panamá: leyes, decretos, resoluciones de la Asamblea y superintendencias",
-        "Regulation in Panama: new laws, decrees and regulatory resolutions",
+        "nueva ley aprobada por la Asamblea", "decreto ejecutivo",
+        "resolución de la superintendencia", "reglamento y normativa",
+        "regulation law decree",
     ),
-}
+}  # fmt: skip
 
 # Valores iniciales; se calibran con evals/eval_organize.py sobre el set etiquetado.
 UMBRAL_TEMA = 0.80
@@ -124,7 +131,7 @@ def clasificar_por_palabras(texto: str) -> str:
 
 
 class ClasificadorPrototipos:
-    """Centroide normalizado por tema; argmax coseno con abstención por umbral y margen."""
+    """Vecino más cercano entre ejemplares por tema; abstención por umbral y margen."""
 
     def __init__(
         self,
@@ -138,19 +145,16 @@ class ClasificadorPrototipos:
         self._temas = tuple(prototipos)
         self._umbral = umbral
         self._margen = margen
-        centroides = [
-            codificador.codificar(list(textos), "passage").mean(axis=0)
-            for textos in prototipos.values()
+        self._ejemplares = [
+            codificador.codificar(list(textos), "passage") for textos in prototipos.values()
         ]
-        matriz = np.vstack(centroides)
-        self._centroides = matriz / np.linalg.norm(matriz, axis=1, keepdims=True)
 
     @property
     def metodo(self) -> str:
         return f"prototipos:{self._codificador.modelo}"
 
     def clasificar_vectores(self, vectores: Matriz) -> list[Clasificacion]:
-        similitudes = vectores @ self._centroides.T
+        similitudes = np.stack([(vectores @ m.T).max(axis=1) for m in self._ejemplares], axis=1)
         resultado: list[Clasificacion] = []
         for fila in similitudes:
             orden = np.argsort(fila)[::-1]
@@ -167,37 +171,32 @@ class ClasificadorPrototipos:
         return self.clasificar_vectores(self._codificador.codificar(textos, "passage"))
 
 
-class _UnionFind:
-    def __init__(self, n: int) -> None:
-        self._padre = list(range(n))
-
-    def raiz(self, i: int) -> int:
-        while self._padre[i] != i:
-            self._padre[i] = self._padre[self._padre[i]]
-            i = self._padre[i]
-        return i
-
-    def unir(self, a: int, b: int) -> None:
-        ra, rb = self.raiz(a), self.raiz(b)
-        if ra != rb:
-            self._padre[max(ra, rb)] = min(ra, rb)
-
-
 def agrupar_eventos(
     documentos: Sequence[Documento], vectores: Matriz, *, umbral: float, ventana_dias: float
 ) -> tuple[tuple[str, ...], ...]:
-    """Clusters de IDs ordenados; se unen documentos similares y cercanos en el tiempo."""
+    """Clusters de IDs ordenados por enlace **promedio** (no encadena eventos distintos).
+
+    Distancia = 1 − coseno; documentos fuera de la ventana temporal quedan a distancia 1.
+    """
     n = len(documentos)
-    conjuntos = _UnionFind(n)
-    similitudes = vectores @ vectores.T
-    segundos_ventana = ventana_dias * 86_400
-    for i in range(n):
-        for j in range(i + 1, n):
-            separacion = abs((documentos[i].fecha - documentos[j].fecha).total_seconds())
-            if similitudes[i, j] >= umbral and separacion <= segundos_ventana:
-                conjuntos.unir(i, j)
+    if n < 2:
+        return tuple((d.id,) for d in documentos)
+    marcas = np.array([d.fecha.timestamp() for d in documentos])
+    distancias = np.clip(1.0 - (vectores @ vectores.T), 0.0, 1.0).astype(np.float64)
+    distancias[np.abs(marcas[:, None] - marcas[None, :]) > ventana_dias * 86_400] = 1.0
+    np.fill_diagonal(distancias, 0.0)
+    etiquetas = AgglomerativeClustering(
+        n_clusters=None,
+        metric="precomputed",
+        linkage="average",
+        distance_threshold=1.0 - umbral,
+    ).fit_predict(distancias)
 
     grupos: dict[int, list[str]] = {}
-    for i, documento in enumerate(documentos):
-        grupos.setdefault(conjuntos.raiz(i), []).append(documento.id)
+    for etiqueta, documento in zip(etiquetas, documentos, strict=True):
+        grupos.setdefault(int(etiqueta), []).append(documento.id)
     return tuple(sorted(tuple(sorted(ids)) for ids in grupos.values()))
+
+
+UMBRAL_EVENTO = 0.90
+VENTANA_EVENTO_DIAS = 3.0

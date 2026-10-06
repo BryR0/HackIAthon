@@ -22,3 +22,8 @@ respaldo en la rama `parte-2/tvn-senal-decision`.
 | 2026-10-06 ~13:45 | GDELT responde 429 (límite 1 consulta / 5 s). Extracción con espera creciente en segundo plano | `extraccion.py` |
 | 2026-10-06 14:04 | Se quitan preguntas al organizador que el reto ya responde | `573596c` |
 | 2026-10-06 ~14:10 | Organizador: "avancen con el desarrollo, documenten todo"; Notion se habilita después. Se crea este espacio local | `docs/notion/` |
+| 2026-10-06 ~14:40 | Snapshot real: 3.758 noticias únicas → 3.049 en es/en (68 TVN), 540 indicadores, 82 sismos. GDELT: 22/30 consultas OK, 8 con 429 registradas en el manifest | `8506a5c` |
+| 2026-10-06 ~14:40 | **Decisión:** descripciones del RSS de TVN fuera del snapshot hasta autorización (reto §6 A: "usar inicialmente los metadatos") | `catalogo.USAR_EXTRACTOS_TVN` |
+| 2026-10-06 ~14:50 | **Prueba fallida (calibración):** prototipos con "Panamá" daban margen mediano 0,008 entre temas y `servicios_publicos` casi nunca salía (4/3049). **Corrección:** ejemplares sin topónimo + vecino más cercano | `organize.py` |
+| 2026-10-06 ~14:50 | **Prueba fallida (calibración):** enlace simple encadenaba eventos (cluster de 1.327 noticias a umbral 0,90). **Corrección:** enlace promedio, distancia 0,10 → clusters coherentes (p. ej. 39 notas de la visita Mulino–Sheinbaum) | `organize.py` |
+| 2026-10-06 ~14:50 | Anti-inyección: saneo, delimitador aleatorio y detector de instrucciones incrustadas (T07) | `seguridad.py` |
