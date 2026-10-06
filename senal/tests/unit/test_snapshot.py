@@ -9,6 +9,7 @@ from senal.snapshot import construir_snapshot
 RSS = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel><language>es</language>
 <item><title>Titular reciente</title>
+<description>Extracto que no se redistribuye</description>
 <link>https://www.tvn-2.com/nacionales/reciente_1_1.html</link>
 <pubDate>Mon, 05 Oct 2026 10:00:00 +0000</pubDate></item>
 <item><title>Titular viejo recirculado</title>
@@ -24,6 +25,13 @@ GDELT = {
             "seendate": "20261005T120000Z",
             "domain": "tvn-2.com",
             "language": "Spanish",
+        },
+        {
+            "url": "https://www.sina.com.cn/panama",
+            "title": "巴拿马运河",
+            "seendate": "20261002T080000Z",
+            "domain": "sina.com.cn",
+            "language": "Chinese",
         },
         {
             "url": "https://www.prensa.com/canal/sintetico",
@@ -119,13 +127,15 @@ def test_noticias_deduplicadas_entre_fuentes_y_viejas_excluidas(tmp_path: Path) 
     assert sorted(n["titulo"] for n in noticias) == ["Canal sintético", "Titular reciente"]
     reciente = next(n for n in noticias if n["titulo"] == "Titular reciente")
     assert reciente["origen"] == "tvn_rss"
+    assert reciente["descripcion"] == ""
+    assert reciente["alcance_texto"] == "titular_metadatos"
     assert reciente["fecha_publicacion"] == "2026-10-05T10:00:00+00:00"
     gdelt = next(n for n in noticias if n["origen"].startswith("gdelt"))
     assert gdelt["fecha_publicacion"] == ""
     assert gdelt["fecha_deteccion"] == "2026-10-01T08:00:00+00:00"
 
     motivos = sorted(e["motivo"] for e in _leer_csv(tmp_path / "out" / "excluidos.csv"))
-    assert motivos == ["fuera_de_ventana", "url_duplicada"]
+    assert motivos == ["fuera_de_ventana", "idioma_no_soportado", "url_duplicada"]
 
 
 def test_indicadores_cubren_la_cuadricula_completa_con_nulos(tmp_path: Path) -> None:
@@ -165,6 +175,7 @@ def test_reporte_de_calidad_cuenta_validas_y_excluidas_por_motivo(tmp_path: Path
     assert reporte["noticias"]["validas"] == 2
     assert reporte["noticias"]["excluidas_por_motivo"] == {
         "fuera_de_ventana": 1,
+        "idioma_no_soportado": 1,
         "url_duplicada": 1,
     }
     assert reporte["noticias"]["por_origen"] == {"gdelt_doc:economia": 1, "tvn_rss": 1}

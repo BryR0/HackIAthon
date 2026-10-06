@@ -23,6 +23,10 @@ INDICADORES = {
 }
 
 TVN_RSS_URL = "https://www.tvn-2.com/rss/"
+# Reto §6 A: en TVN usar inicialmente metadatos; extractos solo con autorización
+# explícita del patrocinador (pregunta 13 al organizador). Mientras sea False,
+# la descripción del RSS queda en raw/ y no entra al snapshot.
+USAR_EXTRACTOS_TVN = False
 GDELT_DOC_URL = "https://api.gdeltproject.org/api/v2/doc/doc"
 WORLDBANK_URL = "https://api.worldbank.org/v2/country/{paises}/indicator/{indicador}"
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"

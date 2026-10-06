@@ -54,3 +54,4 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 senal/.pytest_tmp/
+senal/data/raw/

@@ -55,11 +55,15 @@ COLUMNAS_INDICADORES = (
     "licencia",
 )
 COLUMNAS_EXCLUIDOS = ("tipo", "motivo", "campo", "referencia", "fila")
+# La revisión editorial es en español/inglés; otros idiomas se excluyen y se registran.
+IDIOMAS_SOPORTADOS = frozenset({"es", "en"})
 TRANSFORMACIONES = (
     "Fechas a UTC ISO 8601; seendate de GDELT solo como fecha_deteccion",
     "URL normalizada (host en minúsculas, sin parámetros utm/fbclid, sin barra final)",
     "Deduplicación por URL normalizada; prioridad TVN RSS sobre GDELT",
     "Exclusión de noticias fuera de la ventana de extracción",
+    "Exclusión de noticias en idiomas distintos de español e inglés",
+    "Descripción del RSS de TVN omitida hasta autorización del patrocinador (solo metadatos)",
     "Cuadrícula país × indicador × año completada con valor nulo",
     "Unidad del Banco Mundial derivada del nombre del indicador cuando 'unit' viene vacío",
 )
@@ -146,6 +150,7 @@ def _geojson(eventos: Sequence[dict[str, Any]]) -> dict[str, Any]:
 
 
 def _fila_noticia(n: Noticia) -> tuple[object, ...]:
+    con_extracto = catalogo.USAR_EXTRACTOS_TVN or n.origen != "tvn_rss"
     return (
         n.id_noticia,
         n.titulo,
@@ -157,8 +162,8 @@ def _fila_noticia(n: Noticia) -> tuple[object, ...]:
         _iso(n.fecha_extraccion),
         n.tema,
         n.origen,
-        n.alcance_texto,
-        n.descripcion,
+        n.alcance_texto if con_extracto else "titular_metadatos",
+        n.descripcion if con_extracto else None,
     )
 
 
@@ -178,6 +183,20 @@ def _fila_indicador(i: Indicador) -> tuple[object, ...]:
 def _fila_exclusion(tipo: str, e: Exclusion) -> tuple[object, ...]:
     referencia = e.fila.get("url") or e.fila.get("indicador_id") or ""
     return (tipo, e.motivo, e.campo, referencia, json.dumps(dict(e.fila), ensure_ascii=False))
+
+
+def _filtrar_idioma(
+    noticias: Iterable[Noticia],
+) -> tuple[list[Noticia], list[Exclusion]]:
+    soportadas: list[Noticia] = []
+    excluidas: list[Exclusion] = []
+    for n in noticias:
+        if (n.idioma or "") in IDIOMAS_SOPORTADOS:
+            soportadas.append(n)
+        else:
+            fila = {"url": n.url, "titulo": n.titulo, "idioma": n.idioma, "origen": n.origen}
+            excluidas.append(Exclusion("idioma_no_soportado", "idioma", fila))
+    return soportadas, excluidas
 
 
 def _reporte(
@@ -212,7 +231,9 @@ def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
     )
 
     noticias_res = validar_noticias(_filas_noticias(raw, registro, corte), ventana)
-    noticias = sorted(noticias_res.validas, key=lambda n: n.id_noticia)
+    soportadas, por_idioma = _filtrar_idioma(noticias_res.validas)
+    noticias = sorted(soportadas, key=lambda n: n.id_noticia)
+    excluidas_noticias = [*noticias_res.excluidos, *por_idioma]
     indicadores_res = validar_indicadores(_filas_indicadores(raw, registro, corte))
     indicadores = completar_cuadricula(
         indicadores_res.validas,
@@ -223,7 +244,7 @@ def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
         fecha_extraccion=corte,
     )
     eventos = _eventos(raw, registro)
-    excluidos = [_fila_exclusion("noticia", e) for e in noticias_res.excluidos] + [
+    excluidos = [_fila_exclusion("noticia", e) for e in excluidas_noticias] + [
         _fila_exclusion("indicador", e) for e in indicadores_res.excluidos
     ]
 
@@ -232,9 +253,7 @@ def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
         "indicadores.csv": _csv(COLUMNAS_INDICADORES, map(_fila_indicador, indicadores)),
         "eventos.geojson": _json(_geojson(eventos)),
         "excluidos.csv": _csv(COLUMNAS_EXCLUIDOS, excluidos),
-        "reporte_calidad.json": _json(
-            _reporte(noticias, noticias_res.excluidos, indicadores, eventos)
-        ),
+        "reporte_calidad.json": _json(_reporte(noticias, excluidas_noticias, indicadores, eventos)),
     }
     salida.mkdir(parents=True, exist_ok=True)
     for nombre, contenido in contenidos.items():
