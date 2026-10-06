@@ -46,3 +46,10 @@ next-start.log
 
 # Logs de sondas locales
 dev-probe.log
+
+# Parte 2 (senal/): entorno Python y datos crudos regenerables
+senal/.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
