@@ -77,6 +77,30 @@ def test_fecha_deteccion_nula_se_conserva_como_nula_y_distinta_de_publicacion() 
     assert noticia.fecha_publicacion == datetime(2026, 9, 15, 14, 0, tzinfo=UTC)
 
 
+def test_gdelt_sin_fecha_de_publicacion_usa_deteccion_sin_mezclarlas() -> None:
+    fila = _noticia(
+        url="https://prensa.com/a",
+        origen="gdelt_doc",
+        fecha_publicacion=None,
+        fecha_deteccion="20260915T153000Z",
+    )
+
+    noticia = validar_noticias([fila], VENTANA).validas[0]
+
+    assert noticia.fecha_publicacion is None
+    assert noticia.fecha_deteccion == datetime(2026, 9, 15, 15, 30, tzinfo=UTC)
+    assert noticia.fecha_referencia == noticia.fecha_deteccion
+
+
+def test_sin_fecha_de_publicacion_ni_deteccion_se_excluye() -> None:
+    fila = _noticia(fecha_publicacion=None, fecha_deteccion=None)
+
+    resultado = validar_noticias([fila], VENTANA)
+
+    assert resultado.excluidos[0].motivo == "campo_obligatorio"
+    assert resultado.excluidos[0].campo == "fecha_publicacion"
+
+
 def test_fechas_con_zona_se_normalizan_a_utc() -> None:
     resultado = validar_noticias(
         [_noticia(fecha_publicacion="Mon, 15 Sep 2026 09:00:00 -0500")], VENTANA

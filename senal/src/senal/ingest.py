@@ -17,7 +17,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 Fila = Mapping[str, str | None]
 
-CAMPOS_OBLIGATORIOS_NOTICIA = ("titulo", "url", "medio", "fecha_publicacion", "origen")
+CAMPOS_OBLIGATORIOS_NOTICIA = ("titulo", "url", "medio", "origen")
 PARAMETROS_DE_RASTREO = ("utm_", "fbclid", "gclid", "ocid")
 FORMATO_GDELT = "%Y%m%dT%H%M%SZ"
 
@@ -47,12 +47,21 @@ class Noticia:
     url: str
     medio: str
     idioma: str | None
-    fecha_publicacion: datetime
+    fecha_publicacion: datetime | None
     fecha_deteccion: datetime | None
     fecha_extraccion: datetime | None
     origen: str
     alcance_texto: str | None
     tema: str | None = None
+    descripcion: str | None = None
+
+    @property
+    def fecha_referencia(self) -> datetime:
+        """Publicación si existe; si no, detección (GDELT). Nunca ambas mezcladas."""
+        referencia = self.fecha_publicacion or self.fecha_deteccion
+        if referencia is None:  # pragma: no cover - la validación lo impide
+            raise ValueError(f"{self.id_noticia} sin fecha")
+        return referencia
 
 
 @dataclass(frozen=True)
@@ -143,9 +152,11 @@ def _construir_noticia(fila: Fila, ventana: Ventana) -> Noticia:
         raise _FilaInvalida("url_invalida", "url")
 
     publicacion = _fecha_opcional(fila, "fecha_publicacion")
-    if publicacion is None:
+    deteccion = _fecha_opcional(fila, "fecha_deteccion")
+    referencia = publicacion or deteccion
+    if referencia is None:
         raise _FilaInvalida("campo_obligatorio", "fecha_publicacion")
-    if not ventana.contiene(publicacion):
+    if not ventana.contiene(referencia):
         raise _FilaInvalida("fuera_de_ventana", "fecha_publicacion")
 
     return Noticia(
@@ -155,11 +166,12 @@ def _construir_noticia(fila: Fila, ventana: Ventana) -> Noticia:
         medio=_texto(fila, "medio") or "",
         idioma=_texto(fila, "idioma"),
         fecha_publicacion=publicacion,
-        fecha_deteccion=_fecha_opcional(fila, "fecha_deteccion"),
+        fecha_deteccion=deteccion,
         fecha_extraccion=_fecha_opcional(fila, "fecha_extraccion"),
         origen=_texto(fila, "origen") or "",
         alcance_texto=_texto(fila, "alcance_texto"),
         tema=_texto(fila, "tema"),
+        descripcion=_texto(fila, "descripcion"),
     )
 
 
