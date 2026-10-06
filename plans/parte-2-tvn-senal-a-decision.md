@@ -393,14 +393,14 @@ Las pruebas nunca llaman a la red: proveedor y embeddings con dobles.
 | Paso | Estado | Evidencia |
 |---|---|---|
 | Validación del plan | Hecha | §0 |
-| Cotejo con PDF original | Hecho | §6.1, §6.2, Gate 0 |
-| Gate 0 | Cerrado (pendiente respuestas del organizador) | `docs/adr/0002-parte-2-senal-stack-y-reglas.md`, `docs/parte-2-preguntas-organizador.md` |
-| Paso 1 — Snapshot | En curso: código verde, extracción GDELT lenta por 429 | `senal/src/senal/{ingest,fuentes,extraccion,snapshot}.py`; T01 |
-| Paso 2 — Etiquetado y benchmark | Pendiente | — |
-| Paso 3 — Organizar + rebanada | Código verde; falta eval con etiquetas humanas y UI | `organize.py`, `embed.py`; T02 |
-| Paso 4 — Contexto, puntaje, contradicciones | Parcial: puntaje y evidencia verdes | `score.py`, `evidence.py`; T08, CU-03 |
-| Paso 5 — Consulta y abstención | Pendiente | — |
-| Paso 6 — Generación con citas | Pendiente | — |
-| Paso 7 — Interfaz | Pendiente | — |
-| Paso 8 — Pruebas, métricas y Notion | Pendiente | — |
-| Paso 9 — Entrega y pitch | Pendiente | — |
+| Cotejo con PDF original | Hecho | §6.1, §6.2 |
+| Gate 0 | Cerrado (Notion pendiente del organizador) | ADR 0002, `docs/parte-2-preguntas-organizador.md` |
+| Paso 1 — Snapshot | Verde | 3.049 noticias (68 TVN), 540 indicadores, 82 sismos; T01 |
+| Paso 2 — Etiquetado y benchmark | Parcial: benchmark dev 40 casos (borrador); planillas listas; falta etiquetado humano y set reservado | `senal/evals/` |
+| Paso 3 — Organizar + rebanada | Verde (macro-F1 pendiente de etiquetas) | `organize.py`; T02 |
+| Paso 4 — Contexto, puntaje, contradicciones | Verde | T04, T05, T08, CU-03; reglas `senal-1.1.0` |
+| Paso 5 — Consulta y abstención | Verde | T06; abstención 7/7 |
+| Paso 6 — Generación con citas | Verde | T07, T09; cobertura de citas 100 % |
+| Paso 7 — Interfaz | Verde | `senal/src/senal/web/`; `tests/web/` |
+| Paso 8 — Pruebas, métricas y Notion | Verde en código y registro local; pendiente métricas humanas y migración a Notion | `docs/notion/` |
+| Paso 9 — Entrega y pitch | Parcial: README, `server_start`, guion de pitch; falta ensayo offline y acceso del jurado | `senal/README.md`, `docs/notion/07-…` |
