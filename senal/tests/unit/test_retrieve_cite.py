@@ -151,3 +151,30 @@ def test_campo_no_citable_se_descarta() -> None:
     resultado = validar_afirmaciones([_afirmacion("Lo publicó TVN.", ("N-1", "url"))], EVIDENCIAS)
 
     assert resultado.descartadas[0].motivo == "campo_no_citable"
+
+
+def test_numeros_con_varios_separadores_no_rompen_el_validador() -> None:
+    evidencias = (
+        Evidencia(
+            "N-d", "noticia", {"titulo": "Decreto 2.3.4 del 06.10.2026 fija 1.234,5 tarifas"}
+        ),
+    )
+    textos = ["Decreto 2.3.4 publicado", "El 06.10.2026 se fijó", "Hubo 1.234,5 tarifas", "v1,2,3"]
+
+    resultado = validar_afirmaciones(
+        [_afirmacion(t, ("N-d", "titulo")) for t in textos], evidencias
+    )
+
+    assert len(resultado.aceptadas) + len(resultado.descartadas) == 4
+
+
+def test_palabras_parecidas_no_cuentan_como_acusacion() -> None:
+    evidencias = (
+        Evidencia("N-r", "noticia", {"titulo": "Fábrica de robots y lavadoras abre en Colón"}),
+    )
+
+    resultado = validar_afirmaciones(
+        [_afirmacion("Abre una fábrica de robots y lavadoras.", ("N-r", "titulo"))], evidencias
+    )
+
+    assert len(resultado.aceptadas) == 1

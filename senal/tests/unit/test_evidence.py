@@ -63,3 +63,9 @@ def test_estado_de_evidencia_es_independiente_del_puntaje() -> None:
     assert estado_evidencia(1, fuente_oficial=False) == "parcial"
     assert estado_evidencia(2, fuente_oficial=False) == "suficiente_para_borrador"
     assert estado_evidencia(1, fuente_oficial=True) == "suficiente_para_borrador"
+
+
+def test_dominio_oficial_no_se_suplanta_con_sufijo() -> None:
+    assert not es_fuente_oficial("https://evilworldbank.org/x")
+    assert not es_fuente_oficial("https://notpancanal.com/x")
+    assert es_fuente_oficial("https://data.worldbank.org/x")

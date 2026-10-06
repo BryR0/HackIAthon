@@ -20,6 +20,8 @@ from senal.cite import (
     AfirmacionPropuesta,
     CitaPropuesta,
     Descartada,
+    ResultadoCitas,
+    cifras_respaldadas,
     debe_abstenerse,
     validar_afirmaciones,
 )
@@ -41,6 +43,8 @@ MAX_PALABRAS_BRIEF = 250
 MAX_PALABRAS_COPY = 80
 GUION_PALABRAS = (110, 150)  # 45–60 s a ~2,5 palabras por segundo
 PREGUNTAS_REQUERIDAS = 3
+MAX_EVIDENCIAS_PROMPT = 20
+_FIN_DE_FRASE = re.compile(r"(?<=[.!?…])\s+")
 EXTRACTIVO = ("extractivo", "plantilla-v1")
 _ANIO = re.compile(r"\b(?:19|20)\d{2}\b")
 _CITA_TEXTUAL = re.compile(r"[«\"“]([^»\"”]{12,})[»\"”]")
@@ -153,15 +157,26 @@ def _recortar(texto: str, maximo: int) -> str:
     return texto if len(palabras) <= maximo else " ".join(palabras[:maximo]) + "…"
 
 
-def _afirmacion_extractiva(e: Evidencia) -> _Afirmacion:
+_REQUERIDOS_EXTRACTIVO = {
+    "noticia": ("titulo",),
+    "indicador": ("nombre", "valor", "anio"),
+    "sismo": ("magnitude", "place", "time"),
+}
+
+
+def _afirmacion_extractiva(e: Evidencia) -> _Afirmacion | None:
+    """Afirmación atribuida que copia campos citados; ``None`` si faltan campos clave."""
     c = e.campos
+    if any(not c.get(k) or c.get(k) == "None" for k in _REQUERIDOS_EXTRACTIVO.get(e.tipo, ("_",))):
+        return None
     if e.tipo == "noticia":
-        texto = f"{c.get('medio', 'Un medio')} publicó: «{c['titulo']}»."
+        texto = f"{c.get('medio') or 'Un medio'} publicó: «{c['titulo']}»."
         campos = ["titulo", "medio"]
     elif e.tipo == "indicador":
+        pais = c.get("pais") or c.get("pais_iso3", "")
         texto = (
-            f"Según el Banco Mundial, {c['nombre']} de {c.get('pais') or c.get('pais_iso3', '')} "
-            f"fue {c['valor']} ({c.get('unidad', '')}) en {c['anio']}; es un dato anual, no actual."
+            f"Según el Banco Mundial, {c['nombre']} de {pais} fue {c['valor']} "
+            f"({c.get('unidad', '')}) en {c['anio']}; es un dato anual, no actual."
         )
         campos = ["nombre", "pais", "valor", "unidad", "anio"]
     else:
@@ -173,9 +188,12 @@ def _afirmacion_extractiva(e: Evidencia) -> _Afirmacion:
 
 def _paquete_extractivo(consulta: str, evidencias: Sequence[Evidencia]) -> Paquete:
     """Sin LLM: solo copia campos citados, atribuidos. Menos fluido, nunca inventa."""
-    afirmaciones = [_afirmacion_extractiva(e) for e in evidencias]
+    afirmaciones = [a for a in map(_afirmacion_extractiva, evidencias) if a is not None]
     cuerpo = " ".join(a.texto for a in afirmaciones)
-    primera = next((e.campos["titulo"] for e in evidencias if e.tipo == "noticia"), consulta)
+    primera = next(
+        (e.campos["titulo"] for e in evidencias if e.tipo == "noticia" and e.campos.get("titulo")),
+        consulta,
+    )
     return Paquete(
         titulo=primera,
         enfoque_interes_publico=(
@@ -215,17 +233,29 @@ def _ajustar_formato(
 
         return _CITA_TEXTUAL.sub(reemplazo, texto)
 
-    brief = sin_citas_inventadas(paquete.brief)
+    def solo_cifras_respaldadas(texto: str) -> str:
+        """El texto libre también se verifica: una frase con una cifra o año que no está
+        en la evidencia se elimina (no solo las afirmaciones estructuradas)."""
+        frases = _FIN_DE_FRASE.split(texto.strip())
+        conservadas = [f for f in frases if cifras_respaldadas(f, [corpus])]
+        if len(conservadas) < len(frases):
+            avisos.append("Frase con cifra sin respaldo eliminada del texto libre")
+        return " ".join(conservadas)
+
+    def verificar(texto: str) -> str:
+        return solo_cifras_respaldadas(sin_citas_inventadas(texto))
+
+    brief = verificar(paquete.brief)
     if len(brief.split()) > MAX_PALABRAS_BRIEF - 6:
         avisos.append(f"Brief recortado a {MAX_PALABRAS_BRIEF} palabras")
         brief = _recortar(brief, MAX_PALABRAS_BRIEF - 6)
     if any(e.tipo == "noticia" for e in evidencias) and FRASE_SOLO_METADATOS not in brief:
         brief = f"{brief} {FRASE_SOLO_METADATOS}"
-    copy = sin_citas_inventadas(paquete.copy_digital)
+    copy = verificar(paquete.copy_digital)
     if len(copy.split()) > MAX_PALABRAS_COPY:
         avisos.append(f"Copy recortado a {MAX_PALABRAS_COPY} palabras")
         copy = _recortar(copy, MAX_PALABRAS_COPY)
-    guion = sin_citas_inventadas(paquete.guion)
+    guion = verificar(paquete.guion)
     if not GUION_PALABRAS[0] <= len(guion.split()) <= GUION_PALABRAS[1]:
         avisos.append(f"Guion de {len(guion.split())} palabras (meta 110–150)")
     if len(paquete.preguntas) != PREGUNTAS_REQUERIDAS:
@@ -257,21 +287,32 @@ def _propuestas(paquete: Paquete) -> list[AfirmacionPropuesta]:
     ]
 
 
+@dataclass(frozen=True)
+class _Borrador:
+    paquete: Paquete
+    uso: RespuestaLLM | None
+    del_modelo: bool
+    avisos: tuple[str, ...]
+
+
 def _redactar(
     consulta: str, evidencias: Sequence[Evidencia], proveedor: ProveedorLLM | None
-) -> tuple[Paquete, RespuestaLLM | None, list[str]]:
-    """LLM si hay y responde bien; si no, plantilla extractiva con aviso."""
+) -> _Borrador:
+    """LLM si hay y responde bien; si no, plantilla extractiva con aviso.
+
+    Si la llamada se cobró pero la salida no sirve, el uso de tokens se conserva."""
     if proveedor is None:
-        return _paquete_extractivo(consulta, evidencias), None, []
+        return _Borrador(_paquete_extractivo(consulta, evidencias), None, False, ())
     sistema, usuario, _ = construir_prompt(consulta, evidencias)
+    uso: RespuestaLLM | None = None
     try:
         uso = proveedor.generar(sistema, usuario)
-        return Paquete.model_validate_json(uso.texto), uso, []
-    except ValidationError:
+        return _Borrador(Paquete.model_validate_json(uso.texto), uso, True, ())
+    except (ValidationError, ValueError):
         aviso = "La salida del modelo no es JSON válido del esquema; se usó la plantilla"
-    except httpx.HTTPError as error:
+    except (httpx.HTTPError, KeyError, IndexError, TypeError) as error:
         aviso = f"El proveedor falló ({type(error).__name__}); se usó la plantilla"
-    return _paquete_extractivo(consulta, evidencias), None, [aviso]
+    return _Borrador(_paquete_extractivo(consulta, evidencias), uso, False, (aviso,))
 
 
 def _abstencion(consulta: str, modo: str) -> ResultadoRespuesta:
@@ -350,26 +391,48 @@ def responder(
     unicas = {e.id: e for e in [*obligatorias, *(r.evidencia for r in relevantes)]}
     # Fuentes con instrucciones incrustadas se señalan y no alimentan el borrador (T07).
     sospechosas = tuple(i for i, e in unicas.items() if es_sospechoso(e.texto))
-    evidencias = [e for i, e in unicas.items() if i not in sospechosas]
+    evidencias = [e for i, e in unicas.items() if i not in sospechosas][:MAX_EVIDENCIAS_PROMPT]
     if not evidencias:
         return _abstencion(consulta, buscador.modo)
-    paquete, uso, avisos = _redactar(consulta, evidencias, proveedor)
-    nombre, modelo = (uso.proveedor, uso.modelo) if uso else EXTRACTIVO
-    paquete, avisos_formato = _ajustar_formato(paquete, evidencias)
+    return _resultado(consulta, buscador.modo, evidencias, sospechosas, proveedor)
+
+
+def _validado(
+    consulta: str, evidencias: Sequence[Evidencia], proveedor: ProveedorLLM | None
+) -> tuple[_Borrador, Paquete, ResultadoCitas, tuple[Descartada, ...], list[str]]:
+    """Redacta y valida; si el modelo no deja ninguna afirmación respaldada, usa la
+    plantilla extractiva (abstenerse es para falta de evidencia, no para un mal borrador)."""
+    borrador = _redactar(consulta, evidencias, proveedor)
+    paquete, avisos = _ajustar_formato(borrador.paquete, evidencias)
     validacion = validar_afirmaciones(_propuestas(paquete), evidencias)
     descartadas_modelo: tuple[Descartada, ...] = ()
-    if not validacion.aceptadas and uso is not None:
-        # Hay evidencia pero el modelo no dejó ninguna afirmación respaldada: se muestra
-        # lo descartado y se recurre a la plantilla extractiva (abstenerse es para falta de
-        # evidencia, no para un mal borrador).
-        avisos.append("El modelo no produjo afirmaciones respaldadas; se usó la plantilla")
+    if not validacion.aceptadas and borrador.del_modelo:
         descartadas_modelo = validacion.descartadas
-        nombre, modelo = EXTRACTIVO
-        paquete, avisos_formato = _ajustar_formato(
-            _paquete_extractivo(consulta, evidencias), evidencias
+        borrador = _Borrador(
+            _paquete_extractivo(consulta, evidencias),
+            borrador.uso,
+            False,
+            ("El modelo no produjo afirmaciones respaldadas; se usó la plantilla",),
         )
+        paquete, avisos = _ajustar_formato(borrador.paquete, evidencias)
         validacion = validar_afirmaciones(_propuestas(paquete), evidencias)
+    return borrador, paquete, validacion, descartadas_modelo, [*borrador.avisos, *avisos]
+
+
+def _resultado(
+    consulta: str,
+    modo: str,
+    evidencias: Sequence[Evidencia],
+    sospechosas: tuple[str, ...],
+    proveedor: ProveedorLLM | None,
+) -> ResultadoRespuesta:
+    borrador, paquete, validacion, descartadas_modelo, avisos = _validado(
+        consulta, evidencias, proveedor
+    )
+    uso = borrador.uso
+    nombre, modelo = (uso.proveedor, uso.modelo) if uso and borrador.del_modelo else EXTRACTIVO
     abstencion = not validacion.aceptadas
+    titulos = [Afirmacion(e.id, e.campos.get("titulo", "")) for e in evidencias]
     return ResultadoRespuesta(
         consulta=consulta,
         abstencion=abstencion,
@@ -382,16 +445,12 @@ def responder(
         evidencias=tuple(evidencias),
         proveedor=nombre,
         modelo=modelo,
-        modo_busqueda=buscador.modo,
+        modo_busqueda=modo,
         tokens_entrada=uso.tokens_entrada if uso else 0,
         tokens_salida=uso.tokens_salida if uso else 0,
         latencia_s=uso.latencia_s if uso else 0.0,
         costo_usd=uso.costo_usd if uso else 0.0,
-        avisos=tuple(avisos + avisos_formato),
-        contradicciones=tuple(
-            detectar_contradicciones(
-                [Afirmacion(e.id, e.campos.get("titulo", "")) for e in evidencias]
-            )
-        ),
+        avisos=tuple(avisos),
+        contradicciones=tuple(detectar_contradicciones(titulos)),
         sospechosas=sospechosas,
     )

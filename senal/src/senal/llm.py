@@ -82,11 +82,15 @@ class ProveedorGemini:
         )
         respuesta.raise_for_status()
         datos = respuesta.json()
-        partes = datos["candidates"][0]["content"].get("parts", [])
+        candidatos = datos.get("candidates") or []
+        if not candidatos:  # p. ej. bloqueo de seguridad: se trata como fallo del proveedor
+            raise ValueError("Gemini no devolvió candidatos")
+        partes = candidatos[0].get("content", {}).get("parts", [])
         texto = "".join(p.get("text", "") for p in partes)
         uso = datos.get("usageMetadata", {})
         entrada = int(uso.get("promptTokenCount", 0))
-        salida = int(uso.get("candidatesTokenCount", 0))
+        # Los tokens de razonamiento se facturan como salida.
+        salida = int(uso.get("candidatesTokenCount", 0)) + int(uso.get("thoughtsTokenCount", 0))
         latencia = time.perf_counter() - inicio
         costo = _costo(entrada, salida)
         return RespuestaLLM(texto, self.nombre, self.modelo, entrada, salida, latencia, costo)

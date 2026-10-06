@@ -56,8 +56,12 @@ def agencia(texto: str) -> str | None:
 
 
 def es_fuente_oficial(url: str) -> bool:
-    dominio = dominio_canonico(url)
-    return any(dominio == d.lstrip(".") or dominio.endswith(d) for d in DOMINIOS_OFICIALES)
+    """Dominio exacto o subdominio real (``data.worldbank.org``); ``evilworldbank.org`` no."""
+    host = (urlsplit(url).hostname or "").lower()
+    return any(
+        host == base or host.endswith("." + base)
+        for base in (d.lstrip(".") for d in DOMINIOS_OFICIALES)
+    )
 
 
 def _jaccard(a: str, b: str) -> float:

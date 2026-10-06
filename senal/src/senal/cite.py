@@ -26,11 +26,14 @@ CAMPOS_CITABLES: Mapping[str, frozenset[str]] = {
     "indicador": frozenset({"nombre", "pais", "pais_iso3", "anio", "valor", "unidad"}),
     "sismo": frozenset({"magnitude", "time", "place"}),
 }
-PALABRAS_ACUSACION = (
-    "enriquecimiento", "corrupcion", "corrupto", "culpable", "delito", "fraude", "peculado",
-    "lavado", "robo", "soborno", "asesino", "cometio", "malversacion", "estafa",
+# Palabras completas y raíces: "robo" no debe coincidir con "robot" ni "lavado" con "lavadora".
+PALABRAS_ACUSACION = frozenset(
+    {"culpable", "culpables", "delito", "delitos", "fraude", "robo", "soborno", "sobornos",
+     "asesino", "asesinos", "estafa", "estafas", "cometio", "lavado"}
 )  # fmt: skip
+RAICES_ACUSACION = ("enriquecimiento", "corrup", "peculado", "malversacion")
 _NUMERO = re.compile(r"\d+(?:[.,]\d+)*")
+_MILES_ES = re.compile(r"\d{1,3}(?:\.\d{3})+(?:,\d+)?")
 
 
 @dataclass(frozen=True)
@@ -58,14 +61,28 @@ class ResultadoCitas:
     descartadas: tuple[Descartada, ...]
 
 
-def _numeros(texto: str) -> list[tuple[float, int]]:
-    """Cifras con su cantidad de decimales, para comparar con la precisión de la afirmación."""
-    resultado: list[tuple[float, int]] = []
-    for crudo in _NUMERO.findall(texto):
+def _valores(crudo: str) -> list[tuple[float, int]]:
+    """Interpreta una secuencia numérica: miles es-PA (1.234,5), decimal simple (2,5 o 2.5)
+    o, si tiene varios separadores ambiguos (06.10.2026, 2.3.4), cada parte por separado."""
+    if _MILES_ES.fullmatch(crudo):
+        entero, _, fraccion = crudo.partition(",")
+        valor = float(entero.replace(".", "") + ("." + fraccion if fraccion else ""))
+        return [(valor, len(fraccion))]
+    if crudo.count(".") + crudo.count(",") <= 1:
         valor = normalizar_numero(crudo)
         decimales = 0 if valor.is_integer() else len(crudo.replace(",", ".").split(".")[-1])
-        resultado.append((valor, decimales))
-    return resultado
+        return [(valor, decimales)]
+    return [(float(parte), 0) for parte in re.split(r"[.,]", crudo) if parte]
+
+
+def _numeros(texto: str) -> list[tuple[float, int]]:
+    """Cifras con su cantidad de decimales, para comparar con la precisión de la afirmación."""
+    return [par for crudo in _NUMERO.findall(texto) for par in _valores(crudo)]
+
+
+def cifras_respaldadas(texto: str, fuentes: Sequence[str]) -> bool:
+    """Toda cifra o año de ``texto`` aparece en alguna de ``fuentes``."""
+    return _cifras_respaldadas(texto, fuentes)
 
 
 def _cifras_respaldadas(texto: str, fuentes: Sequence[str]) -> bool:
@@ -77,8 +94,8 @@ def _cifras_respaldadas(texto: str, fuentes: Sequence[str]) -> bool:
 
 
 def _es_acusacion(texto: str) -> bool:
-    relleno = f" {normalizar_texto(texto)} "
-    return any(f" {p}" in relleno for p in PALABRAS_ACUSACION)
+    tokens = normalizar_texto(texto).split()
+    return any(t in PALABRAS_ACUSACION or t.startswith(RAICES_ACUSACION) for t in tokens)
 
 
 def _motivo_descarte(

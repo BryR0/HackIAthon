@@ -215,3 +215,39 @@ def test_t04_anio_pedido_que_no_esta_en_la_evidencia_obliga_a_abstenerse() -> No
 
     assert responder("crecimiento del PIB de Panamá en 2026", buscador, None).abstencion
     assert not responder("crecimiento del PIB de Panamá en 2024", buscador, None).abstencion
+
+
+def test_cifra_inventada_en_texto_libre_se_elimina_con_aviso() -> None:
+    inventado = dict(PAQUETE_VALIDO)
+    inventado["guion"] = (
+        "El Canal aumentó a 33 los tránsitos diarios. El 40% de los buques es asiático."
+    )
+    r = responder("tránsitos del Canal", _buscador(), ProveedorFalso(json.dumps(inventado)))
+
+    assert r.paquete is not None
+    assert "40%" not in r.paquete.guion
+    assert "33" in r.paquete.guion
+    assert any("cifra sin respaldo" in a for a in r.avisos)
+
+
+class ProveedorQueFalla:
+    nombre = "roto"
+    modelo = "roto-1"
+
+    def generar(self, sistema: str, usuario: str) -> RespuestaLLM:
+        raise KeyError("candidates")
+
+
+def test_error_inesperado_del_proveedor_cae_a_plantilla() -> None:
+    r = responder("tránsitos del Canal", _buscador(), ProveedorQueFalla())
+
+    assert r.proveedor == "extractivo"
+    assert r.aceptadas
+    assert any("proveedor" in a.lower() for a in r.avisos)
+
+
+def test_salida_invalida_conserva_tokens_y_costo_medidos() -> None:
+    r = responder("tránsitos del Canal", _buscador(), ProveedorFalso("{no json"))
+
+    assert r.proveedor == "extractivo"
+    assert r.tokens_entrada == 100
