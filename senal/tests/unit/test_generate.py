@@ -167,3 +167,15 @@ def test_t06_coincidencia_de_una_sola_palabra_no_basta_para_responder() -> None:
 
     assert r.abstencion
     assert proveedor.llamadas == []
+
+
+def test_cu04_consulta_muestra_versiones_en_conflicto_sin_escoger() -> None:
+    evidencias = (
+        Evidencia("N-a", "noticia", {"titulo": "Lluvias dejan 3 muertos en Colón"}),
+        Evidencia("N-b", "noticia", {"titulo": "Lluvias dejan 5 muertos en Colón, según Sinaproc"}),
+    )
+
+    r = responder("muertos por lluvias en Colón", Buscador(evidencias, None), None)
+
+    assert len(r.contradicciones) == 1
+    assert sorted(v.valor for v in r.contradicciones[0].versiones) == [3.0, 5.0]

@@ -1,3 +1,8 @@
+{% for c in resultado.contradicciones %}
+<div class="aviso separado" role="note"><b>Versiones en conflicto ({{ c.unidad }}), revisión pendiente:</b>
+  {% for v in c.versiones %}<span class="etiqueta">{{ v.id_fuente }}: {{ v.fragmento }}</span>{% endfor %}
+  El sistema no escoge una versión.</div>
+{% endfor %}
 {% if resultado.abstencion %}
 <div class="aviso" role="status">
   <b>Abstención.</b> {{ resultado.motivo }}

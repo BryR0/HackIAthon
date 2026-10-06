@@ -23,6 +23,7 @@ from senal.cite import (
     debe_abstenerse,
     validar_afirmaciones,
 )
+from senal.contradict import Afirmacion, Contradiccion, detectar_contradicciones
 from senal.llm import ProveedorLLM, RespuestaLLM
 from senal.organize import normalizar_texto
 from senal.retrieve import Buscador, Evidencia, Resultado, tokenizar
@@ -109,6 +110,7 @@ class ResultadoRespuesta:
     latencia_s: float = 0.0
     costo_usd: float = 0.0
     avisos: tuple[str, ...] = field(default_factory=tuple)
+    contradicciones: tuple[Contradiccion, ...] = field(default_factory=tuple)
 
     @property
     def cobertura_citas(self) -> float:
@@ -363,4 +365,9 @@ def responder(
         latencia_s=uso.latencia_s if uso else 0.0,
         costo_usd=uso.costo_usd if uso else 0.0,
         avisos=tuple(avisos + avisos_formato),
+        contradicciones=tuple(
+            detectar_contradicciones(
+                [Afirmacion(e.id, e.campos.get("titulo", "")) for e in evidencias]
+            )
+        ),
     )
