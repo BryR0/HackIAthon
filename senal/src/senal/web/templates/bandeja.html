@@ -74,8 +74,8 @@
 </div>
 
 <nav class="paginas" aria-label="Paginación">
-  {% if pagina > 1 %}<a href="?tema={{ filtros.tema }}&banda={{ filtros.banda }}&evidencia={{ filtros.evidencia }}&pagina={{ pagina - 1 }}">← Anterior</a>{% endif %}
+  {% if pagina > 1 %}<a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina - 1 }}">← Anterior</a>{% endif %}
   <span>Página {{ pagina }}</span>
-  {% if pagina * por_pagina < total %}<a href="?tema={{ filtros.tema }}&banda={{ filtros.banda }}&evidencia={{ filtros.evidencia }}&pagina={{ pagina + 1 }}">Siguiente →</a>{% endif %}
+  {% if pagina * por_pagina < total %}<a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina + 1 }}">Siguiente →</a>{% endif %}
 </nav>
 {% endblock %}

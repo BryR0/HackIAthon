@@ -15,7 +15,13 @@ PROCESADO = Path(__file__).resolve().parents[2] / "data" / "processed"
 @pytest.fixture(scope="module")
 def cliente(tmp_path_factory: pytest.TempPathFactory) -> TestClient:
     revisiones = tmp_path_factory.mktemp("rev") / "reviews.jsonl"
-    config = Config(procesado=PROCESADO, revisiones=revisiones, usar_modelo=False, usar_llm=False)
+    config = Config(
+        procesado=PROCESADO,
+        revisiones=revisiones,
+        usar_modelo=False,
+        usar_llm=False,
+        hosts_permitidos=("testserver", "127.0.0.1", "localhost"),
+    )
     return TestClient(crear_app(config))
 
 
@@ -100,3 +106,14 @@ def test_calidad_muestra_manifest_y_desviaciones(cliente: TestClient) -> None:
     assert respuesta.status_code == 200
     assert "D6" in respuesta.text
     assert "SHA-256" in respuesta.text
+
+
+def test_host_no_permitido_se_rechaza(cliente: TestClient) -> None:
+    assert cliente.get("/", headers={"host": "evil.example"}).status_code == 400
+
+
+def test_cabeceras_de_seguridad_y_no_cache(cliente: TestClient) -> None:
+    respuesta = cliente.get("/")
+
+    assert respuesta.headers["cache-control"] == "no-store"
+    assert respuesta.headers["cross-origin-opener-policy"] == "same-origin"

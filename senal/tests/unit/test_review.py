@@ -52,3 +52,22 @@ def test_estado_invalido_o_revisor_vacio_se_rechazan(tmp_path: Path) -> None:
         registro.registrar(Revision("E-1", "publicado", "Ana", "", AHORA))
     with pytest.raises(ValueError, match="revisor"):
         registro.registrar(Revision("E-1", "en_revision", "  ", "", AHORA))
+
+
+def test_linea_corrupta_se_omite_y_no_rompe_la_bandeja(tmp_path: Path) -> None:
+    ruta = tmp_path / "reviews.jsonl"
+    registro = RegistroRevisiones(ruta)
+    registro.registrar(Revision("E-1", "en_revision", "Ana", "", AHORA))
+    with ruta.open("a", encoding="utf-8") as archivo:
+        archivo.write('{"id_caso": "E-1", "estado": \n')
+
+    assert registro.estado_actual("E-1") == "en_revision"
+
+
+def test_revision_guarda_los_ids_de_fuente_del_caso(tmp_path: Path) -> None:
+    ruta = tmp_path / "reviews.jsonl"
+    RegistroRevisiones(ruta).registrar(
+        Revision("E-1", "en_revision", "Ana", "", AHORA, ids_fuente=("N-1", "N-2"))
+    )
+
+    assert json.loads(ruta.read_text(encoding="utf-8"))["ids_fuente"] == ["N-1", "N-2"]

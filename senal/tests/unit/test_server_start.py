@@ -60,3 +60,9 @@ def test_reinstala_solo_si_cambia_requirements(tmp_path: Path) -> None:
     assert not ss.necesita_instalar(req, marca)
     req.write_text("fastapi==2\n", "utf-8")
     assert ss.necesita_instalar(req, marca)
+
+
+def test_puerto_valido_solo_ascii_y_no_privilegiado() -> None:
+    assert ss.validar_puerto("8765") == 8765
+    for invalido in ("80", "0", "70000", "８７６５", "abc", ""):
+        assert ss.validar_puerto(invalido) is None

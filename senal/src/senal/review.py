@@ -8,6 +8,9 @@ Cada cambio de estado queda en ``reviews.jsonl`` con revisor y fecha UTC.
 from __future__ import annotations
 
 import json
+import logging
+import os
+import threading
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
@@ -16,6 +19,9 @@ from typing import Any
 from senal.generate import ResultadoRespuesta
 from senal.ingest import parsear_fecha
 from senal.pipeline import Tema
+
+log = logging.getLogger(__name__)
+_CANDADO = threading.Lock()
 
 ESTADOS = ("nuevo", "en_revision", "requiere_evidencia", "aprobado_como_borrador", "descartado")
 MAX_NOTA = 1000
@@ -28,6 +34,9 @@ class Revision:
     revisor: str
     nota: str
     fecha_utc: datetime
+    # IDs de las noticias del caso al decidir: el ID del evento puede cambiar si el
+    # snapshot o los umbrales cambian; así la decisión sigue siendo trazable.
+    ids_fuente: tuple[str, ...] = ()
 
 
 class RegistroRevisiones:
@@ -38,12 +47,16 @@ class RegistroRevisiones:
         if not self._ruta.exists():
             return []
         revisiones: list[Revision] = []
-        for linea in self._ruta.read_text(encoding="utf-8").splitlines():
+        for numero, linea in enumerate(self._ruta.read_text(encoding="utf-8").splitlines(), 1):
             if not linea.strip():
                 continue
-            datos = json.loads(linea)
-            datos["fecha_utc"] = parsear_fecha(datos["fecha_utc"])
-            revisiones.append(Revision(**datos))
+            try:
+                datos = json.loads(linea)
+                datos["fecha_utc"] = parsear_fecha(datos["fecha_utc"])
+                datos["ids_fuente"] = tuple(datos.get("ids_fuente", ()))
+                revisiones.append(Revision(**datos))
+            except (ValueError, KeyError, TypeError):
+                log.warning("Línea %d de %s ilegible; se omite", numero, self._ruta.name)
         return revisiones
 
     def registrar(self, revision: Revision) -> Revision:
@@ -57,11 +70,10 @@ class RegistroRevisiones:
             revision.revisor.strip()[:120],
             revision.nota.strip()[:MAX_NOTA],
             revision.fecha_utc,
+            revision.ids_fuente,
         )
         fila = asdict(limpia) | {"fecha_utc": limpia.fecha_utc.isoformat()}
-        self._ruta.parent.mkdir(parents=True, exist_ok=True)
-        with self._ruta.open("a", encoding="utf-8") as archivo:
-            archivo.write(json.dumps(fila, ensure_ascii=False) + "\n")
+        anexar_jsonl(self._ruta, fila)
         return limpia
 
     def historial(self, id_caso: str) -> list[Revision]:
@@ -73,6 +85,15 @@ class RegistroRevisiones:
 
     def ultimos(self) -> dict[str, Revision]:
         return {r.id_caso: r for r in self._leer()}
+
+
+def anexar_jsonl(ruta: Path, fila: dict[str, Any]) -> None:
+    """Anexa una línea JSON de forma serializada y durable (lock + fsync)."""
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    with _CANDADO, ruta.open("a", encoding="utf-8") as archivo:
+        archivo.write(json.dumps(fila, ensure_ascii=False) + "\n")
+        archivo.flush()
+        os.fsync(archivo.fileno())
 
 
 def ficha_contrato(

@@ -31,6 +31,8 @@ REQUISITOS = RAIZ / "requirements.txt"
 MARCA = VENV / ".requirements.sha256"
 PYTHON_MINIMO = (3, 12)
 PUERTO_POR_DEFECTO = 8765
+PUERTO_MINIMO = 1024
+PUERTO_MAXIMO = 65535
 HOST = "127.0.0.1"
 ES_WINDOWS = os.name == "nt"
 ESPERA_PUERTO_S = 10.0
@@ -81,6 +83,16 @@ def pids_ss_linux(salida: str, puerto: int) -> set[int]:
     return pids
 
 
+def validar_puerto(texto: str) -> int | None:
+    """Puerto no privilegiado (1024–65535) escrito con dígitos ASCII; si no, ``None``.
+
+    Evita que un valor como 80 o 5432 haga cerrar servicios del sistema."""
+    if not (texto.isascii() and texto.isdigit()):
+        return None
+    puerto = int(texto)
+    return puerto if PUERTO_MINIMO <= puerto <= PUERTO_MAXIMO else None
+
+
 def _hash(ruta: Path) -> str:
     return hashlib.sha256(ruta.read_bytes()).hexdigest()
 
@@ -117,6 +129,8 @@ def preparar_env() -> dict[str, str]:
         if not ejemplo.exists():
             fallar("no existe .env ni .env.example")
         shutil.copyfile(ejemplo, env)
+        if not ES_WINDOWS:
+            env.chmod(0o600)  # puede contener credenciales: solo lectura del dueño
         info(".env no existía: creado desde .env.example (edítalo para agregar credenciales).")
     else:
         info(".env encontrado")
@@ -227,9 +241,10 @@ def main() -> None:
     python = preparar_venv()
     instalar_dependencias(python)
     puerto_texto = variables.get("SENAL_PUERTO") or str(PUERTO_POR_DEFECTO)
-    if not puerto_texto.isdigit() or not 1 <= int(puerto_texto) <= 65535:
-        fallar(f"SENAL_PUERTO inválido en .env: {puerto_texto!r}")
-    puerto = int(puerto_texto)
+    puerto = validar_puerto(puerto_texto)
+    if puerto is None:
+        fallar(f"SENAL_PUERTO inválido en .env: {puerto_texto!r} (usa 1024–65535).")
+        return
     liberar_puerto(puerto)
     iniciar_servidor(python, puerto)
 

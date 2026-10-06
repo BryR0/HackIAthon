@@ -105,3 +105,26 @@ def test_snapshot_real_carga_y_coincide_con_el_manifest() -> None:
     assert len(snapshot.indicadores) == conteos["indicadores.csv"]
     assert len(snapshot.eventos) == conteos["eventos.geojson"]
     assert snapshot.corte.isoformat() == snapshot.manifest["fecha_corte_utc"]
+
+
+def test_cache_de_embeddings_corrupta_se_recalcula(tmp_path: Path) -> None:
+    from senal.pipeline import vectores_noticias
+
+    cache = tmp_path / "embeddings.npz"
+    cache.write_bytes(b"no es un npz")
+
+    vectores = vectores_noticias(SNAPSHOT, CodificadorFalso(), cache)
+
+    assert vectores.shape[0] == len(SNAPSHOT.noticias)
+    assert np.allclose(vectores_noticias(SNAPSHOT, CodificadorFalso(), cache), vectores)
+
+
+def test_novedad_no_se_infla_con_eventos_que_empiezan_al_mismo_tiempo() -> None:
+    from senal.pipeline import _novedades
+
+    vectores = np.array([[1.0, 0.0], [1.0, 0.0]], dtype=np.float32)
+    fechas = [CORTE, CORTE]
+
+    novedades = _novedades([[0], [1]], fechas, vectores)
+
+    assert sorted(novedades) == [0.0, 1.0]

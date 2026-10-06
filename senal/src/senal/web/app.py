@@ -12,6 +12,8 @@ import json
 import logging
 import os
 import secrets
+import threading
+from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta, timezone
@@ -23,6 +25,7 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from senal.embed import cargar_codificador
 from senal.generate import ResultadoRespuesta, responder
@@ -37,7 +40,7 @@ from senal.pipeline import (
     vectores_noticias,
 )
 from senal.retrieve import Buscador
-from senal.review import ESTADOS, RegistroRevisiones, Revision, ficha_contrato
+from senal.review import ESTADOS, RegistroRevisiones, Revision, anexar_jsonl, ficha_contrato
 from senal.score import PESOS
 
 log = logging.getLogger(__name__)
@@ -47,6 +50,7 @@ DIRECTORIO = Path(__file__).resolve().parent
 HORA_PANAMA = timezone(timedelta(hours=-5), "America/Panama")
 POR_PAGINA = 40
 MAX_CONSULTA = 300
+MAX_TOKEN = 100
 CABECERAS_SEGURIDAD = {
     "Content-Security-Policy": (
         "default-src 'self'; style-src 'self'; img-src 'self' data:; form-action 'self'; "
@@ -56,7 +60,10 @@ CABECERAS_SEGURIDAD = {
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cache-Control": "no-store",
 }
+MAX_CONSULTAS_EN_CACHE = 128
 
 
 @dataclass(frozen=True)
@@ -65,6 +72,8 @@ class Config:
     revisiones: Path = RAIZ / "data" / "reviews.jsonl"
     usar_modelo: bool = True
     usar_llm: bool = True
+    # Solo nombres locales: bloquea DNS rebinding contra el servidor de la demo.
+    hosts_permitidos: tuple[str, ...] = ("127.0.0.1", "localhost")
 
     @property
     def fichas(self) -> Path:
@@ -91,10 +100,25 @@ class Estado:
     reporte: dict[str, Any]
     csrf: str = field(default_factory=lambda: secrets.token_urlsafe(32))
     borradores: dict[str, ResultadoRespuesta] = field(default_factory=dict)
+    consultas: OrderedDict[str, ResultadoRespuesta] = field(default_factory=OrderedDict)
+    # Una generación a la vez: protege la cuota del LLM y el orden de escritura.
+    candado: threading.Lock = field(default_factory=threading.Lock)
+    temas: dict[str, Tema] = field(init=False)
 
-    @property
-    def temas(self) -> dict[str, Tema]:
-        return {t.id_evento: t for t in self.bandeja.temas}
+    def __post_init__(self) -> None:
+        self.temas = {t.id_evento: t for t in self.bandeja.temas}
+
+    def consultar(self, pregunta: str) -> ResultadoRespuesta:
+        """Respuesta cacheada por consulta (acotada): un GET repetido no vuelve a llamar al LLM."""
+        with self.candado:
+            if pregunta in self.consultas:
+                self.consultas.move_to_end(pregunta)
+                return self.consultas[pregunta]
+            resultado = responder(pregunta, self.buscador, self.proveedor)
+            self.consultas[pregunta] = resultado
+            if len(self.consultas) > MAX_CONSULTAS_EN_CACHE:
+                self.consultas.popitem(last=False)
+            return resultado
 
     @property
     def nombre_llm(self) -> str:
@@ -149,6 +173,7 @@ def _ids_evidencia(tema: Tema) -> list[str]:
 def crear_app(config: Config) -> FastAPI:
     estado = _cargar_estado(config)
     app = FastAPI(title="Señal TVN", docs_url=None, redoc_url=None)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(config.hosts_permitidos))
     app.mount("/static", StaticFiles(directory=DIRECTORIO / "static"), name="static")
     plantillas = Jinja2Templates(directory=DIRECTORIO / "templates")
     plantillas.env.filters["hora"] = _hora_panama
@@ -222,39 +247,46 @@ def crear_app(config: Config) -> FastAPI:
         return render_tema(request, tema_o_404(id_evento))
 
     @app.post("/tema/{id_evento}/borrador", response_class=HTMLResponse)
-    def borrador(request: Request, id_evento: str, csrf: Annotated[str, Form()]) -> HTMLResponse:
+    def borrador(
+        request: Request, id_evento: str, csrf: Annotated[str, Form(max_length=MAX_TOKEN)]
+    ) -> HTMLResponse:
         verificar_csrf(csrf)
         tema = tema_o_404(id_evento)
-        estado.borradores[id_evento] = responder(
-            tema.titulo, estado.buscador, estado.proveedor, ids_obligatorios=_ids_evidencia(tema)
-        )
+        with estado.candado:
+            estado.borradores[id_evento] = responder(
+                tema.titulo,
+                estado.buscador,
+                estado.proveedor,
+                ids_obligatorios=_ids_evidencia(tema),
+            )
         return render_tema(request, tema)
 
     @app.post("/tema/{id_evento}/revision")
     def revision(
         id_evento: str,
-        csrf: Annotated[str, Form()],
-        estado_nuevo: Annotated[str, Form(alias="estado")],
-        revisor: Annotated[str, Form()],
-        nota: Annotated[str, Form()] = "",
+        csrf: Annotated[str, Form(max_length=MAX_TOKEN)],
+        estado_nuevo: Annotated[str, Form(alias="estado", max_length=40)],
+        revisor: Annotated[str, Form(max_length=120)],
+        nota: Annotated[str, Form(max_length=1000)] = "",
     ) -> RedirectResponse:
         verificar_csrf(csrf)
         tema = tema_o_404(id_evento)
+        decision = Revision(
+            id_evento, estado_nuevo, revisor, nota, datetime.now(UTC), tema.ids_noticias
+        )
         try:
-            registrada = estado.registro.registrar(
-                Revision(id_evento, estado_nuevo, revisor, nota, datetime.now(UTC))
-            )
+            registrada = estado.registro.registrar(decision)
         except ValueError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
-        fila = ficha_contrato(tema, estado.borradores.get(id_evento), registrada)
-        with config.fichas.open("a", encoding="utf-8") as archivo:
-            archivo.write(json.dumps(fila, ensure_ascii=False) + "\n")
+        anexar_jsonl(
+            config.fichas, ficha_contrato(tema, estado.borradores.get(id_evento), registrada)
+        )
         return RedirectResponse(f"/tema/{id_evento}", status_code=303)
 
     @app.get("/consulta", response_class=HTMLResponse)
     def consulta(request: Request, q: str = "") -> HTMLResponse:
         pregunta = q.strip()[:MAX_CONSULTA]
-        resultado = responder(pregunta, estado.buscador, estado.proveedor) if pregunta else None
+        resultado = estado.consultar(pregunta) if pregunta else None
         return plantillas.TemplateResponse(
             request, "consulta.html", contexto(seccion="consulta", q=pregunta, resultado=resultado)
         )

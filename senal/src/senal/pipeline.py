@@ -10,6 +10,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import logging
+import os
+import zipfile
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -45,6 +48,8 @@ from senal.organize import (
 from senal.retrieve import Evidencia
 from senal.score import RULES_VERSION, Puntaje, SenalesEvento, novedad, ordenar, puntuar
 from senal.seguridad import es_sospechoso
+
+log = logging.getLogger(__name__)
 
 MODO_BASELINE = "baseline:palabras_clave"
 NOMBRE_PAIS = {
@@ -137,14 +142,21 @@ def vectores_noticias(
     titulos = [n.titulo for n in snapshot.noticias]
     huella = _huella(titulos)
     if cache is not None and cache.exists():
-        guardado = np.load(cache, allow_pickle=False)
-        if str(guardado["modelo"]) == codificador.modelo and str(guardado["huella"]) == huella:
-            return np.asarray(guardado["vectores"], dtype=np.float32)
-    vectores = codificador.codificar(titulos, "passage")
+        try:
+            with np.load(cache, allow_pickle=False) as guardado:
+                if (
+                    str(guardado["modelo"]) == codificador.modelo
+                    and str(guardado["huella"]) == huella
+                ):
+                    return np.asarray(guardado["vectores"], dtype=np.float32)
+        except (OSError, ValueError, KeyError, zipfile.BadZipFile):
+            log.warning("Caché de embeddings ilegible (%s); se recalcula", cache.name)
+    vectores = codificador.codificar(titulos, "passage").astype(np.float32)
     if cache is not None:
-        np.savez_compressed(
-            cache, modelo=codificador.modelo, huella=huella, vectores=vectores.astype(np.float16)
-        )
+        # float32 (mismo resultado en la primera corrida y con caché) y escritura atómica.
+        temporal = cache.with_name(cache.stem + ".tmp.npz")
+        np.savez_compressed(temporal, modelo=codificador.modelo, huella=huella, vectores=vectores)
+        os.replace(temporal, cache)
     return vectores
 
 
@@ -235,7 +247,13 @@ def _novedades(
     centroides /= np.linalg.norm(centroides, axis=1, keepdims=True)
     inicio = np.array([min(fechas[i] for i in c).timestamp() for c in clusters])
     similitud = centroides @ centroides.T
-    similitud[inicio[None, :] >= inicio[:, None]] = 0.0
+    # j es "previo" a k si empezó antes, o a la misma hora con menor índice (desempate
+    # estable): dos eventos simultáneos no pueden ser ambos totalmente novedosos.
+    indices = np.arange(len(clusters))
+    previos = (inicio[None, :] < inicio[:, None]) | (
+        (inicio[None, :] == inicio[:, None]) & (indices[None, :] < indices[:, None])
+    )
+    similitud[~previos] = 0.0
     return [novedad(float(fila.max(initial=0.0))) for fila in similitud]
 
 
