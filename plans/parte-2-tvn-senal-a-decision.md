@@ -394,11 +394,11 @@ Las pruebas nunca llaman a la red: proveedor y embeddings con dobles.
 |---|---|---|
 | Validación del plan | Hecha | §0 |
 | Cotejo con PDF original | Hecho | §6.1, §6.2, Gate 0 |
-| Gate 0 | Abierto | — |
-| Paso 1 — Snapshot | Pendiente | — |
+| Gate 0 | Cerrado (pendiente respuestas del organizador) | `docs/adr/0002-parte-2-senal-stack-y-reglas.md`, `docs/parte-2-preguntas-organizador.md` |
+| Paso 1 — Snapshot | En curso: código verde, extracción GDELT lenta por 429 | `senal/src/senal/{ingest,fuentes,extraccion,snapshot}.py`; T01 |
 | Paso 2 — Etiquetado y benchmark | Pendiente | — |
-| Paso 3 — Organizar + rebanada | Pendiente | — |
-| Paso 4 — Contexto, puntaje, contradicciones | Pendiente | — |
+| Paso 3 — Organizar + rebanada | Código verde; falta eval con etiquetas humanas y UI | `organize.py`, `embed.py`; T02 |
+| Paso 4 — Contexto, puntaje, contradicciones | Parcial: puntaje y evidencia verdes | `score.py`, `evidence.py`; T08, CU-03 |
 | Paso 5 — Consulta y abstención | Pendiente | — |
 | Paso 6 — Generación con citas | Pendiente | — |
 | Paso 7 — Interfaz | Pendiente | — |
