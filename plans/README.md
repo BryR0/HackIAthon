@@ -3,6 +3,7 @@
 | Plan | Estado | Próxima acción |
 |---|---|---|
 | [Reto 3 — Estimador de copago y cobertura](./reto-3-estimador-copago-cobertura.md) | Pasos 1-8 verdes | Desplegar en Vercel y enviar los dos enlaces a hackiathon@viamatica.com |
+| [Parte 2 — De la señal a la decisión (TVN Media)](./parte-2-tvn-senal-a-decision.md) | Gate 0 abierto | Escribir ADR 0002 y confirmar acceso a Notion Business |
 
 ## Decisiones
 
