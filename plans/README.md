@@ -3,11 +3,12 @@
 | Plan | Estado | Próxima acción |
 |---|---|---|
 | [Reto 3 — Estimador de copago y cobertura](./reto-3-estimador-copago-cobertura.md) | Pasos 1-8 verdes | Desplegar en Vercel y enviar los dos enlaces a hackiathon@viamatica.com |
-| [Parte 2 — De la señal a la decisión (TVN Media)](./parte-2-tvn-senal-a-decision.md) | Gate 0 abierto | Escribir ADR 0002 y confirmar acceso a Notion Business |
+| [Parte 2 — De la señal a la decisión (TVN Media)](./parte-2-tvn-senal-a-decision.md) | Gate 0: ADR 0002 aceptado | Paso 1 — snapshot; confirmar Notion Business y organizador |
 
 ## Decisiones
 
 - [ADR 0001 — Stack del MVP y reglas base](../docs/adr/0001-mvp-stack-and-rules.md)
+- [ADR 0002 — Parte 2: stack Python, embeddings y reglas](../docs/adr/0002-parte-2-senal-stack-y-reglas.md)
 
 ## Progreso
 

@@ -12,6 +12,7 @@ Producto propuesto: **Señal TVN** — copiloto de inteligencia informativa
 | architect | Aprobar con cambios | Embeddings de consultas offline; `ahora` fijo para urgencia; estado de revisión en Vercel; fórmulas del puntaje; detector de contradicciones; validador de citas; anti-inyección; `provider.ts` no reutilizable tal cual |
 | planner | Parcial, listo tras revisión | Conflicto de fechas del dataset (D6); mapa por días; rebanada vertical el Día 1; conteos de admisión Notion; trazabilidad CU; privacidad y secretos; criterios de salida medibles; recortes YAGNI |
 | code-explorer (`../docversion`) | — | docversion **no** tiene clasificación ni clustering: es RAG (Ollama `nomic-embed-text`, coseno/pgvector, RRF en Postgres). Se reutilizan ideas y algoritmos pequeños, no el servicio. Ver §4.2 |
+| Decisión de stack (2026-10-06) | — | El usuario elige **Python FastAPI + Jinja/HTMX** sobre Next.js: el reto no pide web pública y Python resuelve embeddings offline en proceso. Reemplaza D1–D4 de la v2 |
 
 ## 1. Decisión
 
@@ -36,7 +37,7 @@ En Cobertura Clara el LLM nunca calcula dinero. Aquí:
 | Estado de evidencia | Reglas sobre procedencias independientes |
 | Contradicciones | Comparación determinista de cifras/unidades/entidades dentro del cluster |
 | Abstención | Compuerta determinista **antes** del LLM + validador después |
-| Redacción de brief, guion y copy | LLM sobre evidencia recuperada, salida zod |
+| Redacción de brief, guion y copy | LLM sobre evidencia recuperada, salida pydantic |
 | Validez de cada cita | Validador determinista |
 | Aprobación | Persona revisora con nombre |
 
@@ -75,55 +76,59 @@ Metas (orientativas, sección 9.1 — se reporta numerador, denominador y fallos
 
 ## 4. Arquitectura
 
+Stack: **Python 3.12 + FastAPI + Jinja2/HTMX + Tailwind (CDN fijado o CSS
+compilado)**, proyecto `uv` autocontenido en `senal/`. La app Next.js de la
+Parte 1 no se toca. Pruebas con `pytest`.
+
 ```
-scripts/senal/extract-*.mjs ──> data/senal/raw/        (solo si no hay snapshot del organizador; timebox 2 h)
-scripts/senal/build-snapshot.mjs ──> data/senal/processed/
-   validar + normalizar → noticias.csv, indicadores.csv, eventos.geojson,
-   reporte_calidad.json/md, excluidos.csv (con motivo), manifest.json (SHA-256)
-scripts/senal/embed.mjs ──> processed/embeddings.json  (docs + prototipos + consultas demo/benchmark)
-                                     │
-src/senal/ingest      carga snapshot desde process.cwd() (server-only)
-src/senal/embed       cliente Ollama/Gemini + cache por hash(texto normalizado)+modelo+digest
-src/senal/organize    prototipos por tema (coseno + margen) | baseline palabras clave
-                      clustering union-find por umbral de coseno + ventana temporal
-src/senal/provenance  dominio canónico + regex de agencias (EFE/AP/AFP/Reuters) + cluster
-src/senal/context     noticia ↔ indicador (tema+país) | ↔ sismo (tiempo+lugar); nunca forzado
-src/senal/score       puntaje por CLUSTER, ahora = manifest.fecha_corte_UTC
-src/senal/evidence    estado de evidencia
-src/senal/contradict  cifras/unidades/entidades divergentes → "revisión pendiente"
-src/senal/retrieve    BM25 (baseline) + coseno, fusión RRF k=60
-src/senal/llm         transporte genérico callModel(prompt, schema, opts) con usage de tokens
-src/senal/generate    prompt con delimitadores aleatorios; fuentes = datos no confiables
-src/senal/cite        validador de citas + compuerta de abstención
-                                     │
-src/app/senal/**      bandeja, ficha, consulta, borrador, revisión
-src/app/api/senal/**  rutas de servidor
+senal/
+  pyproject.toml, uv.lock           dependencias fijadas
+  .env.example
+  scripts/extract_*.py ──> data/raw/        (solo si no hay snapshot del organizador; timebox 2 h)
+  scripts/build_snapshot.py ──> data/processed/
+     validar + normalizar → noticias.csv, indicadores.csv, eventos.geojson,
+     reporte_calidad.json/md, excluidos.csv (con motivo), manifest.json (SHA-256)
+  scripts/embed.py ──> data/processed/embeddings.npz (docs + prototipos + consultas demo/benchmark)
+  src/senal/
+    ingest.py       carga y valida snapshot (pydantic)
+    embed.py        sentence-transformers en proceso + cache por hash(texto)+modelo
+    organize.py     prototipos por tema (coseno + margen) | baseline palabras clave
+                    clustering union-find por umbral de coseno + ventana temporal
+    provenance.py   dominio canónico + regex de agencias (EFE/AP/AFP/Reuters) + cluster
+    context.py      noticia ↔ indicador (tema+país) | ↔ sismo (tiempo+lugar); nunca forzado
+    score.py        puntaje por CLUSTER, ahora = manifest.fecha_corte_UTC
+    evidence.py     estado de evidencia
+    contradict.py   cifras/unidades/entidades divergentes → "revisión pendiente"
+    retrieve.py     BM25 (baseline) + coseno, fusión RRF k=60
+    llm.py          cascada Gemini → Ollama → plantilla extractiva; registra tokens
+    generate.py     prompt con delimitadores aleatorios; fuentes = datos no confiables
+    cite.py         validador de citas + compuerta de abstención
+    review.py       estados de revisión → data/reviews.jsonl
+    web/            FastAPI app, plantillas Jinja2, parciales HTMX
+  tests/            unit/, evals/, e2e/ (Playwright para Python)
+  evals/            eval_organize.py, eval_senal.py → eval-results/<fecha>.json
 ```
 
 ### 4.1 Decisiones a cerrar en Gate 0 (ADR 0002)
 
-- **D1 — Ubicación.** Misma app Next.js, `src/senal/**` con `server-only`, ruta `/senal`.
-  `outputFileTracingIncludes` para `data/senal/processed`. Añadir `validate:senal`
-  a `verify`. Merge a `main` solo con todo verde (redespliega Parte 1 en producción).
-- **D2 — Embeddings.** **Un solo modelo** para documentos, prototipos y consultas;
-  id + digest + dimensión en `manifest.json`. Debe ser **multilingüe** (GDELT trae
-  títulos en inglés; `nomic-embed-text` es anglocéntrico). Orden de evaluación,
-  timebox 30 min:
-  1. `bge-m3` vía Ollama (local → sirve consultas offline).
-  2. Gemini embeddings (mejor calidad, sin offline para consultas nuevas).
-  3. `nomic-embed-text` con prefijos `search_query:`/`search_document:` (solo si 1 y 2 fallan).
-  Consultas del benchmark y de la demo: precalculadas y cacheadas.
-  Consulta nueva sin modelo disponible: **solo BM25, rotulado en la UI**.
-  Embeddings redondeados a 4 decimales.
-- **D3 — Generación.** Nuevo `src/senal/llm` (transporte genérico) en lugar de
-  modificar `src/agent/provider.ts`: su prompt, `max_tokens: 256` y timeout 12 s
-  son específicos de la Parte 1 y descarta el uso de tokens. Se acepta la
-  duplicación pequeña para no tocar la Parte 1. Fallback local: plantilla
-  extractiva que solo copia campos citados.
-- **D4 — Estado de revisión.** La demo autoritativa corre **local** (T10 lo exige)
-  y escribe `data/senal/reviews.jsonl` con nombre de revisor y marca de tiempo.
-  En Vercel: modo solo lectura con banner, o `localStorage` + exportar. Nunca
-  "memoria del servidor".
+- **D1 — Stack y ubicación.** Python 3.12 + FastAPI + Jinja2/HTMX, proyecto `uv`
+  en `senal/`. El reto no exige web pública ("interfaz web, dashboard o notebook
+  interactivo es válido"); exige demo reproducible sin internet. Python aporta
+  embeddings en proceso, `pandas`/`pydantic` para el contrato de datos y
+  `scikit-learn` para métricas. La Parte 1 (Next.js) queda intacta.
+- **D2 — Embeddings.** **Un solo modelo multilingüe en proceso** con
+  `sentence-transformers` para documentos, prototipos y consultas:
+  `intfloat/multilingual-e5-small` (prefijos `query:`/`passage:`), con
+  `-base` como alternativa si el F1 lo justifica. Pesos descargados una vez y
+  cacheados localmente → consultas nuevas funcionan offline sin Ollama.
+  id + revisión del modelo + dimensión en `manifest.json`.
+  Si el modelo no carga: **solo BM25, rotulado en la UI**.
+- **D3 — Generación.** `llm.py` con cascada Gemini → Ollama (`llama3.2` local) →
+  plantilla extractiva que solo copia campos citados. Registra tokens, latencia
+  y costo. Timeout y `max_tokens` dimensionados para brief + guion + copy.
+- **D4 — Estado de revisión.** La demo corre **local** (T10 lo exige) y escribe
+  `data/reviews.jsonl` con nombre de revisor y marca de tiempo. Sin despliegue
+  público obligatorio; si se publica, solo lectura.
 - **D5 — Hora.** UTC ISO 8601 en datos; `America/Panama` (UTC−5, sin horario de
   verano) en la UI; regla escrita en `diccionario.md`. `fecha_publicacion` ≠
   `fecha_deteccion` (`seendate` de GDELT).
@@ -142,11 +147,11 @@ docversion resuelve **recuperación RAG**, no clasificación. Se toma:
 
 | De docversion | Uso aquí |
 |---|---|
-| `_cosine` con guardas de dimensión y norma cero (`app/services/rag_service.py:481`) | Port a TS en `src/senal/embed` |
+| `_cosine` con guardas de dimensión y norma cero (`app/services/rag_service.py:481`) | Equivalente numpy en `senal/src/senal/embed.py` |
 | Cache por `content_hash` + modelo + digest (`rag_service.py:353`, `:498`) | Mismo esquema en `embeddings.json` |
 | `embed()` que devuelve `None` al fallar (`app/services/ollama_service.py:112`) | Fallo de embedding → fallback BM25 rotulado, nunca excepción en la demo |
 | `model_digest()` vía `/api/tags` (`ollama_service.py:138`) | Digest en manifest |
-| Fusión RRF `k=60` (`rag_service.py:686`, allí en SQL) | Port a TS en memoria |
+| Fusión RRF `k=60` (`rag_service.py:686`, allí en SQL) | Port a Python en memoria (`retrieve.py`) |
 
 Se construye nuevo (no existe en docversion): prototipos por tema con umbral y
 margen, clustering union-find, calibración de umbrales sobre el set de
@@ -240,7 +245,7 @@ GET https://earthquake.usgs.gov/fdsnws/event/1/query
 
 - **Citas.** Campos citables por tipo: noticia `titulo`/`alcance_texto`; indicador `valor`+`anio`+`unidad` (año y unidad obligatorios, T04); sismo `magnitude`/`time`/`place`. Toda cifra o año de la afirmación debe aparecer en el campo citado tras normalizar formato es-PA (`1.350` ≡ `1,350`). Inferencias e hipótesis citan sus premisas.
 - **Abstención.** Si el mejor puntaje de recuperación está bajo el umbral calibrado en desarrollo, se abstiene **sin llamar al LLM**.
-- **Anti-inyección.** Delimitadores aleatorios por petición; quitar caracteres de control, de ancho cero y lookalikes del delimitador; el modelo no tiene herramientas ni acciones; sin secretos en el prompt; salida zod; detector heurístico que marca la fuente como "contenido sospechoso" en la ficha. T07 se corre contra LLM **y** fallback local.
+- **Anti-inyección.** Delimitadores aleatorios por petición; quitar caracteres de control, de ancho cero y lookalikes del delimitador; el modelo no tiene herramientas ni acciones; sin secretos en el prompt; salida pydantic; detector heurístico que marca la fuente como "contenido sospechoso" en la ficha. T07 se corre contra LLM **y** fallback local.
 - **USGS** solo para hechos sísmicos; la caja geográfica no es el territorio de Panamá; nunca evidencia de inundación o pérdidas.
 - **Reputación.** Afirmaciones con acusaciones solo como tipo `declaracion` con atribución. Sin perfiles de personas; minimizar datos personales. Un caso adversarial del benchmark lo prueba.
 - **Secretos.** `.env` fuera del repo; `.env.example` sin valores; escaneo de secretos antes de entregar; sin tokens en logs, capturas ni prompts. Notion compartido solo con equipo y jurado.
@@ -259,7 +264,7 @@ Regla: **rebanada vertical funcional al cierre del Día 1**, luego profundizar.
 ### Gate 0 — Decisiones y accesos
 - ADR 0002 con D1–D7.
 - Notion Business: acceso confirmado; 8 páginas creadas; backlog con ≥ 8 tareas.
-- Ollama/Gemini: verificación timeboxed 30 min → decide D2.
+- Descargar y cachear `intfloat/multilingual-e5-small`; verificar Ollama `llama3.2` y credencial Gemini (D2, D3).
 - Organizador consultado. El §11 del reto le asigna: confirmar cupos de Notion
   Business, preparar **snapshot común y set reservado**, verificar derechos de
   extractos TVN, designar **persona editorial** revisora, conectividad y fallback
@@ -286,7 +291,7 @@ Regla: **rebanada vertical funcional al cierre del Día 1**, luego profundizar.
 
 ### Paso 3 — Organizar + rebanada vertical
 - Baseline palabras clave; IA = prototipos por tema (coseno + margen; bajo margen → baseline) y clustering union-find.
-- Rebanada: cargar → clasificar → puntuar (versión mínima) → bandeja estática en `/senal`.
+- Rebanada: cargar → clasificar → puntuar (versión mínima) → bandeja estática en `/` de la app FastAPI.
 - `eval-organize`: macro-F1 IA vs baseline, pureza de clusters, casos donde gana el baseline.
 - **Salida:** F1 de ambos reportado con ganador o razón documentada; bandeja visible; T02, T03 verdes.
 
@@ -302,8 +307,8 @@ Regla: **rebanada vertical funcional al cierre del Día 1**, luego profundizar.
 - **Salida:** T05, T06 verdes; umbral y su curva registrados en Notion.
 
 ### Paso 6 — Generación con citas
-- `src/senal/llm` con usage de tokens y timeout acorde.
-- Schema zod: `titulo`, `enfoque_interes_publico`, `brief` (≤ 250 palabras), `preguntas[3]`, `verificaciones_pendientes[]`, `guion` (110–150 palabras ≈ 45–60 s a 2,5 palabras/s), `copy` (≤ 80), `afirmaciones[] { texto, tipo: hecho|declaracion|inferencia|hipotesis, citas[] { id_evidencia, campo } }`, `vacios[]`.
+- `llm.py` con usage de tokens y timeout acorde.
+- Modelo pydantic: `titulo`, `enfoque_interes_publico`, `brief` (≤ 250 palabras), `preguntas[3]`, `verificaciones_pendientes[]`, `guion` (110–150 palabras ≈ 45–60 s a 2,5 palabras/s), `copy` (≤ 80), `afirmaciones[] { texto, tipo: hecho|declaracion|inferencia|hipotesis, citas[] { id_evidencia, campo } }`, `vacios[]`.
 - Chequeo de contenido prohibido: entrevistas, citas textuales o imágenes inventadas.
 - Página Notion "Diseño de solución": modelo, versión, prompts, parámetros, costo.
 - **Salida:** T07 (LLM y fallback), T09 verdes; cobertura de citas 100 % en dev.
@@ -336,24 +341,24 @@ Regla: **rebanada vertical funcional al cierre del Día 1**, luego profundizar.
 
 | CU | Paso | Prueba |
 |---|---|---|
-| CU-01 ranking top 5 | 4, 7 | `tests/e2e/senal-cu01.spec.ts` |
-| CU-02 tema económico + serie oficial + brief | 4, 6, 7 | `tests/e2e/senal-cu02.spec.ts` |
-| CU-03 repetición vs corroboración | 3, 4 | `tests/senal/unit/provenance.test.ts` |
-| CU-04 cifra inexistente / contradicción | 4, 5 | `tests/senal/evals/query.test.ts` |
+| CU-01 ranking top 5 | 4, 7 | `senal/tests/e2e/test_cu01.py` |
+| CU-02 tema económico + serie oficial + brief | 4, 6, 7 | `senal/tests/e2e/test_cu02.py` |
+| CU-03 repetición vs corroboración | 3, 4 | `senal/tests/unit/test_provenance.py` |
+| CU-04 cifra inexistente / contradicción | 4, 5 | `senal/tests/evals/test_query.py` |
 | CU-05 banca | — | Diferido |
 
 ### Pruebas de aceptación
 
 | ID | Paso | Archivo |
 |---|---|---|
-| T01 | 1 | `tests/senal/unit/ingest.test.ts` |
-| T02, T03 | 3 | `tests/senal/unit/organize.test.ts` |
-| T04 | 4 | `tests/senal/unit/context.test.ts` |
-| T05, T06 | 5 | `tests/senal/evals/query.test.ts` |
-| T07 | 6 | `tests/senal/evals/injection.test.ts` |
-| T08 | 4 | `tests/senal/unit/score.test.ts` |
-| T09 | 6 | `tests/senal/evals/draft.test.ts` |
-| T10 | 8 | `tests/e2e/senal-offline.spec.ts` |
+| T01 | 1 | `senal/tests/unit/test_ingest.py` |
+| T02, T03 | 3 | `senal/tests/unit/test_organize.py` |
+| T04 | 4 | `senal/tests/unit/test_context.py` |
+| T05, T06 | 5 | `senal/tests/evals/test_query.py` |
+| T07 | 6 | `senal/tests/evals/test_injection.py` |
+| T08 | 4 | `senal/tests/unit/test_score.py` |
+| T09 | 6 | `senal/tests/evals/test_draft.py` |
+| T10 | 8 | `senal/tests/e2e/test_offline.py` |
 
 Las pruebas nunca llaman a la red: proveedor y embeddings con dobles.
 
@@ -366,7 +371,7 @@ Las pruebas nunca llaman a la red: proveedor y embeddings con dobles.
 | Uso de IA (15) | Embeddings vs baseline (F1, RRF vs BM25), dónde no ayuda |
 | Evidencias y explicabilidad (15) | Puntaje desglosado, validador de citas, contradicciones, abstención |
 | Notion (15) | 8 páginas, registro durante el evento, prueba fallida + corrección |
-| Calidad técnica (10) | `npm run verify`, evals guardadas, ADR 0002 |
+| Calidad técnica (10) | `uv run pytest` + `ruff` + `mypy`, evals guardadas, ADR 0002 |
 | Seguridad y ética (5) | T07, reglas de reputación, escaneo de secretos |
 
 ## 10. Riesgos
@@ -379,7 +384,8 @@ Las pruebas nunca llaman a la red: proveedor y embeddings con dobles.
 | Notion Business sin acceso a tiempo | Gate 0 bloquea; registro en Markdown local mientras tanto |
 | LLM inventa citas o cifras | Validador determinista + compuerta de abstención |
 | Puntaje deriva entre corridas | `ahora` = fecha de corte; constantes versionadas |
-| Merge rompe Parte 1 en producción | Merge solo con `verify` + e2e Parte 1 verdes |
+| GDELT responde 429 (visto 2026-10-06) | Pausa ≥ 5 s entre consultas, reintentos con backoff, cache en `raw/` |
+| Pesos del modelo de embeddings sin red en la demo | Descargar y cachear en Gate 0; ruta local en `.env` |
 | Derechos de contenido | Solo titulares/metadatos; condiciones en `fuentes.json` |
 
 ## 11. Índice de progreso
