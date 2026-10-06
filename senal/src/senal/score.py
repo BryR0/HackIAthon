@@ -46,6 +46,9 @@ BONO_DATO_OFICIAL = 0.3
 TAU_URGENCIA_DIAS = 7.0
 PROCEDENCIAS_PARA_SATURAR = 3
 BONO_FUENTE_OFICIAL = 0.2
+# N · en e5 dos titulares no relacionados ya tienen coseno ≈0,75; sin escalar,
+# 1 − coseno quedaría siempre cerca de 0,2 y N no discriminaría.
+ESCALA_NOVEDAD = 0.25
 
 GAZETTEER_PANAMA = (
     "panama", "panameno", "panamena", "panamenos", "chiriqui", "colon", "david", "veraguas",
@@ -135,6 +138,11 @@ def banda(total: float) -> str:
 
 def _acotar(valor: float) -> float:
     return max(0.0, min(1.0, valor))
+
+
+def novedad(max_coseno_previo: float) -> float:
+    """N a partir de la similitud máxima con eventos que empezaron antes."""
+    return _acotar((1.0 - max_coseno_previo) / ESCALA_NOVEDAD)
 
 
 def puntuar(senales: SenalesEvento, corte: datetime) -> Puntaje:
