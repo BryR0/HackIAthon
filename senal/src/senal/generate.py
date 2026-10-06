@@ -27,7 +27,7 @@ from senal.contradict import Afirmacion, Contradiccion, detectar_contradicciones
 from senal.llm import ProveedorLLM, RespuestaLLM
 from senal.organize import normalizar_texto
 from senal.retrieve import Buscador, Evidencia, Resultado, tokenizar
-from senal.seguridad import delimitador_aleatorio, sanear
+from senal.seguridad import delimitador_aleatorio, es_sospechoso, sanear
 
 FRASE_SOLO_METADATOS = "Basado únicamente en titular/metadatos."
 K_EVIDENCIAS = 8
@@ -111,6 +111,7 @@ class ResultadoRespuesta:
     costo_usd: float = 0.0
     avisos: tuple[str, ...] = field(default_factory=tuple)
     contradicciones: tuple[Contradiccion, ...] = field(default_factory=tuple)
+    sospechosas: tuple[str, ...] = field(default_factory=tuple)
 
     @property
     def cobertura_citas(self) -> float:
@@ -329,7 +330,11 @@ def responder(
         return _abstencion(consulta, buscador.modo)
 
     unicas = {e.id: e for e in [*obligatorias, *(r.evidencia for r in relevantes)]}
-    evidencias = list(unicas.values())
+    # Fuentes con instrucciones incrustadas se señalan y no alimentan el borrador (T07).
+    sospechosas = tuple(i for i, e in unicas.items() if es_sospechoso(e.texto))
+    evidencias = [e for i, e in unicas.items() if i not in sospechosas]
+    if not evidencias:
+        return _abstencion(consulta, buscador.modo)
     paquete, uso, avisos = _redactar(consulta, evidencias, proveedor)
     nombre, modelo = (uso.proveedor, uso.modelo) if uso else EXTRACTIVO
     paquete, avisos_formato = _ajustar_formato(paquete, evidencias)
@@ -370,4 +375,5 @@ def responder(
                 [Afirmacion(e.id, e.campos.get("titulo", "")) for e in evidencias]
             )
         ),
+        sospechosas=sospechosas,
     )

@@ -3,6 +3,10 @@
   {% for v in c.versiones %}<span class="etiqueta">{{ v.id_fuente }}: {{ v.fragmento }}</span>{% endfor %}
   El sistema no escoge una versión.</div>
 {% endfor %}
+{% if resultado.sospechosas %}
+<div class="aviso separado" role="note"><b>Contenido sospechoso:</b> {{ resultado.sospechosas | join(', ') }}
+  contiene instrucciones dirigidas a sistemas; se trató como dato y no se usó para redactar.</div>
+{% endif %}
 {% if resultado.abstencion %}
 <div class="aviso" role="status">
   <b>Abstención.</b> {{ resultado.motivo }}
