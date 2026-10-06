@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Datos y calidad{% endblock %}
+{% block contenido %}
+<h1>Datos y calidad del snapshot</h1>
+<p class="sub">Paquete {{ manifest.version }} · corte {{ manifest.fecha_corte_utc | hora }} (Hora de Panamá) ·
+  ventana de noticias {{ manifest.ventana_noticias[0] | hora }} → {{ manifest.ventana_noticias[1] | hora }}</p>
+
+<div class="rejilla">
+  <section class="panel">
+    <h2>Conteos</h2>
+    <table><tbody>
+      {% for archivo, n in manifest.conteos.items() %}<tr><td>{{ archivo }}</td><td>{{ n }}</td></tr>{% endfor %}
+      <tr><td>Noticias de TVN</td><td>{{ reporte.noticias.de_tvn }}</td></tr>
+      <tr><td>Sin fecha de publicación (solo detección GDELT)</td><td>{{ reporte.noticias.sin_fecha_publicacion }}</td></tr>
+      <tr><td>Indicadores nulos (conservados, nunca 0)</td><td>{{ reporte.indicadores.nulos }}</td></tr>
+    </tbody></table>
+  </section>
+  <section class="panel">
+    <h2>Reporte de calidad: exclusiones</h2>
+    <table><tbody>
+      {% for motivo, n in reporte.noticias.excluidas_por_motivo.items() %}<tr><td>{{ motivo | replace('_', ' ') }}</td><td>{{ n }}</td></tr>{% endfor %}
+    </tbody></table>
+    <h2 class="separado">Por origen</h2>
+    <table><tbody>
+      {% for origen, n in reporte.noticias.por_origen.items() %}<tr><td>{{ origen }}</td><td>{{ n }}</td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>Desviaciones declaradas</h2>
+  <ul>{% for d in manifest.desviaciones %}<li>{{ d }}</li>{% endfor %}</ul>
+  {% if manifest.solicitudes_fallidas %}
+  <p>Solicitudes fallidas en la extracción (registradas, no ocultas):</p>
+  <ul>{% for s in manifest.solicitudes_fallidas %}<li class="cita">{{ s.fuente }} → HTTP {{ s.estado }}</li>{% endfor %}</ul>
+  {% endif %}
+</section>
+
+<section class="panel tabla-scroll">
+  <h2>Archivos y SHA-256</h2>
+  <table><tbody>
+    {% for archivo, h in manifest.archivos.items() %}<tr><td>{{ archivo }}</td><td class="cita">{{ h }}</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+
+<section class="panel tabla-scroll">
+  <h2>Fuentes, licencias y condiciones</h2>
+  <table>
+    <thead><tr><th scope="col">Ref</th><th scope="col">Fuente</th><th scope="col">Condiciones</th></tr></thead>
+    <tbody>
+      {% for f in manifest.licencias %}<tr><td>[{{ f.ref }}]</td><td><a href="{{ f.url }}" rel="noopener noreferrer" target="_blank">{{ f.fuente }}</a></td><td>{{ f.condiciones }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  <h2 class="separado">Transformaciones</h2>
+  <ul>{% for t in manifest.transformaciones %}<li>{{ t }}</li>{% endfor %}</ul>
+</section>
+{% endblock %}

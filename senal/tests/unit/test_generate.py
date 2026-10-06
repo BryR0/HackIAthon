@@ -137,3 +137,16 @@ def test_sin_proveedor_la_plantilla_extractiva_solo_copia_campos_citados() -> No
     assert len(r.paquete.brief.split()) <= 250
     assert len(r.paquete.copy_digital.split()) <= 80
     assert all(a.tipo == "declaracion" for a in r.aceptadas)
+
+
+def test_t06_coincidencia_de_una_sola_palabra_no_basta_para_responder() -> None:
+    evidencias = (
+        Evidencia("N-7", "noticia", {"titulo": "Precio de la gasolina baja en Panamá"}),
+        Evidencia("N-8", "noticia", {"titulo": "Turismo crece en Bocas del Toro"}),
+    )
+    proveedor = ProveedorFalso(json.dumps(PAQUETE_VALIDO))
+
+    r = responder("precio del bitcoin en Japón", Buscador(evidencias, None), proveedor)
+
+    assert r.abstencion
+    assert proveedor.llamadas == []

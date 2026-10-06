@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Señal TVN{% endblock %} · Señal TVN</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="contenedor">
+      <a class="marca" href="/">Señal <span>TVN</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="/" {% if seccion == 'bandeja' %}aria-current="page"{% endif %}>Bandeja</a>
+        <a href="/consulta" {% if seccion == 'consulta' %}aria-current="page"{% endif %}>Consulta</a>
+        <a href="/calidad" {% if seccion == 'calidad' %}aria-current="page"{% endif %}>Datos y calidad</a>
+      </nav>
+    </div>
+    <div class="contenedor estado-sistema" role="status">
+      <span>Corte del snapshot: <b>{{ bandeja.corte | hora }}</b> (Hora de Panamá)</span>
+      <span>Organización: <b>{{ bandeja.modo_ia }}</b></span>
+      <span>Búsqueda: <b>{{ modo_busqueda }}</b></span>
+      <span>Redacción: <b>{{ llm }}</b></span>
+      <span>Reglas: <b>{{ bandeja.version_reglas }}</b></span>
+    </div>
+  </header>
+  <main class="contenedor">
+    {% block contenido %}{% endblock %}
+  </main>
+  <footer class="contenedor">
+    Borradores y señales para revisión humana. Nada se publica automáticamente.
+    La prioridad ordena la revisión; no es probabilidad de verdad ni de pérdida.
+  </footer>
+</body>
+</html>

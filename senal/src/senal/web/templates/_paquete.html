@@ -1,0 +1,55 @@
+{% if resultado.abstencion %}
+<div class="aviso" role="status">
+  <b>Abstención.</b> {{ resultado.motivo }}
+  {% for d in resultado.descartadas %}<br><span class="cita">Descartada ({{ d.motivo }}): {{ d.afirmacion.texto }}</span>{% endfor %}
+</div>
+{% else %}
+{% set p = resultado.paquete %}
+<div class="rejilla separado">
+  <div>
+    <h3>Título propuesto</h3>
+    <p><b>{{ p.titulo }}</b></p>
+    <h3>Enfoque de interés público</h3>
+    <p>{{ p.enfoque_interes_publico }}</p>
+    <h3>Brief <span class="cita">({{ p.brief.split() | length }} / 250 palabras)</span></h3>
+    <p class="texto-largo">{{ p.brief }}</p>
+    <h3>Preguntas de investigación</h3>
+    <ol>{% for q in p.preguntas %}<li>{{ q }}</li>{% endfor %}</ol>
+    <h3>Fuentes y verificaciones pendientes</h3>
+    <ul>{% for v in p.verificaciones_pendientes %}<li>{{ v }}</li>{% endfor %}{% for v in p.vacios %}<li>{{ v }}</li>{% endfor %}</ul>
+  </div>
+  <div>
+    <h3>Guion 45–60 s <span class="cita">({{ p.guion.split() | length }} palabras)</span></h3>
+    <p class="texto-largo">{{ p.guion }}</p>
+    <h3>Copy digital <span class="cita">({{ p.copy_digital.split() | length }} / 80 palabras)</span></h3>
+    <p class="texto-largo">{{ p.copy_digital }}</p>
+  </div>
+</div>
+<h3>Afirmaciones verificadas ({{ resultado.aceptadas | length }})</h3>
+<ul class="lista-afirmaciones">
+  {% for a in resultado.aceptadas %}
+  <li><span class="etiqueta fuerte">{{ a.tipo }}</span> {{ a.texto }}<br>
+    {% for c in a.citas %}<span class="cita">[{{ c.id_evidencia }} · {{ c.campo }}]</span> {% endfor %}</li>
+  {% endfor %}
+</ul>
+{% if resultado.descartadas %}
+<h3>Afirmaciones descartadas por el validador ({{ resultado.descartadas | length }})</h3>
+<ul>
+  {% for d in resultado.descartadas %}<li><span class="etiqueta alerta">{{ d.motivo | replace('_', ' ') }}</span> {{ d.afirmacion.texto }}</li>{% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+<p class="cita">
+  Redactor: {{ resultado.proveedor }}{% if resultado.modelo %} ({{ resultado.modelo }}){% endif %} ·
+  búsqueda {{ resultado.modo_busqueda }} ·
+  cobertura de citas {{ '%.0f' | format(resultado.cobertura_citas * 100) }} % ·
+  tokens {{ resultado.tokens_entrada }}+{{ resultado.tokens_salida }} ·
+  {{ '%.1f' | format(resultado.latencia_s) }} s · costo US$ {{ '%.4f' | format(resultado.costo_usd) }}
+</p>
+{% for a in resultado.avisos %}<p class="aviso">{{ a }}</p>{% endfor %}
+{% if resultado.evidencias %}
+<details>
+  <summary>Evidencia recuperada ({{ resultado.evidencias | length }})</summary>
+  <ul>{% for e in resultado.evidencias %}<li><span class="cita">{{ e.id }} · {{ e.tipo }}</span> {{ e.texto }}</li>{% endfor %}</ul>
+</details>
+{% endif %}

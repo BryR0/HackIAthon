@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block titulo %}Bandeja priorizada{% endblock %}
+{% block contenido %}
+<h1>¿Qué temas merecen revisión para la agenda de Panamá?</h1>
+<p class="sub">{{ total }} temas agrupados por evento, ordenados por puntaje de atención
+  <span class="formula">P = 30R + 25I + 20U + 15N + 10E</span>. Empates: mayor urgencia y luego ID.</p>
+
+<form class="filtros" method="get" action="/">
+  <div>
+    <label for="f-tema">Tema</label>
+    <select id="f-tema" name="tema">
+      <option value="">Todos</option>
+      {% for clave, nombre in temas_catalogo.items() %}
+      <option value="{{ clave }}" {% if filtros.tema == clave %}selected{% endif %}>{{ nombre }}</option>
+      {% endfor %}
+      <option value="sin_tema" {% if filtros.tema == 'sin_tema' %}selected{% endif %}>Sin tema claro</option>
+    </select>
+  </div>
+  <div>
+    <label for="f-banda">Prioridad</label>
+    <select id="f-banda" name="banda">
+      <option value="">Todas</option>
+      {% for b in ['alto', 'medio', 'bajo'] %}
+      <option value="{{ b }}" {% if filtros.banda == b %}selected{% endif %}>{{ b }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="f-evidencia">Evidencia</label>
+    <select id="f-evidencia" name="evidencia">
+      <option value="">Cualquiera</option>
+      {% for e in ['insuficiente', 'parcial', 'suficiente_para_borrador'] %}
+      <option value="{{ e }}" {% if filtros.evidencia == e %}selected{% endif %}>{{ e | replace('_', ' ') }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit">Filtrar</button>
+</form>
+
+<div class="panel tabla-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Puntaje</th>
+        <th scope="col">Tema</th>
+        <th scope="col" class="ocultar-movil">Clasificación</th>
+        <th scope="col">Evidencia</th>
+        <th scope="col" class="ocultar-movil">Revisión</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in visibles %}
+      <tr>
+        <td><span class="puntaje {{ t.puntaje.banda }}" title="Banda {{ t.puntaje.banda }}">{{ '%.1f' | format(t.puntaje.total) }}</span></td>
+        <td>
+          <a href="/tema/{{ t.id_evento }}">{{ t.titulo }}</a><br>
+          <span class="cita">{{ t.noticias | length }} nota(s) · {{ t.medios | length }} medio(s) · {{ t.fecha_referencia | hora }}</span>
+          {% if t.contradicciones %}<span class="etiqueta alerta">cifras en conflicto</span>{% endif %}
+          {% if t.sospechoso %}<span class="etiqueta alerta">contenido sospechoso</span>{% endif %}
+          {% if t.enlaces_indicadores or t.enlaces_sismos %}<span class="etiqueta fuerte">dato oficial enlazado</span>{% endif %}
+        </td>
+        <td class="ocultar-movil">
+          <span class="etiqueta fuerte">{{ temas_catalogo.get(t.tema, 'sin tema') }}</span>
+          {% if t.tema_baseline != t.tema %}<span class="etiqueta" title="Baseline de palabras clave">base: {{ temas_catalogo.get(t.tema_baseline, 'sin tema') }}</span>{% endif %}
+        </td>
+        <td>{{ t.estado_evidencia | replace('_', ' ') }}<br><span class="cita">{{ t.procedencias }} procedencia(s) independiente(s)</span></td>
+        <td class="ocultar-movil">{{ revisiones[t.id_evento].estado if t.id_evento in revisiones else 'nuevo' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No hay temas con esos filtros.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<nav class="paginas" aria-label="Paginación">
+  {% if pagina > 1 %}<a href="?tema={{ filtros.tema }}&banda={{ filtros.banda }}&evidencia={{ filtros.evidencia }}&pagina={{ pagina - 1 }}">← Anterior</a>{% endif %}
+  <span>Página {{ pagina }}</span>
+  {% if pagina * por_pagina < total %}<a href="?tema={{ filtros.tema }}&banda={{ filtros.banda }}&evidencia={{ filtros.evidencia }}&pagina={{ pagina + 1 }}">Siguiente →</a>{% endif %}
+</nav>
+{% endblock %}

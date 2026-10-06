@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block titulo %}Ficha {{ tema.id_evento }}{% endblock %}
+{% block contenido %}
+<p class="cita"><a href="/">← Bandeja</a> · {{ tema.id_evento }}</p>
+<h1>{{ tema.titulo }}</h1>
+<p class="sub">
+  <span class="puntaje {{ tema.puntaje.banda }}">{{ '%.1f' | format(tema.puntaje.total) }}</span>
+  prioridad {{ tema.puntaje.banda }} ·
+  <span class="etiqueta fuerte">{{ temas_catalogo.get(tema.tema, 'sin tema claro') }}</span>
+  · estado de revisión: <b>{{ estado_revision }}</b>
+</p>
+
+<div class="{{ 'aviso' if tema.estado_evidencia != 'suficiente_para_borrador' or tema.sospechoso else 'ok' }}" role="note">
+  <b>Acción recomendada:</b> {{ tema.accion_recomendada }}.
+  La prioridad ordena la revisión; <b>no habilita publicación</b>.
+</div>
+
+<div class="rejilla separado">
+  <section class="panel" aria-labelledby="h-reporta">
+    <h2 id="h-reporta">Qué se reporta</h2>
+    <p>{{ tema.titulo }}</p>
+    <p class="cita">{{ tema.noticias | length }} nota(s) agrupadas como un mismo evento.
+      Primera aparición: {{ tema.fecha_referencia | hora }} (fecha original de publicación cuando existe).</p>
+    <p class="aviso">Basado únicamente en titular/metadatos: el sistema no leyó los artículos completos.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-prioridad">
+    <h2 id="h-prioridad">Por qué esta prioridad</h2>
+    <p class="formula">P = 30 × R + 25 × I + 20 × U + 15 × N + 10 × E = {{ '%.1f' | format(tema.puntaje.total) }}</p>
+    <table>
+      <thead><tr><th scope="col">Componente</th><th scope="col">Valor 0–1</th><th scope="col">Peso</th><th scope="col">Aporte</th></tr></thead>
+      <tbody>
+        {% set nombres = {'R': 'Relevancia (Panamá × tema)', 'I': 'Impacto potencial', 'U': 'Urgencia (edad al corte)', 'N': 'Novedad frente a eventos previos', 'E': 'Evidencia disponible'} %}
+        {% for clave, c in tema.puntaje.desglose().items() %}
+        <tr><td>{{ clave }} · {{ nombres[clave] }}</td><td>{{ c.valor }}</td><td>{{ c.peso }}</td><td>{{ c.aporte }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="cita">Reglas {{ tema.puntaje.version }}. Cambiar pesos exige una decisión registrada.</p>
+  </section>
+</div>
+
+<section class="panel" aria-labelledby="h-quien">
+  <h2 id="h-quien">Quién lo reporta</h2>
+  <div class="tabla-scroll">
+    <table>
+      <thead><tr><th scope="col">ID</th><th scope="col">Medio</th><th scope="col">Fecha</th><th scope="col">Titular</th><th scope="col">Origen</th></tr></thead>
+      <tbody>
+        {% for n in tema.noticias %}
+        <tr>
+          <td class="cita">{{ n.id_noticia }}</td>
+          <td>{{ n.medio }}</td>
+          <td>{% if n.fecha_publicacion %}{{ n.fecha_publicacion | hora }}{% else %}{{ n.fecha_deteccion | hora }} <span class="cita">(detección)</span>{% endif %}</td>
+          <td><a href="{{ n.url }}" rel="noopener noreferrer" target="_blank">{{ n.titulo }}</a></td>
+          <td class="cita">{{ n.origen }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rejilla">
+  <section class="panel" aria-labelledby="h-respaldo">
+    <h2 id="h-respaldo">Qué está respaldado</h2>
+    <p><b>{{ tema.procedencias }}</b> procedencia(s) independiente(s) de {{ tema.noticias | length }} nota(s):
+      la misma agencia o un titular replicado cuentan una sola vez.</p>
+    <p>Estado de evidencia: <b>{{ tema.estado_evidencia | replace('_', ' ') }}</b>
+      {% if tema.fuente_oficial %}· incluye fuente oficial{% endif %}</p>
+    {% for e in tema.enlaces_indicadores %}
+    <p><b>{{ e.nombre }} ({{ e.pais_iso3 }}, {{ e.anio }}): {{ e.valor }} {{ e.unidad }}</b><br>
+      <span class="cita">{{ e.id_evidencia }} · {{ e.limitacion }} · {{ e.licencia }}</span></p>
+    {% endfor %}
+    {% for s in tema.enlaces_sismos %}
+    <p><b>Sismo M{{ s.magnitude }} · {{ s.place }}</b><br><span class="cita">{{ s.id_evidencia }} · {{ s.limitacion }}</span></p>
+    {% endfor %}
+    {% if not tema.enlaces_indicadores and not tema.enlaces_sismos %}
+    <p class="cita">Sin dato oficial relacionado de forma sustentada; no se fuerza un enlace.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel" aria-labelledby="h-falta">
+    <h2 id="h-falta">Qué falta comprobar</h2>
+    <ul>
+      <li>Leer el artículo original: aquí solo hay titulares y metadatos.</li>
+      {% if tema.estado_evidencia != 'suficiente_para_borrador' %}<li>Conseguir una segunda procedencia independiente o una fuente oficial.</li>{% endif %}
+      {% for c in tema.contradicciones %}
+      <li><b>Cifras incompatibles ({{ c.unidad }}), revisión pendiente:</b>
+        {% for v in c.versiones %}<span class="etiqueta">{{ v.id_fuente }}: {{ v.fragmento }}</span>{% endfor %}</li>
+      {% endfor %}
+      {% if tema.sospechoso %}<li><b>Contenido sospechoso:</b> una fuente contiene instrucciones dirigidas a sistemas. Se trató como dato, no como orden.</li>{% endif %}
+    </ul>
+  </section>
+</div>
+
+<section class="panel" aria-labelledby="h-borrador">
+  <h2 id="h-borrador">Paquete editorial (borrador)</h2>
+  <form method="post" action="/tema/{{ tema.id_evento }}/borrador">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button type="submit">{{ 'Regenerar' if resultado else 'Generar' }} borrador con citas</button>
+    <span class="cita">Redacción: {{ llm }}</span>
+  </form>
+  {% if resultado %}{% include "_paquete.html" %}{% endif %}
+</section>
+
+<section class="panel" aria-labelledby="h-revision">
+  <h2 id="h-revision">Revisión humana</h2>
+  <form method="post" action="/tema/{{ tema.id_evento }}/revision" class="filtros">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div>
+      <label for="r-estado">Estado</label>
+      <select id="r-estado" name="estado">
+        {% for e in estados %}<option value="{{ e }}" {% if e == estado_revision %}selected{% endif %}>{{ e | replace('_', ' ') }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="r-revisor">Persona revisora</label>
+      <input id="r-revisor" type="text" name="revisor" required maxlength="120">
+    </div>
+    <div class="campo-ancho">
+      <label for="r-nota">Nota</label>
+      <input id="r-nota" type="text" name="nota" maxlength="1000">
+    </div>
+    <button type="submit" class="secundario">Registrar decisión</button>
+  </form>
+  <p class="cita">Aprobar como borrador no significa publicar.</p>
+  {% if historial %}
+  <table>
+    <thead><tr><th scope="col">Fecha</th><th scope="col">Estado</th><th scope="col">Revisor</th><th scope="col">Nota</th></tr></thead>
+    <tbody>
+      {% for r in historial %}<tr><td>{{ r.fecha_utc | hora }}</td><td>{{ r.estado }}</td><td>{{ r.revisor }}</td><td>{{ r.nota }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endblock %}

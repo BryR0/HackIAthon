@@ -24,13 +24,17 @@ from senal.cite import (
     validar_afirmaciones,
 )
 from senal.llm import ProveedorLLM, RespuestaLLM
-from senal.retrieve import Buscador, Evidencia
+from senal.retrieve import Buscador, Evidencia, Resultado, tokenizar
 from senal.seguridad import delimitador_aleatorio, sanear
 
 FRASE_SOLO_METADATOS = "Basado únicamente en titular/metadatos."
 K_EVIDENCIAS = 8
 UMBRAL_BM25 = 0.5
 UMBRAL_COSENO = 0.83
+# Fracción mínima de términos de la consulta presentes en la evidencia recuperada.
+# Evita responder "precio del bitcoin en Japón" con noticias de precio de la gasolina.
+COBERTURA_MINIMA = 0.5
+UMBRAL_COSENO_FUERTE = 0.88
 MAX_PALABRAS_BRIEF = 250
 MAX_PALABRAS_COPY = 80
 GUION_PALABRAS = (110, 150)  # 45–60 s a ~2,5 palabras por segundo
@@ -276,6 +280,27 @@ def _abstencion(consulta: str, modo: str) -> ResultadoRespuesta:
     )
 
 
+def cobertura_lexica(consulta: str, resultados: Sequence[Resultado]) -> float:
+    terminos = set(tokenizar(consulta))
+    if not terminos:
+        return 0.0
+    # Por documento, no por unión: "precio" en una nota y "Japón" en otra no sustentan
+    # una respuesta sobre el precio del bitcoin en Japón.
+    return max(
+        (len(terminos & set(tokenizar(r.evidencia.texto))) / len(terminos) for r in resultados),
+        default=0.0,
+    )
+
+
+def _sin_sustento(consulta: str, relevantes: Sequence[Resultado]) -> bool:
+    if debe_abstenerse(relevantes, umbral_bm25=UMBRAL_BM25, umbral_coseno=UMBRAL_COSENO):
+        return True
+    semantica_fuerte = any(
+        r.coseno is not None and r.coseno >= UMBRAL_COSENO_FUERTE for r in relevantes
+    )
+    return not semantica_fuerte and cobertura_lexica(consulta, relevantes) < COBERTURA_MINIMA
+
+
 def responder(
     consulta: str,
     buscador: Buscador,
@@ -290,9 +315,7 @@ def responder(
     ]
     pedidos = set(ids_obligatorios)
     obligatorias = [e for e in buscador.evidencias if e.id in pedidos]
-    if not obligatorias and debe_abstenerse(
-        relevantes, umbral_bm25=UMBRAL_BM25, umbral_coseno=UMBRAL_COSENO
-    ):
+    if not obligatorias and _sin_sustento(consulta, relevantes):
         return _abstencion(consulta, buscador.modo)
 
     unicas = {e.id: e for e in [*obligatorias, *(r.evidencia for r in relevantes)]}
