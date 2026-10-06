@@ -5,6 +5,7 @@
   --muted: #5d6170;
   --line: #dedbd2;
   --accent: #0b5cad;
+  --on-accent: #ffffff;
   --alto: #b3261e;
   --medio: #a15c00;
   --bajo: #4a6b3f;
@@ -25,6 +26,7 @@
     --muted: #a3a6b1;
     --line: #33363f;
     --accent: #6aa8ec;
+    --on-accent: #0d1b2a;
     --alto: #ff8a80;
     --medio: #f2b45a;
     --bajo: #9ccc8a;
@@ -64,7 +66,7 @@ nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 
 
 .estado-sistema {
   display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .82rem; color: var(--muted);
-  padding: 8px 0 12px;
+  padding-block: 8px 12px;
 }
 .estado-sistema b { color: var(--ink); font-weight: 600; }
 
@@ -89,7 +91,7 @@ th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color:
 
 .puntaje {
   display: inline-block; min-width: 3.4em; text-align: center; font-weight: 700;
-  border-radius: 999px; padding: 2px 8px; color: #fff; font-variant-numeric: tabular-nums;
+  border-radius: 999px; padding: 2px 8px; color: var(--on-accent); font-variant-numeric: tabular-nums;
 }
 .puntaje.alto { background: var(--alto); }
 .puntaje.medio { background: var(--medio); }
@@ -112,7 +114,7 @@ textarea { width: 100%; min-height: 80px; }
 input[type="search"] { width: 100%; }
 button, .boton {
   font: inherit; font-weight: 600; cursor: pointer; border: 0; border-radius: 8px;
-  padding: 9px 16px; min-height: 40px; background: var(--accent); color: #fff; text-decoration: none;
+  padding: 9px 16px; min-height: 40px; background: var(--accent); color: var(--on-accent); text-decoration: none;
   display: inline-block;
 }
 button.secundario { background: transparent; color: var(--accent); border: 1px solid var(--accent); }

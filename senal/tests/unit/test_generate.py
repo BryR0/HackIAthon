@@ -114,9 +114,26 @@ def test_t07_salida_que_cita_evidencia_inexistente_se_descarta() -> None:
     ]
     r = responder("tránsitos del Canal", _buscador(), ProveedorFalso(json.dumps(comprometido)))
 
-    assert r.aceptadas == ()
-    assert r.abstencion
     assert r.descartadas[0].motivo == "evidencia_no_recuperada"
+    assert all("1234" not in a.texto for a in r.aceptadas)
+    assert r.proveedor == "extractivo"
+    assert any("plantilla" in a for a in r.avisos)
+
+
+def test_formato_del_modelo_se_normaliza_sin_relajar_la_validacion() -> None:
+    desprolijo = dict(PAQUETE_VALIDO)
+    desprolijo["afirmaciones"] = [
+        {
+            "texto": "El Canal aumentó a 33 los tránsitos diarios.",
+            "tipo": "Hecho",
+            "citas": [{"id_evidencia": "[N-1]", "campo": "Titulo"}],
+        }
+    ]
+    r = responder("tránsitos del Canal", _buscador(), ProveedorFalso(json.dumps(desprolijo)))
+
+    assert [a.tipo for a in r.aceptadas] == ["hecho"]
+    assert r.aceptadas[0].citas[0].id_evidencia == "N-1"
+    assert r.proveedor == "falso"
 
 
 def test_json_invalido_cae_a_plantilla_extractiva_con_aviso() -> None:

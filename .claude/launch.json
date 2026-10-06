@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "senal",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "--directory",
+        "senal",
+        "uvicorn",
+        "senal.web.app:crear_app_desde_entorno",
+        "--factory",
+        "--port",
+        "8765"
+      ],
+      "port": 8765
+    }
+  ]
+}

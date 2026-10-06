@@ -24,6 +24,7 @@ from senal.cite import (
     validar_afirmaciones,
 )
 from senal.llm import ProveedorLLM, RespuestaLLM
+from senal.organize import normalizar_texto
 from senal.retrieve import Buscador, Evidencia, Resultado, tokenizar
 from senal.seguridad import delimitador_aleatorio, sanear
 
@@ -236,10 +237,17 @@ def _ajustar_formato(
     return ajustado, avisos
 
 
+def _normalizar_cita(cita: _Cita) -> CitaPropuesta:
+    """Tolerancia de forma (corchetes, mayúsculas); el contenido se valida igual."""
+    return CitaPropuesta(cita.id_evidencia.strip().strip("[]").strip(), cita.campo.strip().lower())
+
+
 def _propuestas(paquete: Paquete) -> list[AfirmacionPropuesta]:
     return [
         AfirmacionPropuesta(
-            a.texto, a.tipo, tuple(CitaPropuesta(c.id_evidencia, c.campo) for c in a.citas)
+            a.texto,
+            normalizar_texto(a.tipo).strip(),
+            tuple(_normalizar_cita(c) for c in a.citas),
         )
         for a in paquete.afirmaciones
     ]
@@ -324,6 +332,18 @@ def responder(
     nombre, modelo = (uso.proveedor, uso.modelo) if uso else EXTRACTIVO
     paquete, avisos_formato = _ajustar_formato(paquete, evidencias)
     validacion = validar_afirmaciones(_propuestas(paquete), evidencias)
+    descartadas_modelo: tuple[Descartada, ...] = ()
+    if not validacion.aceptadas and uso is not None:
+        # Hay evidencia pero el modelo no dejó ninguna afirmación respaldada: se muestra
+        # lo descartado y se recurre a la plantilla extractiva (abstenerse es para falta de
+        # evidencia, no para un mal borrador).
+        avisos.append("El modelo no produjo afirmaciones respaldadas; se usó la plantilla")
+        descartadas_modelo = validacion.descartadas
+        nombre, modelo = EXTRACTIVO
+        paquete, avisos_formato = _ajustar_formato(
+            _paquete_extractivo(consulta, evidencias), evidencias
+        )
+        validacion = validar_afirmaciones(_propuestas(paquete), evidencias)
     abstencion = not validacion.aceptadas
     return ResultadoRespuesta(
         consulta=consulta,
@@ -333,7 +353,7 @@ def responder(
         else "",
         paquete=None if abstencion else paquete,
         aceptadas=validacion.aceptadas,
-        descartadas=validacion.descartadas,
+        descartadas=descartadas_modelo + validacion.descartadas,
         evidencias=tuple(evidencias),
         proveedor=nombre,
         modelo=modelo,
