@@ -18,6 +18,7 @@ from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Annotated, Any
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -283,5 +284,6 @@ def crear_app(config: Config) -> FastAPI:
 
 
 def crear_app_desde_entorno() -> FastAPI:
+    load_dotenv(RAIZ / ".env")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
     return crear_app(Config.desde_entorno())

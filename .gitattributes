@@ -2,3 +2,5 @@
 * text=auto
 senal/data/** text eol=lf
 senal/data/**/*.npz binary
+senal/server_start.sh text eol=lf
+senal/server_start.bat text eol=crlf
