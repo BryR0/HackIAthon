@@ -80,7 +80,7 @@ def test_dato_oficial_enlazado_sube_impacto_con_tope() -> None:
 
 def test_nivel_geografico_por_gazetteer_y_medio() -> None:
     assert nivel_geografico("Sube el agua en Chiriquí", ("cnn.com",)) == 1.0
-    assert nivel_geografico("Alcaldía anuncia obras", ("tvn-2.com",)) == 0.8
+    assert nivel_geografico("Alcaldía anuncia obras", ("tvn-2.com",)) == 0.5
     assert nivel_geografico("Costa Rica eleva tasas", ("cnn.com",)) == 0.5
     assert nivel_geografico("Bolsa de Tokio cae", ("cnn.com",)) == 0.0
 

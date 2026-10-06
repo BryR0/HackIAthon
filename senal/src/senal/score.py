@@ -16,7 +16,7 @@ from datetime import datetime
 
 from senal.organize import normalizar_texto
 
-RULES_VERSION = "senal-1.0.0"
+RULES_VERSION = "senal-1.1.0"
 
 PESOS = {"R": 30, "I": 25, "U": 20, "N": 15, "E": 10}
 BANDA_MEDIA = 40.0
@@ -69,7 +69,9 @@ MEDIOS_PANAMENOS = (
     "telemetro.com",
 )
 NIVEL_PANAMA = 1.0
-NIVEL_MEDIO_PANAMENO = 0.8
+# 1.1.0: 0.8 -> 0.5. Un medio panameño que cubre un hecho internacional sin mención
+# a Panamá (p. ej. drones en el mar Negro) llegaba al top 2 de la agenda.
+NIVEL_MEDIO_PANAMENO = 0.5
 NIVEL_REGION = 0.5
 
 
@@ -118,7 +120,7 @@ def _contiene(texto: str, terminos: Iterable[str]) -> bool:
 
 
 def nivel_geografico(texto: str, medios: Iterable[str]) -> float:
-    """1 Panamá explícito · 0.8 medio panameño · 0.5 región · 0 ninguno."""
+    """1 Panamá explícito · 0.5 medio panameño o región · 0 ninguno."""
     if _contiene(texto, GAZETTEER_PANAMA):
         return NIVEL_PANAMA
     if any(m in MEDIOS_PANAMENOS or m.endswith(SUFIJOS_MEDIO_PANAMENO) for m in medios):
