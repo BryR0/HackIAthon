@@ -4,6 +4,7 @@
 set -eu
 cd "$(dirname "$0")"
 
+echo "[server_start] Iniciando Señal TVN. Verificando Python..."
 PY=""
 for candidato in python3.13 python3.12 python3 python; do
   if command -v "$candidato" >/dev/null 2>&1; then
@@ -17,4 +18,5 @@ if [ -z "$PY" ]; then
   exit 1
 fi
 
+echo "[server_start] Ejecutando scripts de preparación y arranque. Por favor espere..."
 exec "$PY" scripts/server_start.py "$@"

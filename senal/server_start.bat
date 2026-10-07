@@ -4,6 +4,7 @@ rem Crea .env si falta, instala requirements.txt, libera el puerto e inicia el s
 setlocal
 cd /d "%~dp0"
 
+echo [server_start] Iniciando Senal TVN. Verificando Python...
 set "PY="
 where py >nul 2>&1 && set "PY=py -3"
 if not defined PY (
@@ -14,5 +15,6 @@ if not defined PY (
   exit /b 1
 )
 
+echo [server_start] Ejecutando scripts de preparacion y arranque. Por favor espere...
 %PY% "%~dp0scripts\server_start.py" %*
 exit /b %ERRORLEVEL%

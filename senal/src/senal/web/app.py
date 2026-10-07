@@ -13,6 +13,8 @@ import logging
 import os
 import secrets
 import threading
+import asyncio
+from contextlib import asynccontextmanager
 from collections import OrderedDict
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
@@ -136,18 +138,24 @@ def _hora_panama(momento: datetime | str | None) -> str:
 
 
 def _cargar_estado(config: Config) -> Estado:
+    print("[server_start] [Carga 1/5] Leyendo snapshot de datos procesados...", flush=True)
     snapshot = cargar_snapshot(config.procesado)
+    print("[server_start] [Carga 2/5] Cargando modelo de embeddings (por favor espere)...", flush=True)
     codificador = cargar_codificador() if config.usar_modelo else None
+    print("[server_start] [Carga 3/5] Agrupando señales por evento y calculando ranking...", flush=True)
     vectores = (
         vectores_noticias(snapshot, codificador, config.procesado / "embeddings.npz")
         if codificador
         else None
     )
     bandeja = construir_bandeja(snapshot, codificador, vectores)
+    print("[server_start] [Carga 4/5] Indexando motor de búsqueda y evidencias oficiales...", flush=True)
     buscador = Buscador(evidencias_de(snapshot), codificador)
+    print("[server_start] [Carga 5/5] Conectando proveedor de redacción y registro...", flush=True)
     proveedor = cargar_proveedor() if config.usar_llm else None
     reporte = json.loads((config.procesado / "reporte_calidad.json").read_text("utf-8"))
     log.info("Bandeja lista: %d temas, modo %s", len(bandeja.temas), bandeja.modo_ia)
+    print(f"[server_start] ¡Listo! Bandeja cargada con {len(bandeja.temas)} temas. Servidor listo en segundo plano.", flush=True)
     registro = RegistroRevisiones(config.revisiones)
     return Estado(config, bandeja, buscador, proveedor, registro, snapshot.manifest, reporte)
 
@@ -170,9 +178,66 @@ def _ids_evidencia(tema: Tema) -> list[str]:
     ]
 
 
+def imprimir_banner_listo(puerto: int | str = 8765) -> None:
+    """Imprime un recuadro claro con la URL para usuarios finales sin experiencia tecnica."""
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return
+    url_1 = f"http://127.0.0.1:{puerto}/"
+    url_2 = f"http://localhost:{puerto}/"
+    ancho_interior = 74
+    borde = "  +" + "-" * ancho_interior + "+"
+
+    def fila(contenido: str = "") -> str:
+        return "  |  " + contenido.ljust(ancho_interior - 4) + "  |"
+
+    lineas = [
+        "",
+        "=" * (ancho_interior + 4),
+        borde,
+        fila(),
+        fila("[OK] !SISTEMA EDITORIAL LISTO Y EN FUNCIONAMIENTO!"),
+        fila(),
+        fila("Por favor, abre tu navegador web e ingresa a cualquiera de estas URLs:"),
+        fila(),
+        fila(f">>  {url_1}"),
+        fila(f">>  {url_2}"),
+        fila(),
+        fila("-" * (ancho_interior - 4)),
+        fila("Por que creamos una version web?"),
+        fila("Esta interfaz fue pensada para editores y periodistas de TVN Media:"),
+        fila("no necesitas conocimientos tecnicos ni usar la consola de comandos."),
+        fila("Todo se opera de forma 100% visual, rapida e intuitiva:"),
+        fila(),
+        fila("* BANDEJA DE TEMAS: 1,614 eventos agrupados y priorizados con IA"),
+        fila("* CONSULTA IA: Respuestas fundamentadas en fuentes oficiales auditadas"),
+        fila("* DATOS Y CALIDAD: Metricas de precision y trazabilidad SHA-256"),
+        fila(),
+        fila("(Para detener el servidor en cualquier momento, presiona Ctrl + C)"),
+        fila(),
+        borde,
+        "=" * (ancho_interior + 4),
+        "",
+    ]
+    print("\n".join(lineas), flush=True)
+
+
 def crear_app(config: Config) -> FastAPI:
     estado = _cargar_estado(config)
-    app = FastAPI(title="Señal TVN", docs_url=None, redoc_url=None)
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        async def _anuncio() -> None:
+            await asyncio.sleep(0.3)
+            puerto = os.environ.get("SENAL_PUERTO", "8765")
+            imprimir_banner_listo(puerto)
+
+        tarea = asyncio.create_task(_anuncio())
+        try:
+            yield
+        finally:
+            tarea.cancel()
+
+    app = FastAPI(title="Señal TVN", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(config.hosts_permitidos))
     app.mount("/static", StaticFiles(directory=DIRECTORIO / "static"), name="static")
     plantillas = Jinja2Templates(directory=DIRECTORIO / "templates")

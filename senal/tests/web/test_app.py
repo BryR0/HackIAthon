@@ -117,3 +117,26 @@ def test_cabeceras_de_seguridad_y_no_cache(cliente: TestClient) -> None:
 
     assert respuesta.headers["cache-control"] == "no-store"
     assert respuesta.headers["cross-origin-opener-policy"] == "same-origin"
+
+
+def test_modales_y_assets_front_end(cliente: TestClient) -> None:
+    # Asset estático de script existe y se sirve correctamente
+    resp_js = cliente.get("/static/app.js")
+    assert resp_js.status_code == 200
+    assert "abrirModal" in resp_js.text
+
+    # Página principal incluye modals y script
+    resp_inicio = cliente.get("/")
+    assert resp_inicio.status_code == 200
+    assert "/static/app.js" in resp_inicio.text
+    assert 'id="modal-tour"' in resp_inicio.text
+    assert 'id="modal-consulta"' in resp_inicio.text
+    assert 'id="modal-formula"' in resp_inicio.text
+    assert "hero-banner" in resp_inicio.text
+
+    # Ficha del tema incluye modal de revisión
+    id_tema = _primer_tema(cliente)
+    resp_tema = cliente.get(f"/tema/{id_tema}")
+    assert resp_tema.status_code == 200
+    assert 'id="modal-decision-revision"' in resp_tema.text
+

@@ -157,11 +157,14 @@ def instalar_dependencias(python: Path) -> None:
     if not necesita_instalar(REQUISITOS, MARCA):
         info("Dependencias al día (requirements.txt sin cambios).")
         return
-    info("Instalando dependencias de requirements.txt (la primera vez tarda varios minutos)...")
+    info("Instalando dependencias de requirements.txt...")
+    info("  [!] AVISO: La instalación inicial puede tardar 1-3 minutos según la velocidad de red. Por favor espere...")
+    info("  -> Actualizando pip...")
     ejecutar([str(python), "-m", "pip", "install", "--upgrade", "pip"])
+    info("  -> Descargando e instalando paquetes de Señal TVN (FastAPI, PyTorch, etc.)...")
     ejecutar([str(python), "-m", "pip", "install", "-r", str(REQUISITOS)])
     registrar_instalacion(REQUISITOS, MARCA)
-    info("Dependencias instaladas.")
+    info("Dependencias instaladas exitosamente.")
 
 
 def _puerto_ocupado(puerto: int) -> bool:
@@ -222,30 +225,43 @@ def liberar_puerto(puerto: int) -> None:
 
 
 def iniciar_servidor(python: Path, puerto: int) -> None:
-    info(f"Iniciando Señal TVN en http://{HOST}:{puerto}  (Ctrl+C para detener)")
-    info("La primera vez descarga el modelo de embeddings; después funciona sin internet.")
+    os.environ["SENAL_PUERTO"] = str(puerto)
+    info(f"Servidor web configurado para http://{HOST}:{puerto} (Ctrl+C para detener)")
+    info("Cargando modelo de embeddings y snapshot de Panamá...")
+    info("  [!] Por favor espere: el motor está indexando las señales noticiosas...")
     comando = [
         str(python), "-m", "uvicorn", "senal.web.app:crear_app_desde_entorno",
         "--factory", "--host", HOST, "--port", str(puerto),
     ]  # fmt: skip
+    env = os.environ.copy()
+    env["SENAL_PUERTO"] = str(puerto)
     try:
-        subprocess.run(comando, cwd=RAIZ, check=False)  # noqa: S603
+        subprocess.run(comando, cwd=RAIZ, env=env, check=False)  # noqa: S603
     except KeyboardInterrupt:
         info("Servidor detenido.")
 
 
 def main() -> None:
     os.chdir(RAIZ)
+    print("=" * 64, flush=True)
+    print("  Señal TVN · Lanzador Automático de Servidor", flush=True)
+    print("=" * 64, flush=True)
+    info("Paso [1/6] Verificando versión de Python...")
     verificar_python()
+    info("Paso [2/6] Comprobando archivo de configuración (.env)...")
     variables = preparar_env()
+    info("Paso [3/6] Preparando entorno virtual (.venv)...")
     python = preparar_venv()
+    info("Paso [4/6] Verificando dependencias instaladas...")
     instalar_dependencias(python)
     puerto_texto = variables.get("SENAL_PUERTO") or str(PUERTO_POR_DEFECTO)
     puerto = validar_puerto(puerto_texto)
     if puerto is None:
         fallar(f"SENAL_PUERTO inválido en .env: {puerto_texto!r} (usa 1024–65535).")
         return
+    info(f"Paso [5/6] Verificando disponibilidad del puerto {puerto}...")
     liberar_puerto(puerto)
+    info("Paso [6/6] Iniciando servidor web y motor de IA...")
     iniciar_servidor(python, puerto)
 
 

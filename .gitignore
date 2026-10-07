@@ -54,6 +54,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 senal/.pytest_tmp/
+.pytest_tmp/
 senal/data/raw/
 senal/data/reviews.jsonl
 senal/data/fichas.jsonl
