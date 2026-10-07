@@ -32,6 +32,24 @@ Ejecución: `uv run pytest` (119 pruebas verdes), `uv run python evals/eval_sena
 | Tokens / costo | 0 / US$ 0 | 0 / US$ 0 |
 | Con Ollama `llama3.2` (1 borrador) | — | 14,7 s · 1.734 + 554 tokens · US$ 0 |
 
+## Extensión bancaria (CU-05, fuente D)
+
+Pruebas TB01–TB14 en `test_sbp.py`, `test_banca.py`, `test_boletin.py`, `test_review.py` y
+`tests/web/test_app.py`: parser sobre texto real de 4 meses, sumas, esquema cerrado sin
+datos de clientes, período `MM/AAAA` (nunca "hoy"), léxico prohibido solo fuera de
+declaraciones atribuidas, separación observación/hipótesis, "solo titular/metadatos",
+CU-05 literal, revisión separada por modalidad y arranque sin `sbp_series.csv`.
+
+| Métrica | Dev BM25 (7) | Dev híbrido (7) | Reservado híbrido (3) | Reservado BM25 (3) |
+|---|---|---|---|---|
+| Aprobados | 7/7 | 7/7 | **2/3** | 3/3 |
+| Abstención correcta | 2/2 | 2/2 | 1/1 | 1/1 |
+| Abstención incorrecta en respondibles | 0/4 | 0/4 | 0/1 | 0/1 |
+| Cobertura de citas | 64/64 | 74/74 | 31/31 | 27/27 |
+| Latencia mediana | 0,004 s | 0,014 s | 0,012 s | 0,003 s |
+
+Regresión editorial tras la extensión: 40/40 en BM25 y en híbrido, sin cambios.
+
 ## Pruebas fallidas y su corrección
 
 | Fecha | Prueba | Falla | Corrección |
@@ -44,10 +62,15 @@ Ejecución: `uv run pytest` (119 pruebas verdes), `uv run python evals/eval_sena
 | 06/10 15:55 | Borrador con `llama3.2` | 3/3 afirmaciones descartadas | Normalización de formato + plantilla de respaldo |
 | 06/10 16:45 | Benchmark v1 | Abstención 4/7 a 5/7 | Regla de año (D11) y metadatos de fuente |
 | 06/10 17:30 | Revisión de código | 3 HIGH | Ver bitácora; todos con prueba |
+| 07/10 | Exploración SBP | Regex de "liquidez X%" devolvía 15,3 (el IAC) | Se descartan los ratios (D15) |
+| 07/10 | Validador SBP | La hipótesis que solo cita el nombre de la serie se descartaba por "sin período" | Período exigido solo al citar cifras de la serie |
+| 07/10 | Boletín con `llama3.2` | JSON sin `tipo` ni `citas` | Esquema completo en el prompt; el validador aún descarta sus citas y se usa la plantilla |
+| 07/10 | Reservado banca RB03 (híbrido) | La fuente con instrucciones quedó en el puesto 10 (k = 8): no se usó ni se marcó; el boletín no tuvo lenguaje prohibido | Sin corrección: el set reservado no se usa para calibrar; queda como límite de recuperación |
 
 ## Pendiente de personas
 
 - Revisar las etiquetas del benchmark de desarrollo y correr el set reservado.
+- Banca: una persona analista revisa boletines y las etiquetas de `benchmark_banca_*.jsonl`.
 - Validez de sustento: revisar ≥ 30 afirmaciones.
 - macro-F1: etiquetar `evals/etiquetado/temas.csv`. Precision@5: editor sobre `ranking_candidatos.csv`.
 - Ahorro de tiempo: prueba cronometrada manual vs asistida, o declararlo hipótesis de valor.

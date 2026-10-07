@@ -137,17 +137,19 @@ header.tvn-header {
 }
 
 .tvn-header-inner {
-  height: 64px;
+  height: 58px;
+  min-height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gutter);
+  gap: 12px;
 }
 
 .tvn-nav-left {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: 14px;
+  flex-shrink: 0;
 }
 
 .tvn-brand {
@@ -157,6 +159,7 @@ header.tvn-header {
   text-decoration: none;
   color: #ffffff;
   outline: none;
+  flex-shrink: 0;
 }
 
 .tvn-brand:hover {
@@ -218,32 +221,35 @@ header.tvn-header {
 
 .tvn-header-divider {
   width: 1px;
-  height: 26px;
+  height: 24px;
   background-color: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
 }
 
 /* Navegación por Pestañas / Pills en Header Azul */
 nav.tvn-nav-tabs {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background-color: rgba(0, 0, 0, 0.22);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 4px;
+  padding: 3px;
   border-radius: var(--radius-xl);
+  flex-shrink: 0;
 }
 
 .tvn-nav-tab {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: var(--radius-lg);
   font-size: 12px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .tvn-nav-tab:hover {
@@ -276,29 +282,46 @@ nav.tvn-nav-tabs {
   font-weight: 800;
 }
 
+/* Control responsivo de texto en tabs */
+.tab-label-short {
+  display: none;
+}
+.tab-label-long {
+  display: inline;
+}
+
 /* Header Derecho */
 .tvn-nav-right {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .tvn-snapshot-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
+  gap: 7px;
+  padding: 5px 11px;
   border-radius: var(--radius-full);
-  background-color: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: rgba(255, 255, 255, 0.92);
   font-size: 11px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .tvn-snapshot-pill b,
 .tvn-snapshot-pill strong {
   color: #ffffff;
+}
+
+.snapshot-text-short {
+  display: none;
+}
+.snapshot-text-long {
+  display: inline;
 }
 
 .tvn-pulse-dot {
@@ -308,6 +331,7 @@ nav.tvn-nav-tabs {
   background-color: #60a5fa;
   box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.7);
   animation: tvn-pulse 2s infinite;
+  flex-shrink: 0;
 }
 
 @keyframes tvn-pulse {
@@ -319,8 +343,8 @@ nav.tvn-nav-tabs {
 .tvn-btn-cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
+  gap: 5px;
+  padding: 6px 13px;
   border-radius: var(--radius-lg);
   background-color: #ffffff;
   color: #0043aa;
@@ -328,9 +352,10 @@ nav.tvn-nav-tabs {
   font-weight: 700;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
   transition: all 0.15s ease;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .tvn-btn-cta:hover {
@@ -343,23 +368,42 @@ nav.tvn-nav-tabs {
 .tvn-btn-ghost {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
+  gap: 5px;
+  padding: 6px 11px;
   border-radius: var(--radius-lg);
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .tvn-btn-ghost:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.24);
   color: #ffffff;
   text-decoration: none;
+}
+
+.tvn-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.tvn-user-avatar:hover {
+  background-color: rgba(255, 255, 255, 0.28);
 }
 
 /* Botones para superficies blancas/claras (Cards, Modales, Tablas) */
@@ -460,7 +504,7 @@ nav.tvn-nav-tabs {
   width: 100%;
   background: linear-gradient(180deg, #eaf2fc 0%, #e2eefb 100%);
   border-bottom: 1px solid #c8def4;
-  padding: 6px 0;
+  padding: 5px 0;
   font-size: 11px;
   line-height: 14px;
   color: #2b4c73;
@@ -468,24 +512,25 @@ nav.tvn-nav-tabs {
 
 .tvn-context-bar-inner {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
+  flex-wrap: nowrap;
 }
 
 .tvn-context-left {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .tvn-tag-hub {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 2px 9px;
   border-radius: var(--radius-full);
   background-color: #d6e8fb;
   color: #003e8a;
@@ -494,6 +539,8 @@ nav.tvn-nav-tabs {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tvn-hub-dot {
@@ -501,21 +548,40 @@ nav.tvn-nav-tabs {
   height: 6px;
   border-radius: 50%;
   background-color: #0050cc;
+  flex-shrink: 0;
+}
+
+.ctx-item {
+  white-space: nowrap;
+  color: #2b4c73;
+}
+
+.ctx-sep {
+  color: #a4c2e6;
+  user-select: none;
+  font-weight: 300;
 }
 
 .tvn-context-right {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: 12px;
   margin-left: auto;
+  flex-shrink: 0;
+}
+
+.ctx-rate {
+  white-space: nowrap;
+  color: #2b4c73;
 }
 
 .tvn-status-live {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   color: #0050cc;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -1786,10 +1852,84 @@ footer.tvn-footer {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints: Laptops, Tablets & Móviles
    ========================================================================== */
 
-@media (max-width: 1024px) {
+/* Laptop estándar y medianas (<= 1366px) */
+@media (max-width: 1366px) {
+  .tvn-brand-sub {
+    display: none;
+  }
+  .tvn-header-divider {
+    height: 18px;
+    opacity: 0.5;
+  }
+  .tvn-header-inner {
+    gap: 10px;
+  }
+  .tvn-nav-left {
+    gap: 10px;
+  }
+  .tvn-nav-right {
+    gap: 6px;
+  }
+  .tvn-nav-tab {
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+  .tvn-context-left {
+    gap: 6px;
+  }
+}
+
+/* Laptops chicas / Ultrabooks (<= 1240px) */
+@media (max-width: 1240px) {
+  .tab-label-long {
+    display: none;
+  }
+  .tab-label-short {
+    display: inline;
+  }
+  .snapshot-text-long {
+    display: none;
+  }
+  .snapshot-text-short {
+    display: inline;
+  }
+  .tvn-btn-nav-guia .btn-label-text {
+    display: none;
+  }
+  .tvn-btn-nav-guia {
+    padding: 6px 9px;
+  }
+  .tvn-snapshot-pill {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+  .ctx-item-extra,
+  .ctx-sep-extra {
+    display: none;
+  }
+  .ctx-rate {
+    display: none;
+  }
+}
+
+/* Tablets horizontales y laptops compactas (<= 1060px) */
+@media (max-width: 1060px) {
+  .tvn-user-avatar {
+    display: none;
+  }
+  .tvn-modalidad a {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+  .tvn-btn-nav-consulta .btn-label-text {
+    display: none;
+  }
+  .tvn-btn-nav-consulta {
+    padding: 6px 9px;
+  }
   .tvn-table-header, .tvn-row-item {
     grid-template-columns: 70px 1fr 140px 80px;
   }
@@ -1799,9 +1939,37 @@ footer.tvn-footer {
   .rag-workspace-grid {
     grid-template-columns: 1fr;
   }
+  .tvn-context-bar-inner {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tvn-context-bar-inner::-webkit-scrollbar {
+    display: none;
+  }
 }
 
+/* Móviles (<= 768px) */
 @media (max-width: 768px) {
+  .tvn-header-inner {
+    height: auto;
+    min-height: auto;
+    flex-wrap: wrap;
+    padding: 8px 0;
+    gap: 8px;
+  }
+  .tvn-nav-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .tvn-nav-right {
+    width: 100%;
+    justify-content: space-between;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  .tvn-header-divider {
+    display: none;
+  }
   .tvn-table-header {
     display: none;
   }
@@ -1816,4 +1984,115 @@ footer.tvn-footer {
   .hero-guardrails {
     grid-template-columns: 1fr;
   }
+}
+
+/* =========================================================================
+   Extensión bancaria (ADR 0003): selector de modalidad y piezas del boletín
+   ========================================================================= */
+.tvn-modalidad {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+.tvn-modalidad a {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.tvn-modalidad a:hover { color: #ffffff; background-color: rgba(255, 255, 255, 0.12); }
+.tvn-modalidad a[aria-current="true"] { background-color: #ffffff; color: var(--primary); }
+.tvn-modalidad a:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
+
+.banca-aviso {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: var(--space-md) 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  background-color: var(--warning-bg);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: var(--warning-text);
+  font-size: 13px;
+  line-height: 19px;
+}
+.banca-aviso strong { color: var(--warning-text); }
+
+.sector-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  border: 1px dashed var(--secondary);
+  color: var(--secondary);
+  background-color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+}
+
+.serie-sbp {
+  background: var(--surface-container-low);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--secondary);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 18px;
+}
+.serie-sbp .meta { color: var(--outline); }
+
+.boletin-bloque { margin-top: 16px; }
+.boletin-bloque h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 10px 0;
+}
+.boletin-lista { padding-left: 20px; font-size: 13px; line-height: 1.7; color: var(--on-surface); margin: 0; }
+.boletin-lista li { margin-bottom: 8px; }
+.boletin-hipotesis {
+  border-left: 3px dashed var(--warning-amber);
+  padding-left: 12px;
+}
+.boletin-meta {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 12px;
+}
+.boletin-meta div {
+  background: var(--surface-container-low);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 18px;
+}
+.boletin-meta span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin-bottom: 2px;
+}
+.cita-chip {
+  display: inline-block;
+  margin-right: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--secondary);
 }

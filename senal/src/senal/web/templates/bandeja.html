@@ -145,6 +145,7 @@
 
 <!-- Módulo de Filtros ( Filter Bar) -->
 <form class="filter-module" method="get" action="/">
+  {% if modalidad == 'banca' %}<input type="hidden" name="modalidad" value="banca">{% endif %}
   <div class="filter-fields-wrap">
     <!-- Dropdown: Tema -->
     <div class="filter-group">
@@ -203,7 +204,7 @@
       <span>Filtrar</span>
     </button>
     {% if filtros.tema or filtros.banda or filtros.evidencia %}
-    <a href="/" class="btn-secondary" title="Restablecer filtros">
+    <a href="/{{ qm }}" class="btn-secondary" title="Restablecer filtros">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
       </svg>
@@ -238,7 +239,7 @@
 
       <!-- Content Column -->
       <div class="item-content">
-        <a class="item-title" href="/tema/{{ t.id_evento }}">
+        <a class="item-title" href="/tema/{{ t.id_evento }}{{ qm }}">
           {{ t.titulo }}
         </a>
 
@@ -259,6 +260,12 @@
             <span style="width: 5px; height: 5px; border-radius: 50%; background-color: var(--secondary);"></span>
             Dato oficial enlazado
           </span>
+          {% endif %}
+
+          {% if modalidad == 'banca' %}
+          {% for sector in sectores_de(t.tema) %}
+          <span class="sector-chip" title="Sector SBP potencialmente relacionado (hipótesis, {{ version_banca }})">{{ sector }}</span>
+          {% endfor %}
           {% endif %}
 
           {% if t.contradicciones %}
@@ -311,7 +318,7 @@
       <!-- Action Column -->
       <div class="item-action-wrap">
         {% set est = revisiones[t.id_evento].estado if t.id_evento in revisiones else 'nuevo' %}
-        <a class="btn-revisar {% if loop.first and pagina == 1 %}destacado{% endif %}" href="/tema/{{ t.id_evento }}">
+        <a class="btn-revisar {% if loop.first and pagina == 1 %}destacado{% endif %}" href="/tema/{{ t.id_evento }}{{ qm }}">
           <span>Revisar</span>
           {% if est != 'nuevo' %}
           <span style="font-size: 9px; opacity: 0.85;">&bull;</span>
@@ -322,7 +329,7 @@
     {% else %}
     <div style="text-align: center; padding: 48px 16px; color: var(--outline);">
       <p style="font-weight: 600; color: var(--primary);">No hay temas que coincidan con los filtros seleccionados.</p>
-      <a href="/" class="tvn-btn-ghost" style="margin-top: 12px;">Ver todos los temas</a>
+      <a href="/{{ qm }}" class="tvn-btn-ghost" style="margin-top: 12px;">Ver todos los temas</a>
     </div>
     {% endfor %}
   </div>
@@ -337,7 +344,7 @@
 
     <div class="pagination-controls">
       {% if pagina > 1 %}
-      <a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina - 1 }}" class="page-btn">
+      <a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina - 1 }}{{ am }}" class="page-btn">
         &larr; Anterior
       </a>
       {% else %}
@@ -347,7 +354,7 @@
       <span class="page-btn active">{{ pagina }}</span>
 
       {% if pagina * por_pagina < total %}
-      <a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina + 1 }}" class="page-btn">
+      <a href="?tema={{ filtros.tema | urlencode }}&banda={{ filtros.banda | urlencode }}&evidencia={{ filtros.evidencia | urlencode }}&pagina={{ pagina + 1 }}{{ am }}" class="page-btn">
         Siguiente &rarr;
       </a>
       {% else %}

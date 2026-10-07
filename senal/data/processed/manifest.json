@@ -4,7 +4,8 @@
     "excluidos.csv": "a34c6aa6518ff91a2ab501139d84fe85d02d2eb20a9f23842c186840ac5aaa7c",
     "indicadores.csv": "da796475519f3475b58c83ff65940e2a245e49631dc79ce30a35b0f46bbf5c63",
     "noticias.csv": "5128aee6728a78e062e9d35ce597998bfd7031ea807ce16acb80a44fa65747e5",
-    "reporte_calidad.json": "8a94baf0ff923ca848b4dfdc325acb98be88377a0f6ae566498ebd41952bb128"
+    "reporte_calidad.json": "488ada9a48a09e5523725b8eec9c8c1ebcfdf8c09a9a06df81e85978ffaf5849",
+    "sbp_series.csv": "586f5f29d8cbcdb9c30e1623c079f2df759f0b7776fab7a59726bbdcab9dbb2f"
   },
   "consultas": [
     {
@@ -515,13 +516,98 @@
       },
       "sha256": null,
       "url": "https://api.gdeltproject.org/api/v2/doc/doc"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-01",
+      "params": {},
+      "sha256": "3e3e166baf20d4a497e0f9d775f24338c575715a91281bf52b826a5ff24c17ca",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0124.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-02",
+      "params": {},
+      "sha256": "47f272772c012da5c791be9613a6197f10f30806673ca3ca18576d43e205c559",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0224.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-03",
+      "params": {},
+      "sha256": "0c9b93fcdd83d76fcffcab4b719a0530805a7224fcad087ef53cc5f536a2a403",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0324.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-04",
+      "params": {},
+      "sha256": "d3436a4df9e525ef9fdde407bdb9cf2ba7739d9ddd9442f2051708e8aead3ee3",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0424.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-05",
+      "params": {},
+      "sha256": "b8d48dcad8642d64b32bd45b8dae10b103a8b1fcbc487f5ce82870b9d7091ca7",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0524.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-06",
+      "params": {},
+      "sha256": "9e3fa6ef64e6b5858b4692f3db3ce8f5bcdae433e4e3e9bf0574e3dfff105ce5",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0624.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-07",
+      "params": {},
+      "sha256": "6ddb6d1f7c40c4fbeff18517b727e7bfb093d2ef10a8bc2d1a15559c55a95a47",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0724.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-08",
+      "params": {},
+      "sha256": "5f97e299513066dd8ddd5084c4bd048f21c6b0d406461d07af13f1bc2350748a",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0824.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-09",
+      "params": {},
+      "sha256": "517b57bd3d146c6dc1097329d1e73d7010a45a754d7aef3d7e8ea7dc583adb8f",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-0924.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-10",
+      "params": {},
+      "sha256": "e434924a04bd340082cd0221befffb7d7df752489b9a2161dbdf4af9eb8d658c",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-1024.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-11",
+      "params": {},
+      "sha256": "48d712a7cdbeee0aa50638b47744f75d94475e69b68e96fc067256929c31d66d",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-1124.pdf"
+    },
+    {
+      "estado": 200,
+      "fuente": "sbp:2024-12",
+      "params": {},
+      "sha256": "fee5fea482dba1ea18f8e74a566460a8b6c2bd242baf645887119745a62f0014",
+      "url": "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/IAB-1224.pdf"
     }
   ],
   "conteos": {
     "eventos.geojson": 82,
     "excluidos.csv": 1531,
     "indicadores.csv": 540,
-    "noticias.csv": 3049
+    "noticias.csv": 3049,
+    "sbp_series.csv": 156
   },
   "desviaciones": [
     "D6 (ADR 0002): noticias de los últimos 90 días antes del corte, no [2024-01-01, 2025-10-01); ninguna fuente pública de noticias alcanza 2024 desde 2026-10."
@@ -569,6 +655,18 @@
       "fuente": "USGS · servicio FDSN de eventos",
       "ref": "7",
       "url": "https://earthquake.usgs.gov/fdsnws/event/1"
+    },
+    {
+      "condiciones": "Uso informativo; libre acceso; citar a la SBP como fuente y ser fiel a su contenido y contexto. Solo agregados del sistema, sin datos de clientes ni por banco",
+      "fuente": "SBP · estadísticas financieras",
+      "ref": "8",
+      "url": "https://www.superbancos.gob.pa/estadisticas-financieras"
+    },
+    {
+      "condiciones": "Uso informativo; citar a la SBP; el análisis del equipo no es opinión oficial de la SBP",
+      "fuente": "SBP · estudios e informes (Informe de Actividad Bancaria)",
+      "ref": "9",
+      "url": "https://www.superbancos.gob.pa/estadisticas-financieras/estudios"
     }
   ],
   "solicitudes_fallidas": [
@@ -613,7 +711,9 @@
     "Exclusión de noticias en idiomas distintos de español e inglés",
     "Descripción del RSS de TVN omitida hasta autorización del patrocinador (solo metadatos)",
     "Cuadrícula país × indicador × año completada con valor nulo",
-    "Unidad del Banco Mundial derivada del nombre del indicador cuando 'unit' viene vacío"
+    "Unidad del Banco Mundial derivada del nombre del indicador cuando 'unit' viene vacío",
+    "SBP: tabla de crédito local por sector extraída con pypdf (sbp-credito-local-1.0.0); anclada por encabezado del mes, valores sin separador de miles, página 1-based del PDF",
+    "SBP: sumas de sectores validadas con tolerancia de redondeo ±0,5 por sumando"
   ],
   "ventana_noticias": [
     "2026-07-08T18:46:40+00:00",

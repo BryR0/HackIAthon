@@ -13,6 +13,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
 
 from senal.embed import Codificador
 from senal.organize import normalizar_texto
@@ -87,15 +88,35 @@ class _BM25:
 
 
 class Buscador:
-    def __init__(self, evidencias: Sequence[Evidencia], codificador: Codificador | None) -> None:
+    def __init__(
+        self,
+        evidencias: Sequence[Evidencia],
+        codificador: Codificador | None,
+        *,
+        vectores: npt.NDArray[np.float32] | None = None,
+    ) -> None:
+        if vectores is not None and codificador is None:
+            raise ValueError("vectores precalculados requieren el codificador que los produjo")
         self._evidencias = tuple(evidencias)
         self._bm25 = _BM25([tokenizar(e.texto) for e in self._evidencias])
         self._codificador = codificador
         self._vectores = (
-            codificador.codificar([e.texto for e in self._evidencias], "passage")
+            vectores
+            if vectores is not None
+            else codificador.codificar([e.texto for e in self._evidencias], "passage")
             if codificador is not None and self._evidencias
             else None
         )
+
+    def con_evidencias(self, extra: Sequence[Evidencia]) -> Buscador:
+        """Nuevo buscador con evidencias adicionales (p. ej. series SBP de la modalidad
+        bancaria). Reutiliza los vectores ya calculados y solo codifica lo nuevo; el
+        buscador original no cambia."""
+        vectores = self._vectores
+        if self._codificador is not None and vectores is not None and extra:
+            nuevos = self._codificador.codificar([e.texto for e in extra], "passage")
+            vectores = np.vstack([vectores, nuevos])
+        return Buscador([*self._evidencias, *extra], self._codificador, vectores=vectores)
 
     @property
     def modo(self) -> str:

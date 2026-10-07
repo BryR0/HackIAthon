@@ -140,3 +140,91 @@ def test_modales_y_assets_front_end(cliente: TestClient) -> None:
     assert resp_tema.status_code == 200
     assert 'id="modal-decision-revision"' in resp_tema.text
 
+
+
+# --- Extensión bancaria: misma app, modalidad "banca" (TB09, TB11, TB13) ------------
+
+CU05 = "¿Qué señales públicas del entorno logístico debo revisar?"
+
+
+def _primer_tema_banca(cliente: TestClient) -> str:
+    html = cliente.get("/", params={"modalidad": "banca"}).text
+    coincidencia = re.search(r'href="/tema/([^"?]+)\?modalidad=banca"', html)
+    assert coincidencia
+    return coincidencia.group(1)
+
+
+def test_tb09_modalidad_por_lista_permitida_y_defecto_editorial(cliente: TestClient) -> None:
+    banca = cliente.get("/", params={"modalidad": "banca"}).text
+    invalida = cliente.get("/", params={"modalidad": "<script>"}).text
+    defecto = cliente.get("/").text
+
+    assert 'data-modalidad="banca"' in banca
+    assert "no una opinión oficial de la SBP" in banca
+    assert 'data-modalidad="editorial"' in invalida
+    assert "<script>" not in invalida.split("<body>")[1].split("</header>")[0]
+    assert 'data-modalidad="editorial"' in defecto
+
+
+def test_tb09_ficha_bancaria_muestra_contexto_sbp_como_hipotesis(cliente: TestClient) -> None:
+    id_tema = _primer_tema_banca(cliente)
+
+    html = cliente.get(f"/tema/{id_tema}", params={"modalidad": "banca"}).text
+
+    assert "Crédito local SBN" in html
+    assert "hipótesis" in html
+    assert f'action="/tema/{id_tema}/boletin"' in html
+
+
+def test_tb09_boletin_con_citas_aviso_y_csrf(cliente: TestClient) -> None:
+    id_tema = _primer_tema_banca(cliente)
+    token = _token(cliente.get(f"/tema/{id_tema}", params={"modalidad": "banca"}).text)
+
+    sin_token = cliente.post(f"/tema/{id_tema}/boletin", data={"csrf": "x"})
+    respuesta = cliente.post(f"/tema/{id_tema}/boletin", data={"csrf": token})
+
+    assert sin_token.status_code == 403
+    assert respuesta.status_code == 200
+    assert "Boletín de entorno" in respuesta.text
+    assert "no una opinión oficial de la SBP" in respuesta.text
+    assert "Basado únicamente en titular/metadatos." in respuesta.text
+    assert "SBP:credito_local:" in respuesta.text
+    assert "Hipótesis de impacto" in respuesta.text
+
+
+def test_tb13_revision_bancaria_separada_de_la_editorial(cliente: TestClient) -> None:
+    id_tema = _primer_tema_banca(cliente)
+    token = _token(cliente.get(f"/tema/{id_tema}", params={"modalidad": "banca"}).text)
+
+    invalida = cliente.post(
+        f"/tema/{id_tema}/revision",
+        data={"csrf": token, "estado": "descartado", "revisor": "Beto", "modalidad": "otra"},
+    )
+    banca = cliente.post(
+        f"/tema/{id_tema}/revision",
+        data={"csrf": token, "estado": "descartado", "revisor": "Beto Analista",
+              "nota": "sin dato", "modalidad": "banca"},
+        follow_redirects=True,
+    )  # fmt: skip
+    editorial = cliente.get(f"/tema/{id_tema}").text
+
+    assert invalida.status_code == 422
+    assert banca.status_code == 200
+    assert "Beto Analista" in banca.text
+    assert "Beto Analista" not in editorial
+
+
+def test_tb11_cu05_literal_en_la_web_entrega_boletin_sin_abstenerse(cliente: TestClient) -> None:
+    respuesta = cliente.get("/consulta", params={"q": CU05, "modalidad": "banca"})
+
+    assert respuesta.status_code == 200
+    assert "Abstención" not in respuesta.text
+    assert "Boletín de entorno" in respuesta.text
+    assert "SBP:credito_local:comercio:" in respuesta.text
+    assert "SBP:credito_local:industria:" in respuesta.text
+
+
+def test_consulta_editorial_no_usa_series_sbp(cliente: TestClient) -> None:
+    respuesta = cliente.get("/consulta", params={"q": "tránsitos del Canal de Panamá"})
+
+    assert "SBP:credito_local" not in respuesta.text

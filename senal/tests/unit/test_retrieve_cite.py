@@ -178,3 +178,26 @@ def test_palabras_parecidas_no_cuentan_como_acusacion() -> None:
     )
 
     assert len(resultado.aceptadas) == 1
+
+
+def test_buscador_extendido_reutiliza_vectores_y_solo_codifica_lo_nuevo() -> None:
+    codificador = CodificadorFalso()
+    llamadas: list[int] = []
+    original = codificador.codificar
+
+    def contar(textos: Sequence[str], tipo: str) -> npt.NDArray[np.float32]:
+        llamadas.append(len(textos))
+        return original(textos, tipo)
+
+    codificador.codificar = contar  # type: ignore[method-assign]
+    base = Buscador(EVIDENCIAS, codificador=codificador)
+    extra = Evidencia(
+        "SBP:credito_local:pesca:2024-12", "serie_sbp", {"nombre": "Crédito local SBN · Pesca"}
+    )
+
+    extendido = base.con_evidencias([extra])
+
+    assert llamadas == [len(EVIDENCIAS), 1]
+    assert len(extendido.evidencias) == len(EVIDENCIAS) + 1
+    assert extendido.buscar("crédito local pesca", k=1)[0].id == extra.id
+    assert extra.id not in {r.id for r in base.buscar("crédito local pesca", k=len(EVIDENCIAS))}

@@ -4,6 +4,7 @@
 |---|---|---|
 | [Reto 3 — Estimador de copago y cobertura](./reto-3-estimador-copago-cobertura.md) | Pasos 1-8 verdes | Desplegar en Vercel y enviar los dos enlaces a hackiathon@viamatica.com |
 | [Parte 2 — De la señal a la decisión (TVN Media)](./parte-2-tvn-senal-a-decision.md) | Pasos 1, 3–7 verdes; 2, 8, 9 parciales | Etiquetado humano, set reservado, migrar a Notion y ensayo offline |
+| [Parte 2 — Extensión bancaria (CU-05, SBP)](./parte-2-extension-bancaria.md) | Pasos 0–5 verdes | Revisión ECC (paso 6), commit y revisión por una persona analista |
 
 ## Decisiones
 

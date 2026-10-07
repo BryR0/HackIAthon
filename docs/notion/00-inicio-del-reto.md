@@ -4,11 +4,11 @@
 |---|---|
 | Reto | "De la señal a la decisión" — Copiloto de inteligencia informativa (TVN Media) |
 | Equipo | BryR0 |
-| Modalidad | **Editorial TVN** (recomendada por el reto). Bancaria diferida |
-| Usuario | Editor/a y periodista de TVN; productor/a digital |
+| Modalidad | **Editorial TVN** (recomendada por el reto) + **extensión bancaria** en la misma app (`?modalidad=banca`, ADR 0003) |
+| Usuario | Editor/a y periodista de TVN; productor/a digital; en la extensión, analista de estudios económicos o riesgo sectorial |
 | Problema | Fuentes dispersas, duplicados y circulación que no equivale a confirmación: cuesta encontrar qué tema revisar, qué evidencia existe y qué falta verificar |
 | Solución | Bandeja priorizada por evento con puntaje explicable, ficha de evidencia, consulta en español con abstención y paquete editorial (brief, guion, copy) con citas por afirmación; revisión humana obligatoria |
-| Alcance | Snapshot público (TVN RSS + GDELT, Banco Mundial, USGS), demo local sin internet. Sin rating, sin veredictos de verdad, sin publicación automática |
+| Alcance | Snapshot público (TVN RSS + GDELT, Banco Mundial, USGS, SBP 2024), demo local sin internet. Sin rating, sin veredictos de verdad, sin publicación automática |
 | Demo | `senal/server_start.bat` (Windows) o `senal/server_start.sh` (Linux) → http://127.0.0.1:8765 |
 | Repositorio | `BryR0/HackIAthon`, rama `parte-2/tvn-senal-decision`, carpeta `senal/` |
 

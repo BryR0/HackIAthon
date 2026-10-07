@@ -158,7 +158,10 @@ def instalar_dependencias(python: Path) -> None:
         info("Dependencias al día (requirements.txt sin cambios).")
         return
     info("Instalando dependencias de requirements.txt...")
-    info("  [!] AVISO: La instalación inicial puede tardar 1-3 minutos según la velocidad de red. Por favor espere...")
+    info(
+        "  [!] AVISO: La instalación inicial puede tardar 1-3 minutos según la velocidad "
+        "de red. Por favor espere..."
+    )
     info("  -> Actualizando pip...")
     ejecutar([str(python), "-m", "pip", "install", "--upgrade", "pip"])
     info("  -> Descargando e instalando paquetes de Señal TVN (FastAPI, PyTorch, etc.)...")

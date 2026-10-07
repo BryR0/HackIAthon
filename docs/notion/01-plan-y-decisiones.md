@@ -1,6 +1,6 @@
 # Plan y decisiones
 
-Plan completo: `plans/parte-2-tvn-senal-a-decision.md`. Cronología: [bitácora](bitacora.md).
+Plan completo: `plans/parte-2-tvn-senal-a-decision.md`; extensión bancaria: `plans/parte-2-extension-bancaria.md`. Cronología: [bitácora](bitacora.md).
 
 ## Backlog
 
@@ -24,6 +24,11 @@ Plan completo: `plans/parte-2-tvn-senal-a-decision.md`. Cronología: [bitácora]
 | 16 | Revisar etiquetas del benchmark y correr el set reservado | Organizador + equipo | Pendiente | `evals/benchmark_dev.jsonl` |
 | 17 | Migrar este espacio a Notion Business | Equipo | Bloqueado: Notion no habilitado | `docs/notion/` |
 | 18 | Ensayo del pitch sin internet (≤ 10 min) | Equipo | Pendiente | página 07 |
+| 19 | Extensión bancaria: plan v2 validado por ECC, ADR 0003 | BryR0 + agentes ECC | Hecho | `plans/parte-2-extension-bancaria.md` |
+| 20 | Fuente D (SBP): 12 informes 2024 → 156 series | BryR0 | Hecho | `sbp_series.csv`, `sbp.py` |
+| 21 | Boletín de entorno con el mismo motor + CU-05 en la web | BryR0 | Hecho | `boletin.py`, `banca.py`, `web/` |
+| 22 | Benchmark bancario (7 dev / 3 reservados) | BryR0 | Hecho | `evals/benchmark_banca_*.jsonl` |
+| 23 | Persona bancaria revisa boletines y etiquetas del benchmark bancario | Analista bancario | Pendiente | fichas `banca_boletin` |
 
 ## Decisiones justificadas
 
@@ -41,3 +46,8 @@ Plan completo: `plans/parte-2-tvn-senal-a-decision.md`. Cronología: [bitácora]
 | D10 | 06/10 | Agrupación por enlace promedio (distancia 0,10) | Enlace simple (union-find) | El enlace simple encadenaba 1.327 noticias en un solo cluster |
 | D11 | 06/10 | Abstención por año pedido ausente en la evidencia | Solo umbrales léxicos | "PIB 2026" se respondía con datos de 2024 |
 | D12 | 06/10 | Fuentes sospechosas no alimentan el borrador | Solo marcarlas | Defensa en profundidad contra inyección (T07) |
+| D13 | 07/10 | Banca como modalidad de la misma app (`?modalidad=banca`), no segundo producto | Proyecto o servidor aparte | Reto §1: "extensión, sin exigir dos productos completos"; misma bandeja, puntaje y motor |
+| D14 | 07/10 | Fuente D = Informe de Actividad Bancaria mensual (PDF) con `pypdf`, anclado por encabezado del mes | Hojas de estadísticas; `pdfplumber` | 12/12 meses con 200 y texto extraíble; página citable; sin binarios |
+| D15 | 07/10 | Sin indicadores de solidez (morosidad, IAC, liquidez) | Extraerlos por regex | Son riesgo bancario (reto §2, §9.1) y el regex era frágil ("liquidez" devolvía el IAC) |
+| D16 | 07/10 | Mapa tema → sector versionado (`banca-1.0.0`), siempre hipótesis; puntaje `senal-1.1.0` intacto | Que el LLM elija sectores; puntaje bancario | El LLM nunca decide sector; no se crea un "riesgo bancario" |
+| D17 | 07/10 | Un solo motor de redacción con `Formato` inyectable | `boletin.py` con motor propio | Reutiliza compuerta, anti-inyección, validador y caída a plantilla |

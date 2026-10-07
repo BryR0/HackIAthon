@@ -22,6 +22,7 @@ from typing import Any
 
 import numpy as np
 
+from senal.banca import periodo_texto
 from senal.catalogo import INDICADORES
 from senal.context import EnlaceIndicador, EnlaceSismo, enlazar_indicadores, enlazar_sismos
 from senal.contradict import Afirmacion, Contradiccion, detectar_contradicciones
@@ -30,10 +31,12 @@ from senal.evidence import Pieza, contar_procedencias, es_fuente_oficial, estado
 from senal.ingest import (
     Indicador,
     Noticia,
+    SerieSBP,
     Ventana,
     parsear_fecha,
     validar_indicadores,
     validar_noticias,
+    validar_series_sbp,
 )
 from senal.organize import (
     SIN_TEMA,
@@ -69,6 +72,7 @@ class Snapshot:
     eventos: tuple[dict[str, Any], ...]
     manifest: dict[str, Any]
     corte: datetime
+    series_sbp: tuple[SerieSBP, ...] = ()  # extensión bancaria; vacío si no hay fuente D
 
 
 @dataclass(frozen=True)
@@ -128,7 +132,9 @@ def cargar_snapshot(directorio: Path) -> Snapshot:
     geo = json.loads((directorio / "eventos.geojson").read_text("utf-8"))
     eventos = tuple(f["properties"] for f in geo.get("features", []))
     corte = parsear_fecha(manifest["fecha_corte_utc"])
-    return Snapshot(noticias, indicadores, eventos, manifest, corte)
+    ruta_sbp = directorio / "sbp_series.csv"
+    series_sbp = validar_series_sbp(_leer_csv(ruta_sbp)).validas if ruta_sbp.exists() else ()
+    return Snapshot(noticias, indicadores, eventos, manifest, corte, series_sbp)
 
 
 def _huella(textos: Sequence[str]) -> str:
@@ -296,8 +302,32 @@ def _fecha(momento: datetime | None) -> str:
     return momento.isoformat() if momento else ""
 
 
-def evidencias_de(snapshot: Snapshot) -> list[Evidencia]:
-    """Corpus recuperable: noticias, indicadores con valor y sismos, con IDs estables."""
+def _evidencia_sbp(s: SerieSBP) -> Evidencia:
+    return Evidencia(
+        s.id_evidencia,
+        "serie_sbp",
+        {
+            "nombre": s.nombre,
+            "periodo": periodo_texto(s.periodo),
+            "valor": f"{s.valor:.10g}" if s.valor is not None else "",
+            "unidad": s.unidad or "",
+            "variacion_interanual_pct": "" if s.variacion_pct is None else f"{s.variacion_pct:g}",
+            "periodo_base": periodo_texto(s.periodo_base) if s.periodo_base else "",
+            "cuadro": s.cuadro or "",
+            "pagina_pdf": "" if s.pagina_pdf is None else str(s.pagina_pdf),
+            "fuente": "Superintendencia de Bancos de Panamá (SBP), Informe de Actividad Bancaria",
+            "periodicidad": "dato mensual",
+            "url": s.fuente_url or "",
+        },
+    )
+
+
+def evidencias_de(snapshot: Snapshot, *, incluir_sbp: bool = False) -> list[Evidencia]:
+    """Corpus recuperable: noticias, indicadores con valor y sismos, con IDs estables.
+
+    Las series SBP solo entran en la modalidad bancaria: la recuperación editorial
+    no cambia con la extensión.
+    """
     evidencias = [
         Evidencia(
             n.id_noticia,
@@ -346,4 +376,6 @@ def evidencias_de(snapshot: Snapshot) -> list[Evidencia]:
         )
         for e in snapshot.eventos
     ]
+    if incluir_sbp:
+        evidencias += [_evidencia_sbp(s) for s in snapshot.series_sbp if s.valor is not None]
     return evidencias

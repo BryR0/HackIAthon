@@ -9,19 +9,20 @@
 </head>
 <body>
   <!-- Header Institucional  (64px) -->
+  <!-- Header Institucional (TVN Blue) -->
   <header class="tvn-header">
     <div class="tvn-container tvn-header-inner">
       <div class="tvn-nav-left">
-        <a class="tvn-brand" href="/" title="Señal TVN · Sistema de Inteligencia Editorial">
+        <a class="tvn-brand" href="/{{ qm }}" title="Señal TVN · Sistema de Inteligencia Editorial">
           <span class="tvn-brand-logo" aria-hidden="true">
-            <svg width="34" height="34" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <svg width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
               <path d="M23.885 0C10.679 0 0 10.73 0 24c0 13.236 10.68 24 23.885 24 13.172 0 23.884-10.73 23.884-24-.033-13.27-10.712-24-23.884-24zM38.37 31.549v-7.414c0-1.794-.843-2.674-2.594-2.674-1.786 0-3.302 1.016-3.302 3.791v6.33h-3.84V20.379H28.6l-4.851 11.17h-4.38l-4.21-10.222h-3.336v6.093c0 1.015.27 1.354 1.28 1.354.674 0 1.28-.034 1.887-.102v2.878c-.707.101-2.156.237-3.032.237-3.638 0-4.009-1.524-4.009-3.86v-6.6H5.56v-2.877h2.425v-4.063h3.84v4.063h6.536l3.2 9.173 3.538-9.173h7.276v1.895h.034c.707-1.083 2.526-2.234 4.783-2.234 1.988 0 5.02.846 5.02 4.705v8.7h-3.84v.034z" fill="#ffffff" fill-rule="nonzero"/>
             </svg>
           </span>
           <div class="tvn-brand-meta">
             <div class="tvn-brand-title-wrap">
               <span class="tvn-brand-title">Señal TVN</span>
-              <span class="tvn-brand-tag">EDITORIAL</span>
+              <span class="tvn-brand-tag">{{ 'BANCA' if modalidad == 'banca' else 'EDITORIAL' }}</span>
             </div>
             <span class="tvn-brand-sub">Inteligencia Editorial &middot; TVN Media</span>
           </div>
@@ -30,69 +31,81 @@
         <div class="tvn-header-divider"></div>
 
         <nav class="tvn-nav-tabs" aria-label="Navegación principal">
-          <a href="/" class="tvn-nav-tab" {% if seccion == 'bandeja' %}aria-current="page"{% endif %}>
-            <span>Bandeja de Temas</span>
+          <a href="/{{ qm }}" class="tvn-nav-tab" {% if seccion == 'bandeja' %}aria-current="page"{% endif %}>
+            <span class="tab-label-long">Bandeja de Temas</span>
+            <span class="tab-label-short">Bandeja</span>
             <span class="tvn-nav-badge">{{ total if total is defined else '1,616' }}</span>
           </a>
-          <a href="/consulta" class="tvn-nav-tab" {% if seccion == 'consulta' %}aria-current="page"{% endif %}>
-            <span>Consulta IA</span>
+          <a href="/consulta{{ qm }}" class="tvn-nav-tab" {% if seccion == 'consulta' %}aria-current="page"{% endif %}>
+            <span class="tab-label-long">Consulta IA</span>
+            <span class="tab-label-short">Consulta</span>
           </a>
-          <a href="/calidad" class="tvn-nav-tab" {% if seccion == 'calidad' %}aria-current="page"{% endif %}>
-            <span>Datos y Calidad</span>
+          <a href="/calidad{{ qm }}" class="tvn-nav-tab" {% if seccion == 'calidad' %}aria-current="page"{% endif %}>
+            <span class="tab-label-long">Datos y Calidad</span>
+            <span class="tab-label-short">Calidad</span>
           </a>
         </nav>
       </div>
 
       <div class="tvn-nav-right">
-        <div class="tvn-snapshot-pill">
+        {# Selector de Modalidad (ADR 0003) #}
+        {% if tema is defined %}{% set ruta_actual = '/tema/' ~ tema.id_evento %}
+        {% elif seccion == 'consulta' %}{% set ruta_actual = '/consulta' %}
+        {% elif seccion == 'calidad' %}{% set ruta_actual = '/calidad' %}
+        {% else %}{% set ruta_actual = '/' %}{% endif %}
+        <nav class="tvn-modalidad" aria-label="Modalidad de análisis" data-modalidad="{{ modalidad }}">
+          <a href="{{ ruta_actual }}" {% if modalidad != 'banca' %}aria-current="true"{% endif %} title="Redacción TVN: paquete editorial">Editorial</a>
+          <a href="{{ ruta_actual }}?modalidad=banca" {% if modalidad == 'banca' %}aria-current="true"{% endif %} title="Analista bancario: boletín de entorno con series SBP">Banca</a>
+        </nav>
+
+        <div class="tvn-snapshot-pill" title="Corte auditado del snapshot (Hora de Panamá)">
           <span class="tvn-pulse-dot"></span>
-          <span>Snapshot: <b>{{ bandeja.corte | hora }}</b> (Hora de Panamá)</span>
-          <span style="color: var(--outline-variant);">&middot;</span>
-          <span style="font-weight: 600; color: var(--primary);">{{ llm }}</span>
+          <span class="snapshot-text-long">Snapshot: <b>{{ bandeja.corte | hora }}</b> (Hora de Panamá)</span>
+          <span class="snapshot-text-short"><b>{{ bandeja.corte | hora }}</b> (Hora de Panamá)</span>
         </div>
 
-        <button type="button" class="tvn-btn-ghost" data-abre-modal="modal-tour">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button type="button" class="tvn-btn-ghost tvn-btn-nav-guia" data-abre-modal="modal-tour" title="Guía metodológica y de uso">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
           </svg>
-          <span>Guía metodológica</span>
+          <span class="btn-label-text">Guía</span>
         </button>
 
-        <button type="button" class="tvn-btn-cta" data-abre-modal="modal-consulta">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button type="button" class="tvn-btn-cta tvn-btn-nav-consulta" data-abre-modal="modal-consulta" title="Nueva consulta IA al snapshot">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          <span>Nueva Consulta</span>
+          <span class="btn-label-text">Consulta</span>
         </button>
 
-        <div style="width: 32px; height: 32px; border-radius: 50%; background-color: var(--primary); display: flex; align-items: center; justify-content: center; color: #ffffff;" title="Redacción TVN">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
+        
       </div>
     </div>
   </header>
 
-  <!-- Top Command Context Bar () -->
+  <!-- Top Command Context Bar (Telemetría y Estado) -->
   <div class="tvn-context-bar" role="status">
     <div class="tvn-container tvn-context-bar-inner">
       <div class="tvn-context-left">
         <span class="tvn-tag-hub">
           <span class="tvn-hub-dot"></span>
-          Redacción Central Panamá
+          {{ 'Estudios económicos · Banca' if modalidad == 'banca' else 'Redacción Central Panamá' }}
         </span>
-        <span>Organización: <strong style="color: var(--on-surface);">{{ bandeja.modo_ia }}</strong></span>
-        <span style="color: var(--outline-variant);">/</span>
-        <span>Inferencia: <strong style="color: var(--on-surface);">{{ llm }}</strong></span>
-        <span style="color: var(--outline-variant);">/</span>
-        <span>Reglas: <strong style="color: var(--on-surface);">{{ bandeja.version_reglas }}</strong></span>
+        {% if modalidad == 'banca' %}
+        <span class="ctx-item">Mapa: <strong style="color: var(--on-surface);">{{ version_banca }}</strong></span>
+        <span class="ctx-sep" style="color: var(--outline-variant);">/</span>
+        {% endif %}
+        <span class="ctx-item">Organización: <strong style="color: var(--on-surface);">{{ bandeja.modo_ia }}</strong></span>
+        <span class="ctx-sep" style="color: var(--outline-variant);">/</span>
+        <span class="ctx-item">Inferencia: <strong style="color: var(--on-surface);">{{ llm }}</strong></span>
+        <span class="ctx-sep ctx-sep-extra" style="color: var(--outline-variant);">/</span>
+        <span class="ctx-item ctx-item-extra">Reglas: <strong style="color: var(--on-surface);">{{ bandeja.version_reglas }}</strong></span>
       </div>
 
       <div class="tvn-context-right">
-        <span>Tasa de ingestión: <strong style="color: var(--primary);">34 cables/min</strong></span>
+        <span class="ctx-rate">Ingestión: <strong style="color: var(--primary);">34 cables/min</strong></span>
         <div class="tvn-status-live">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
           </svg>
@@ -104,6 +117,12 @@
 
   <!-- Contenido Principal -->
   <main class="tvn-container">
+    {% if modalidad == 'banca' %}
+    <div class="banca-aviso" role="note">
+      <strong>Modalidad banca.</strong>
+      <span>{{ aviso_sbp }} Boletines y señales para un analista: no evalúan clientes ni bancos, no recomiendan operaciones y no son alertas regulatorias.</span>
+    </div>
+    {% endif %}
     {% block contenido %}{% endblock %}
   </main>
 
@@ -195,6 +214,7 @@
       </div>
 
       <form method="get" action="/consulta">
+        {% if modalidad == 'banca' %}<input type="hidden" name="modalidad" value="banca">{% endif %}
         <div class="modal-cuerpo">
           <h2 id="modal-consulta-titulo" class="modal-titulo">Pregunta al snapshot auditado</h2>
           <p class="modal-descripcion">
@@ -218,6 +238,9 @@
               Sugerencias rápidas:
             </span>
             <div class="chips-row">
+              {% if modalidad == 'banca' %}
+              <button type="button" class="chip-consulta" data-consulta-sugerida="¿Qué señales públicas del entorno logístico debo revisar?">CU-05 · Entorno logístico</button>
+              {% endif %}
               <button type="button" class="chip-consulta" data-consulta-sugerida="¿Qué pasa con los tránsitos del Canal de Panamá?">Tránsitos del Canal</button>
               <button type="button" class="chip-consulta" data-consulta-sugerida="¿Cuál es la inflación reportada en Panamá?">Inflación en Panamá</button>
               <button type="button" class="chip-consulta" data-consulta-sugerida="¿Cuál es el precio del bitcoin en Japón hoy?" style="color: var(--error); border-color: rgba(186, 26, 26, 0.3);">Prueba de abstención</button>

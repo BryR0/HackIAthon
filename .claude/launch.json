@@ -15,6 +15,21 @@
         "8765"
       ],
       "port": 8765
+    },
+    {
+      "name": "senal-verificacion",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "--directory",
+        "senal",
+        "uvicorn",
+        "senal.web.app:crear_app_desde_entorno",
+        "--factory",
+        "--port",
+        "8766"
+      ],
+      "port": 8766
     }
   ]
 }

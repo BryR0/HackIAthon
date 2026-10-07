@@ -3,7 +3,7 @@
 {% block contenido %}
 
 <div style="margin-top: var(--space-md); margin-bottom: var(--space-md);">
-  <a href="/" class="btn-secondary" style="padding: 5px 12px; font-size: 12px;">
+  <a href="/{{ qm }}" class="btn-secondary" style="padding: 5px 12px; font-size: 12px;">
     &larr; Volver a la Bandeja
   </a>
   <span style="color: var(--outline-variant); margin: 0 6px;">&bull;</span>
@@ -189,6 +189,21 @@
     </div>
     {% endfor %}
 
+    {% if modalidad == 'banca' %}
+    <h3 style="font-size: 13px; font-weight: 700; color: var(--primary); margin: 14px 0 8px 0;">
+      Contexto SBP &middot; sectores potencialmente relacionados (hipótesis, {{ version_banca }})
+    </h3>
+    {% for e in enlaces_sbp %}
+    <div class="serie-sbp">
+      <strong>{{ e.nombre }}: {{ '{:,.1f}'.format(e.valor) }} {{ e.unidad }}</strong>
+      {% if e.variacion_pct is not none %}&middot; {{ e.variacion_pct }} % interanual{% endif %}<br>
+      <span class="meta">{{ e.id_evidencia }} &middot; página {{ e.pagina_pdf }} del PDF &middot; {{ e.limitacion }}</span>
+    </div>
+    {% else %}
+    <p style="font-size: 12px; color: var(--outline); margin: 0 0 8px 0;">El tema no tiene sectores SBP mapeados; no se fuerza una relación.</p>
+    {% endfor %}
+    {% endif %}
+
     {% if not tema.enlaces_indicadores and not tema.enlaces_sismos %}
     <p style="font-size: 12px; color: var(--outline); margin: 0;">Sin dato oficial relacionado de forma sustentada; no se fuerza un enlace.</p>
     {% endif %}
@@ -220,6 +235,34 @@
   </section>
 </div>
 
+{% if modalidad == 'banca' %}
+<!-- Boletín de entorno (modalidad banca, ADR 0003) -->
+<section class="panel-card" aria-labelledby="h-boletin" style="margin-bottom: var(--space-lg);">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
+    <div>
+      <h2 id="h-boletin" style="font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 2px 0;">
+        Boletín de entorno (borrador para analista)
+      </h2>
+      <span style="font-size: 12px; color: var(--outline);">Redacción: {{ llm }} &middot; series SBP y titulares como evidencia</span>
+    </div>
+    <form method="post" action="/tema/{{ tema.id_evento }}/boletin" style="margin: 0;">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <button type="submit" class="btn-primary">{{ 'Regenerar' if resultado else 'Generar' }} boletín con citas</button>
+      <div class="progress-line"><div class="progress-line-fill"></div></div>
+    </form>
+  </div>
+  {% if resultado %}
+    {% include "_boletin.html" %}
+  {% else %}
+    <div style="text-align: center; padding: 36px 20px; background: var(--surface-container-low); border: 1px dashed var(--border); border-radius: var(--radius-xl);">
+      <p style="font-weight: 600; color: var(--primary); margin-bottom: 6px;">Aún no se ha generado el boletín para este evento.</p>
+      <p style="font-size: 12px; color: var(--outline); margin: 0;">
+        Resumen, sectores potencialmente relacionados, horizonte, evidencia citada y 3 preguntas para el analista; observaciones separadas de hipótesis.
+      </p>
+    </div>
+  {% endif %}
+</section>
+{% else %}
 <!-- Paquete editorial (borrador generado) -->
 <section class="panel-card" aria-labelledby="h-borrador" style="margin-bottom: var(--space-lg);">
   <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
@@ -256,15 +299,17 @@
     </div>
   {% endif %}
 </section>
+{% endif %}
 
 <!-- Revisión humana -->
 <section class="panel-card" aria-labelledby="h-revision" style="margin-bottom: var(--space-xl);">
   <h2 id="h-revision" style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 0; margin-bottom: 12px;">
-    Revisión humana
+    Revisión humana {% if modalidad == 'banca' %}del boletín{% else %}del borrador editorial{% endif %}
   </h2>
 
   <form method="post" action="/tema/{{ tema.id_evento }}/revision" class="filter-module" style="box-shadow: none; padding: var(--space-md); margin-bottom: 8px;">
     <input type="hidden" name="csrf" value="{{ csrf }}">
+    <input type="hidden" name="modalidad" value="{{ modalidad }}">
     <div class="filter-fields-wrap">
       <div class="filter-group">
         <label class="filter-label" for="r-estado">Estado</label>
@@ -350,6 +395,7 @@
 
     <form method="post" action="/tema/{{ tema.id_evento }}/revision" class="modal-cuerpo" style="padding-bottom: 20px;">
       <input type="hidden" name="csrf" value="{{ csrf }}">
+      <input type="hidden" name="modalidad" value="{{ modalidad }}">
       <h2 id="modal-decision-titulo" class="modal-titulo">
         Registrar decisión sobre {{ tema.id_evento }}
       </h2>

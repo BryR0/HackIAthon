@@ -15,6 +15,10 @@
 | Credenciales | Solo en `.env` (ignorado por git); nunca en el prompt ni en logs; la clave va en cabecera, no en la URL | `llm.py`, revisión ECC |
 | Abuso de la app | CSRF, CSP sin scripts, TrustedHost, solo 127.0.0.1, límites de formulario, generación serializada y cacheada | `web/app.py` |
 | Disponibilidad sin red | Snapshot y modelo locales, plantilla sin LLM | T10 |
+| Boletín leído como recomendación o alerta (banca) | Léxico prohibido (compra/venta, pérdidas, impagos, exposición de cartera, scores, alertas) en hipótesis y resumen; sectores siempre "hipótesis"; aviso SBP fijo | `boletin.py`, TB05, TB06 |
+| Serie mensual SBP presentada como dato de hoy | Período `MM/AAAA` obligatorio al citar cifras; "hoy/actual" descartado | `cite.py`, TB04 |
+| Confundir el análisis con opinión de la SBP | Aviso en catálogo, manifest, ficha y boletín | ADR 0003 |
+| Riesgo crediticio o de clientes inferido | Sin datos por banco ni cliente (esquema cerrado); sin morosidad ni solvencia | TB12, D15 |
 
 ## Fuera de alcance (declarado)
 
@@ -28,3 +32,6 @@ publicación.
   posterior.
 - La redacción del texto libre no se verifica (solo sus cifras); la interfaz lo dice.
 - Un LLM pequeño produce borradores pobres; se cae a la plantilla con aviso.
+- Banca: el mapa tema → sector es un supuesto del equipo, no una relación medida.
+- Banca: con recuperación híbrida, una fuente con instrucciones puede quedar fuera del
+  top-k (RB03); no se usa ni se marca.

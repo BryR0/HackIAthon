@@ -70,8 +70,9 @@ def obtener_con_reintentos(
 
 
 def _guardar(destino: Path, nombre: str, contenido: bytes) -> str:
-    destino.mkdir(parents=True, exist_ok=True)
-    (destino / nombre).write_bytes(contenido)
+    ruta = destino / nombre
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    ruta.write_bytes(contenido)
     return hashlib.sha256(contenido).hexdigest()
 
 
@@ -138,18 +139,70 @@ def _extraer_worldbank(cliente: httpx.Client, destino: Path) -> list[Solicitud]:
     ]
 
 
+def _extraer_sbp(cliente: httpx.Client, destino: Path) -> list[Solicitud]:
+    """Fuente D: un PDF por mes; los PDFs quedan en ``raw/sbp/`` y fuera de git (ADR 0003)."""
+    anio = catalogo.SBP_ANIO % 100
+    return [
+        _solicitar(
+            cliente,
+            destino,
+            f"sbp:{catalogo.SBP_ANIO}-{mes:02d}",
+            catalogo.SBP_IAB_URL.format(mes=mes, anio=anio),
+            {},
+            f"sbp/IAB-{mes:02d}{anio:02d}.pdf",
+        )
+        for mes in catalogo.SBP_MESES
+    ]
+
+
+def _cliente(transporte: httpx.BaseTransport | None = None) -> httpx.Client:
+    return httpx.Client(
+        headers={"User-Agent": AGENTE},
+        timeout=TIEMPO_ESPERA_SEGUNDOS,
+        follow_redirects=True,
+        transport=transporte,
+    )
+
+
+def _escribir_registro(destino: Path, registro: Mapping[str, object]) -> None:
+    destino.mkdir(parents=True, exist_ok=True)
+    (destino / "extraccion.json").write_text(
+        json.dumps(registro, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8"
+    )
+
+
+def agregar_sbp(
+    destino: Path, *, transporte: httpx.BaseTransport | None = None
+) -> dict[str, object]:
+    """Descarga solo la fuente D y la agrega a un ``extraccion.json`` existente.
+
+    No vuelve a pedir noticias: el corpus editorial y su fecha de corte no cambian.
+    Una corrida previa de SBP se reemplaza, no se duplica.
+    """
+    registro: dict[str, object] = json.loads((destino / "extraccion.json").read_text("utf-8"))
+    previas = registro["solicitudes"]
+    assert isinstance(previas, list)
+    with _cliente(transporte) as cliente:
+        nuevas = [asdict(s) for s in _extraer_sbp(cliente, destino)]
+    registro = {
+        **registro,
+        "solicitudes": [s for s in previas if not str(s["fuente"]).startswith("sbp:")] + nuevas,
+    }
+    _escribir_registro(destino, registro)
+    return registro
+
+
 def extraer_todo(
     destino: Path,
     corte: datetime | None = None,
     *,
     incluir_gdelt: bool = True,
+    incluir_sbp: bool = True,
     dormir: Callable[[float], None] = time.sleep,
 ) -> dict[str, object]:
     """Descarga todas las fuentes y escribe ``extraccion.json``. Devuelve el registro."""
     corte = (corte or datetime.now(UTC)).replace(microsecond=0)
-    with httpx.Client(
-        headers={"User-Agent": AGENTE}, timeout=TIEMPO_ESPERA_SEGUNDOS, follow_redirects=True
-    ) as cliente:
+    with _cliente() as cliente:
         solicitudes = [
             _solicitar(cliente, destino, "tvn_rss", catalogo.TVN_RSS_URL, {}, "tvn_rss.xml"),
             *_extraer_worldbank(cliente, destino),
@@ -162,6 +215,8 @@ def extraer_todo(
                 "usgs_2024.geojson",
             ),
         ]
+        if incluir_sbp:
+            solicitudes.extend(_extraer_sbp(cliente, destino))
         if incluir_gdelt:
             solicitudes.extend(_extraer_gdelt(cliente, destino, corte, dormir))
 
@@ -170,8 +225,5 @@ def extraer_todo(
         "fecha_corte_utc": corte.isoformat(),
         "solicitudes": [asdict(s) for s in solicitudes],
     }
-    destino.mkdir(parents=True, exist_ok=True)
-    (destino / "extraccion.json").write_text(
-        json.dumps(registro, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8"
-    )
+    _escribir_registro(destino, registro)
     return registro

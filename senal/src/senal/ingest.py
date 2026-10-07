@@ -9,8 +9,9 @@ Reglas del contrato (reto §7):
 from __future__ import annotations
 
 import hashlib
+import re
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -20,6 +21,8 @@ Fila = Mapping[str, str | None]
 CAMPOS_OBLIGATORIOS_NOTICIA = ("titulo", "url", "medio", "origen")
 PARAMETROS_DE_RASTREO = ("utm_", "fbclid", "gclid", "ocid")
 FORMATO_GDELT = "%Y%m%dT%H%M%SZ"
+_PERIODO_MENSUAL = re.compile(r"\d{4}-(0[1-9]|1[0-2])")
+CAMPOS_OBLIGATORIOS_SBP = ("id_serie", "periodo", "sector")
 
 
 @dataclass(frozen=True)
@@ -74,6 +77,35 @@ class Indicador:
     fuente_url: str | None
     fecha_extraccion: datetime | None
     licencia: str | None
+
+
+@dataclass(frozen=True)
+class SerieSBP:
+    """Valor mensual agregado de un informe de la SBP (fuente D, extensión bancaria).
+
+    Sin datos de clientes ni por banco: solo agregados del sistema por sector.
+    """
+
+    id_serie: str
+    periodo: str  # "2024-12": mes de cierre del informe
+    nombre: str
+    sector: str
+    valor: float | None
+    unidad: str | None
+    valor_base: float | None
+    periodo_base: str | None  # mismo mes del año anterior (variación interanual)
+    variacion_pct: float | None
+    cuadro: str | None
+    pagina_pdf: int | None  # 1-based del PDF, no la numeración impresa
+    fuente_url: str | None
+    sha256_pdf: str | None
+
+    @property
+    def id_evidencia(self) -> str:
+        return f"{self.id_serie}:{self.periodo}"
+
+    def con_valor(self, valor: float | None) -> SerieSBP:
+        return replace(self, valor=valor)
 
 
 @dataclass(frozen=True)
@@ -272,3 +304,59 @@ def completar_cuadricula(
                     )
                 )
     return tuple(cuadricula)
+
+
+def _numero_opcional(fila: Fila, campo: str) -> float | None:
+    texto = _texto(fila, campo)
+    try:
+        return None if texto is None else float(texto)
+    except ValueError as error:
+        raise _FilaInvalida(f"{campo}_invalido", campo) from error
+
+
+def _entero_opcional(fila: Fila, campo: str) -> int | None:
+    valor = _numero_opcional(fila, campo)
+    return None if valor is None else int(valor)
+
+
+def _periodo_opcional(fila: Fila, campo: str) -> str | None:
+    texto = _texto(fila, campo)
+    if texto is not None and not _PERIODO_MENSUAL.fullmatch(texto):
+        raise _FilaInvalida("periodo_invalido", campo)
+    return texto
+
+
+def _construir_serie_sbp(fila: Fila) -> SerieSBP:
+    for campo in CAMPOS_OBLIGATORIOS_SBP:
+        if _texto(fila, campo) is None:
+            raise _FilaInvalida("campo_obligatorio", campo)
+    periodo = _periodo_opcional(fila, "periodo")
+    valor = _numero_opcional(fila, "valor")
+    assert periodo is not None
+    return SerieSBP(
+        id_serie=_texto(fila, "id_serie") or "",
+        periodo=periodo,
+        nombre=_texto(fila, "nombre") or "",
+        sector=_texto(fila, "sector") or "",
+        valor=valor,
+        unidad=_texto(fila, "unidad"),
+        valor_base=_numero_opcional(fila, "valor_base"),
+        periodo_base=_periodo_opcional(fila, "periodo_base"),
+        variacion_pct=_numero_opcional(fila, "variacion_pct"),
+        cuadro=_texto(fila, "cuadro"),
+        pagina_pdf=_entero_opcional(fila, "pagina_pdf"),
+        fuente_url=_texto(fila, "fuente_url"),
+        sha256_pdf=_texto(fila, "sha256_pdf"),
+    )
+
+
+def validar_series_sbp(filas: Iterable[Fila]) -> ResultadoValidacion[SerieSBP]:
+    """Carga de ``sbp_series.csv``: nulos se conservan; filas inválidas se separan (T01)."""
+    validas: list[SerieSBP] = []
+    excluidos: list[Exclusion] = []
+    for fila in filas:
+        try:
+            validas.append(_construir_serie_sbp(fila))
+        except _FilaInvalida as error:
+            excluidos.append(Exclusion(error.motivo, error.campo, dict(fila)))
+    return ResultadoValidacion(tuple(validas), tuple(excluidos))

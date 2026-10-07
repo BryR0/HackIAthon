@@ -1,8 +1,8 @@
 """Catálogo de fuentes del paquete "Panamá · Señales y Evidencias v1" (reto §6, §12).
 
 Única fuente de verdad para extracción, snapshot y la página "Catálogo de datos"
-de Notion. Las URLs [1]–[7] vienen del PDF del reto; los endpoints son derivados.
-Las fuentes SBP [8]–[9] quedan fuera: la modalidad bancaria está diferida.
+de Notion. Las URLs [1]–[9] vienen del PDF del reto; los endpoints son derivados.
+Las fuentes SBP [8]–[9] alimentan la extensión bancaria (ADR 0003).
 """
 
 from __future__ import annotations
@@ -30,6 +30,17 @@ USAR_EXTRACTOS_TVN = False
 GDELT_DOC_URL = "https://api.gdeltproject.org/api/v2/doc/doc"
 WORLDBANK_URL = "https://api.worldbank.org/v2/country/{paises}/indicator/{indicador}"
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
+# Fuente D (§6): Informe de Actividad Bancaria mensual de la SBP, 12 meses de 2024.
+SBP_IAB_URL = (
+    "https://www.superbancos.gob.pa/documentos/financiera_y_estadistica/estudios/IAB/"
+    "IAB-{mes:02d}{anio:02d}.pdf"
+)
+SBP_ANIO = 2024
+SBP_MESES = range(1, 13)
+AVISO_SBP = (
+    "Datos agregados de la Superintendencia de Bancos de Panamá con fines informativos. "
+    "El análisis es del equipo, no una opinión oficial de la SBP."
+)
 
 # Consultas GDELT por familia temática pedida en el reto (§6 A).
 GDELT_CONSULTAS = {
@@ -102,5 +113,18 @@ FUENTES = (
         "USGS · servicio FDSN de eventos",
         "https://earthquake.usgs.gov/fdsnws/event/1",
         "Usar ID y URL del evento; solo hechos sísmicos",
+    ),
+    FuenteCatalogo(
+        "8",
+        "SBP · estadísticas financieras",
+        "https://www.superbancos.gob.pa/estadisticas-financieras",
+        "Uso informativo; libre acceso; citar a la SBP como fuente y ser fiel a su contenido "
+        "y contexto. Solo agregados del sistema, sin datos de clientes ni por banco",
+    ),
+    FuenteCatalogo(
+        "9",
+        "SBP · estudios e informes (Informe de Actividad Bancaria)",
+        "https://www.superbancos.gob.pa/estadisticas-financieras/estudios",
+        "Uso informativo; citar a la SBP; el análisis del equipo no es opinión oficial de la SBP",
     ),
 )

@@ -62,6 +62,27 @@ consulta ─► recuperación BM25 + coseno (RRF) ─► compuerta de abstenció
 | Redacción | LLM o plantilla, siempre validada |
 | Decisión | Persona revisora |
 
+## Extensión bancaria (misma app)
+
+La modalidad bancaria del reto (§1: "alternativa o extensión, sin exigir dos productos
+completos") vive en esta misma app: el selector **Editorial | Banca** de la cabecera o
+`?modalidad=banca` en cualquier página. Misma bandeja, mismo puntaje `senal-1.1.0`,
+mismo motor de redacción y validador; cambia la salida
+([ADR 0003](../docs/adr/0003-parte-2-extension-bancaria.md)).
+
+- **Boletín de entorno** (reto §3): resumen ≤ 250 palabras, sectores potencialmente
+  relacionados, período de la evidencia y horizonte de seguimiento, observaciones
+  separadas de hipótesis de impacto, 3 preguntas para el analista y aviso de la SBP.
+- **Fuente D:** saldos de crédito local por sector de los 12 Informes de Actividad
+  Bancaria 2024 (SBP), con período, unidad y página del PDF. Toda cifra se cita con
+  `MM/AAAA` y nunca como dato de hoy.
+- **Sectores = hipótesis:** el mapa tema → sector (`banca-1.0.0`) es una tabla del
+  equipo; el LLM no lo decide.
+- **Prohibido fuera de declaraciones atribuidas:** recomendar compra/venta, inferir
+  pérdidas, impagos o exposición de cartera, scores de clientes o alertas regulatorias.
+- **CU-05:** "¿Qué señales públicas del entorno logístico debo revisar?" en Consulta
+  (modo Banca) → boletín con Comercio e Industria citados.
+
 ## Datos
 
 Paquete `panama-senales-evidencias-v1` en `data/processed/` (con `manifest.json`
@@ -72,6 +93,7 @@ y SHA-256 por archivo):
 | `noticias.csv` | 3.049 titulares es/en de los últimos 90 días (68 de TVN): TVN RSS + GDELT DOC 2.0 |
 | `indicadores.csv` | 540 filas: 6 países × 6 indicadores × 2010–2024 (Banco Mundial, CC BY 4.0) |
 | `eventos.geojson` | 82 sismos 2024 en la caja lat 5–12, lon −86 a −76 (USGS) |
+| `sbp_series.csv` | 156 filas: crédito local por sector, 12 informes mensuales 2024 de la SBP (extensión bancaria) |
 | `excluidos.csv`, `reporte_calidad.json` | Exclusiones con motivo y reporte de calidad |
 
 Desviaciones declaradas en el manifest:
@@ -86,6 +108,9 @@ Regenerar desde las fuentes, es decir la receta (`data/raw/` no se versiona):
 uv run python scripts/extract.py
 uv run python scripts/build_snapshot.py
 ```
+
+Solo la fuente D, sin volver a pedir las noticias (el paquete editorial queda idéntico):
+`uv run python scripts/extract.py --solo-sbp` y luego `build_snapshot.py`.
 
 ## Desarrollo
 
@@ -107,7 +132,12 @@ uv run python evals/eval_senal.py --modo bm25    # baseline léxico
 uv run python evals/eval_senal.py                # híbrido e5
 uv run python evals/eval_senal.py --llm          # con el LLM configurado
 uv run python evals/eval_organize.py medir       # tras etiquetar evals/etiquetado/*.csv
+uv run python evals/eval_senal.py --modalidad banca --benchmark evals/benchmark_banca_dev.jsonl
 ```
+
+Banca (7 dev / 3 reservados, sin LLM): dev 7/7 en BM25 e híbrido, citas 74/74;
+reservado 3/3 en BM25 y 2/3 en híbrido (RB03: la fuente con instrucciones quedó fuera
+del top-8 y no se usó). La regresión editorial sigue 40/40.
 
 Resultados en `eval-results/senal/` con numerador, denominador y fallos.
 
@@ -154,6 +184,9 @@ Con Ollama `llama3.2` en el equipo de desarrollo, un borrador tarda ≈15 s
 | T08 prioridad alta | `test_score.py` |
 | T09 brief editorial | `test_generate.py` |
 | T10 sin internet | `tests/web/test_app.py` (sin modelo ni LLM); snapshot y modelo locales |
+| TB01–TB03, TB12 fuente D (parser, sumas, esquema sin clientes) | `test_sbp.py`, `test_snapshot.py` |
+| TB04–TB08, TB10–TB11 boletín y CU-05 | `test_boletin.py` |
+| TB09, TB13, TB14 web, revisión por modalidad, arranque sin SBP | `tests/web/test_app.py`, `test_review.py`, `test_banca.py` |
 
 ## Seguridad y ética
 

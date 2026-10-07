@@ -6,6 +6,7 @@ Uso:
     uv run python evals/eval_senal.py --modo bm25     # baseline léxico (comparación §8)
     uv run python evals/eval_senal.py --llm           # usa el LLM configurado (Ollama/Gemini)
     uv run python evals/eval_senal.py --benchmark evals/benchmark_reservado.jsonl
+    uv run python evals/eval_senal.py --modalidad banca --benchmark evals/benchmark_banca_dev.jsonl
 
 Los casos sintéticos (SINT-*) se agregan solo al buscador de esta corrida, nunca al
 snapshot ni a la app. Las etiquetas del benchmark de desarrollo son un borrador que
@@ -23,18 +24,27 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from senal.boletin import Boletin, formato_banca, ids_consulta_banca, tema_de_consulta
 from senal.embed import cargar_codificador
 from senal.generate import (
     COBERTURA_MINIMA,
     UMBRAL_BM25,
     UMBRAL_COSENO,
     UMBRAL_COSENO_FUERTE,
+    Paquete,
     ResultadoRespuesta,
     responder,
 )
 from senal.llm import cargar_proveedor
 from senal.organize import normalizar_texto
-from senal.pipeline import cargar_snapshot, evidencias_de
+from senal.pipeline import (
+    Snapshot,
+    Tema,
+    cargar_snapshot,
+    construir_bandeja,
+    evidencias_de,
+    vectores_noticias,
+)
 from senal.retrieve import Buscador, Evidencia
 from senal.score import RULES_VERSION
 
@@ -47,9 +57,21 @@ def _cargar_benchmark(ruta: Path) -> list[dict[str, Any]]:
 
 def _texto_emitido(r: ResultadoRespuesta) -> str:
     partes = [a.texto for a in r.aceptadas]
-    if r.paquete is not None:
-        p = r.paquete
+    p = r.paquete
+    if isinstance(p, Paquete):
         partes += [p.titulo, p.brief, p.guion, p.copy_digital, *p.preguntas]
+    elif isinstance(p, Boletin):
+        partes += [p.titulo, p.resumen, *p.preguntas_analista, *(s.razon for s in p.sectores)]
+    return " ".join(partes)
+
+
+def _texto_propio(r: ResultadoRespuesta) -> str:
+    """Lo que redacta el sistema, sin titulares atribuidos: allí se busca el léxico
+    prohibido en banca (citar "pérdidas" de un medio es válido; inferirlas, no)."""
+    partes = [a.texto for a in r.aceptadas if a.tipo != "declaracion"]
+    p = r.paquete
+    if isinstance(p, Boletin):
+        partes += [*p.preguntas_analista, *(s.razon for s in p.sectores), p.horizonte_seguimiento]
     return " ".join(partes)
 
 
@@ -78,6 +100,12 @@ def _evaluar_caso(caso: dict[str, Any], r: ResultadoRespuesta) -> dict[str, Any]
         chequeos["contradiccion_detectada"] = set(esperado.get("ids", [])) <= ids_en_conflicto
     for prohibido in esperado.get("prohibido", []):
         chequeos[f"sin:{prohibido}"] = prohibido.lower() not in emitido.lower()
+    propio = normalizar_texto(_texto_propio(r))
+    for prohibido in esperado.get("prohibido_propio", []):
+        chequeos[f"sin_propio:{prohibido}"] = normalizar_texto(prohibido) not in propio
+    if esperado.get("ids_citados"):
+        citados = {c.id_evidencia for a in r.aceptadas for c in a.citas}
+        chequeos["ids_citados"] = set(esperado["ids_citados"]) <= citados
     for sospechoso in esperado.get("sospechoso", []):
         chequeos[f"sospechoso:{sospechoso}"] = sospechoso in r.sospechosas
     if esperado.get("acusacion_no_como_hecho"):
@@ -153,24 +181,53 @@ def _imprimir(salida: dict[str, Any], ruta: Path) -> None:
         print(f"  FALLO {f['id']} ({f['tipo']}): {', '.join(fallidos)} | {f['consulta']}")
 
 
+def _temas(snapshot: Snapshot, modo: str) -> tuple[Tema, ...]:
+    """Bandeja de la corrida: CU-05 toma las noticias de los temas mejor priorizados."""
+    if modo != "hibrido":
+        return construir_bandeja(snapshot, None, None).temas
+    codificador = cargar_codificador()
+    cache = RAIZ / "data" / "processed" / "embeddings.npz"
+    vectores = vectores_noticias(snapshot, codificador, cache)
+    return construir_bandeja(snapshot, codificador, vectores).temas
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", type=Path, default=RAIZ / "evals" / "benchmark_dev.jsonl")
     parser.add_argument("--modo", choices=("hibrido", "bm25"), default="hibrido")
     parser.add_argument("--llm", action="store_true", help="usar el LLM configurado")
+    parser.add_argument(
+        "--modalidad",
+        choices=("editorial", "banca"),
+        default="editorial",
+        help="banca: boletín de entorno con series SBP (extensión, ADR 0003)",
+    )
     args = parser.parse_args()
+    banca = args.modalidad == "banca"
 
     casos = _cargar_benchmark(args.benchmark)
     snapshot = cargar_snapshot(RAIZ / "data" / "processed")
     sinteticas = [Evidencia(**e) for c in casos for e in c.get("evidencia_sintetica", [])]
     codificador = cargar_codificador() if args.modo == "hibrido" else None
-    buscador = Buscador([*evidencias_de(snapshot), *sinteticas], codificador)
+    corpus = evidencias_de(snapshot, incluir_sbp=banca)
+    buscador = Buscador([*corpus, *sinteticas], codificador)
     proveedor = cargar_proveedor() if args.llm else None
+    temas = _temas(snapshot, args.modo) if banca else ()
 
     filas, latencias, tokens, costo = [], [], 0, 0.0
     for caso in casos:
         inicio = time.perf_counter()
-        resultado = responder(caso["consulta"], buscador, proveedor)
+        if banca:
+            consulta = caso["consulta"]
+            resultado = responder(
+                consulta,
+                buscador,
+                proveedor,
+                ids_obligatorios=ids_consulta_banca(consulta, temas, snapshot.series_sbp),
+                formato=formato_banca(tema_de_consulta(consulta)),
+            )
+        else:
+            resultado = responder(caso["consulta"], buscador, proveedor)
         latencias.append(time.perf_counter() - inicio)
         tokens += resultado.tokens_entrada + resultado.tokens_salida
         costo += resultado.costo_usd
@@ -180,6 +237,7 @@ def main() -> None:
         "fecha_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "config": {
             "benchmark": args.benchmark.name,
+            "modalidad": args.modalidad,
             "casos": len(casos),
             "busqueda": buscador.modo,
             "redaccion": f"{proveedor.nombre}:{proveedor.modelo}" if proveedor else "extractivo",
@@ -201,7 +259,8 @@ def main() -> None:
     destino = RAIZ / "eval-results" / "senal"
     destino.mkdir(parents=True, exist_ok=True)
     marca = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
-    ruta = destino / f"{marca}_{args.modo}{'_llm' if args.llm else ''}.json"
+    sufijo = f"{'_banca' if banca else ''}{'_llm' if args.llm else ''}"
+    ruta = destino / f"{marca}_{args.modo}{sufijo}.json"
     ruta.write_text(json.dumps(salida, ensure_ascii=False, indent=2), encoding="utf-8")
     _imprimir(salida, ruta)
 

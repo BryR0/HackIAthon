@@ -180,3 +180,110 @@ def test_reporte_de_calidad_cuenta_validas_y_excluidas_por_motivo(tmp_path: Path
     }
     assert reporte["noticias"]["por_origen"] == {"gdelt_doc:economia": 1, "tvn_rss": 1}
     assert reporte["indicadores"]["nulos"] == 539
+
+
+# --- Extensión bancaria: fuente D · SBP (TB03, TB12) -------------------------
+
+FIXTURES_SBP = Path(__file__).resolve().parents[1] / "fixtures" / "sbp"
+COLUMNAS_SBP_ESPERADAS = [
+    "id_serie",
+    "periodo",
+    "nombre",
+    "sector",
+    "valor",
+    "unidad",
+    "valor_base",
+    "periodo_base",
+    "variacion_pct",
+    "cuadro",
+    "pagina_pdf",
+    "fuente_url",
+    "sha256_pdf",
+]
+
+
+def _lector_fixture(ruta: Path) -> dict[int, str]:
+    crudo = json.loads((FIXTURES_SBP / ruta.name.replace(".pdf", ".json")).read_text("utf-8"))
+    return {int(k): v for k, v in crudo.items()}
+
+
+def _crear_raw_con_sbp(raw: Path) -> None:
+    _crear_raw(raw)
+    registro = json.loads((raw / "extraccion.json").read_text("utf-8"))
+    (raw / "sbp").mkdir()
+    for mes in ("0124", "1224"):
+        (raw / "sbp" / f"IAB-{mes}.pdf").write_bytes(b"%PDF sintetico")
+        solicitud = _solicitud(f"sbp:2024-{mes[:2]}", f"sbp/IAB-{mes}.pdf", 200)
+        registro["solicitudes"].append({**solicitud, "sha256": "f" * 64})
+    registro["solicitudes"].append(_solicitud("sbp:2024-03", None, 404))
+    (raw / "extraccion.json").write_text(json.dumps(registro), encoding="utf-8")
+
+
+def test_sin_solicitudes_sbp_no_se_escribe_la_extension(tmp_path: Path) -> None:
+    _crear_raw(tmp_path / "raw")
+
+    manifest = construir_snapshot(tmp_path / "raw", tmp_path / "out")
+
+    assert not (tmp_path / "out" / "sbp_series.csv").exists()
+    assert "sbp_series.csv" not in manifest["conteos"]
+
+
+def test_tb12_series_sbp_con_esquema_cerrado_y_sin_datos_de_clientes(tmp_path: Path) -> None:
+    _crear_raw_con_sbp(tmp_path / "raw")
+
+    construir_snapshot(tmp_path / "raw", tmp_path / "out", leer_pdf=_lector_fixture)
+
+    ruta = tmp_path / "out" / "sbp_series.csv"
+    with ruta.open(encoding="utf-8", newline="") as archivo:
+        lector = csv.DictReader(archivo)
+        assert lector.fieldnames == COLUMNAS_SBP_ESPERADAS
+        filas = list(lector)
+    assert len(filas) == 2 * 13
+    assert {f["periodo"] for f in filas} == {"2024-01", "2024-12"}
+    comercio = next(
+        f for f in filas if f["sector"] == "comercio" and f["periodo"] == "2024-12"
+    )
+    assert comercio["valor"] == "13177.0"
+    assert comercio["sha256_pdf"] == "f" * 64
+    assert comercio["pagina_pdf"] == "14"
+
+
+def test_tb03_manifest_y_reporte_registran_la_fuente_d(tmp_path: Path) -> None:
+    _crear_raw_con_sbp(tmp_path / "raw")
+
+    manifest = construir_snapshot(tmp_path / "raw", tmp_path / "out", leer_pdf=_lector_fixture)
+
+    assert manifest["conteos"]["sbp_series.csv"] == 26
+    assert "sbp_series.csv" in manifest["archivos"]
+    assert {"fuente": "sbp:2024-03", "estado": 404} in manifest["solicitudes_fallidas"]
+    sbp = [c for c in manifest["consultas"] if c["fuente"].startswith("sbp:2024-12")]
+    assert sbp[0]["sha256"] == "f" * 64
+    refs = {licencia["ref"]: licencia["condiciones"] for licencia in manifest["licencias"]}
+    assert "informativ" in refs["8"].lower() and "citar" in refs["8"].lower()
+    assert any("SBP" in t for t in manifest["transformaciones"])
+
+    reporte = json.loads((tmp_path / "out" / "reporte_calidad.json").read_text("utf-8"))
+    assert reporte["sbp"]["filas"] == 26
+    assert reporte["sbp"]["nulos"] == 0
+    assert reporte["sbp"]["periodos"] == ["2024-01", "2024-12"]
+    assert reporte["sbp"]["periodos_faltantes"] == 10
+    assert reporte["sbp"]["inconsistencias"] == 0
+
+
+def test_pdf_ilegible_o_fuera_de_raw_se_excluye_sin_bloquear(tmp_path: Path) -> None:
+    raw = tmp_path / "raw"
+    _crear_raw_con_sbp(raw)
+    registro = json.loads((raw / "extraccion.json").read_text("utf-8"))
+    registro["solicitudes"].append(_solicitud("sbp:2024-02", "../fuera/IAB-0224.pdf", 200))
+    (raw / "extraccion.json").write_text(json.dumps(registro), encoding="utf-8")
+
+    def lector(ruta: Path) -> dict[int, str]:
+        if ruta.name == "IAB-0124.pdf":
+            raise ValueError("PDF ilegible: IAB-0124.pdf")
+        return _lector_fixture(ruta)
+
+    construir_snapshot(raw, tmp_path / "out", leer_pdf=lector)
+
+    reporte = json.loads((tmp_path / "out" / "reporte_calidad.json").read_text("utf-8"))
+    assert reporte["sbp"]["periodos"] == ["2024-12"]
+    assert reporte["sbp"]["excluidas_por_motivo"] == {"pdf_ilegible": 1, "ruta_fuera_de_raw": 1}

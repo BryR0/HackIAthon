@@ -5,13 +5,15 @@ Una afirmación se **descarta entera** si:
 - no tiene cita, cita evidencia no recuperada o un campo no citable;
 - contiene una cifra que no aparece en los campos citados;
 - cita un indicador anual sin mencionar el año (no confundir con dato de hoy);
-- presenta una acusación como hecho (debe ser declaración atribuida).
+- cita una serie mensual SBP sin su período ``MM/AAAA`` o la presenta como dato de hoy;
+- presenta una acusación como hecho (debe ser declaración atribuida);
+- incumple una regla extra de la modalidad (p. ej. lenguaje prohibido en banca).
 """
 
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
 from senal.contradict import normalizar_numero
@@ -25,7 +27,14 @@ CAMPOS_CITABLES: Mapping[str, frozenset[str]] = {
     ),
     "indicador": frozenset({"nombre", "pais", "pais_iso3", "anio", "valor", "unidad"}),
     "sismo": frozenset({"magnitude", "time", "place"}),
-}
+    "serie_sbp": frozenset(
+        {"nombre", "periodo", "valor", "unidad", "variacion_interanual_pct", "periodo_base",
+         "cuadro", "pagina_pdf"}
+    ),
+}  # fmt: skip
+# Marcadores de actualidad: una serie de 2024 no describe la situación de hoy (T04).
+PALABRAS_ACTUALIDAD = frozenset({"hoy", "actual", "actualmente", "ahora", "vigente"})
+CAMPOS_CIFRA_SBP = frozenset({"valor", "variacion_interanual_pct", "periodo", "periodo_base"})
 # Palabras completas y raíces: "robo" no debe coincidir con "robot" ni "lavado" con "lavadora".
 PALABRAS_ACUSACION = frozenset(
     {"culpable", "culpables", "delito", "delitos", "fraude", "robo", "soborno", "sobornos",
@@ -53,6 +62,10 @@ class AfirmacionPropuesta:
 class Descartada:
     afirmacion: AfirmacionPropuesta
     motivo: str
+
+
+# Regla de una modalidad: recibe la afirmación y las evidencias recuperadas por ID.
+Regla = Callable[[AfirmacionPropuesta, Mapping[str, Evidencia]], str | None]
 
 
 @dataclass(frozen=True)
@@ -116,24 +129,50 @@ def _motivo_descarte(
 
     if not _cifras_respaldadas(afirmacion.texto, [e.campos.get(c, "") for e, c in citadas]):
         return "cifra_sin_respaldo"
-    for evidencia, _ in citadas:
-        anio = evidencia.campos.get("anio")
-        if evidencia.tipo == "indicador" and anio and anio not in afirmacion.texto:
-            return "indicador_sin_anio"
+    motivo_periodo = _motivo_periodo(afirmacion.texto, citadas)
+    if motivo_periodo is not None:
+        return motivo_periodo
     if afirmacion.tipo == "hecho" and _es_acusacion(afirmacion.texto):
         return "acusacion_como_hecho"
     return None
 
 
+def _motivo_periodo(texto: str, citadas: Sequence[tuple[Evidencia, str]]) -> str | None:
+    """Indicador anual con su año; cifra de una serie mensual con su ``MM/AAAA``; ninguna
+    serie mensual presentada como dato de hoy."""
+    cifras_sbp = {e.id for e, campo in citadas if campo in CAMPOS_CIFRA_SBP}
+    for evidencia, _ in citadas:
+        anio = evidencia.campos.get("anio")
+        if evidencia.tipo == "indicador" and anio and anio not in texto:
+            return "indicador_sin_anio"
+        if evidencia.tipo != "serie_sbp":
+            continue
+        periodo = evidencia.campos.get("periodo", "")
+        if evidencia.id in cifras_sbp and periodo not in texto:
+            return "serie_sin_periodo"
+        if PALABRAS_ACTUALIDAD & set(normalizar_texto(texto).split()):
+            return "serie_como_dato_actual"
+    return None
+
+
 def validar_afirmaciones(
-    afirmaciones: Sequence[AfirmacionPropuesta], evidencias: Sequence[Evidencia]
+    afirmaciones: Sequence[AfirmacionPropuesta],
+    evidencias: Sequence[Evidencia],
+    *,
+    reglas_extra: Sequence[Regla] = (),
 ) -> ResultadoCitas:
-    """Valida contra las evidencias **recuperadas** para esta consulta, no contra todo el corpus."""
+    """Valida contra las evidencias **recuperadas** para esta consulta, no contra todo el corpus.
+
+    ``reglas_extra`` agrega reglas de la modalidad después de las comunes; la primera que
+    devuelve un motivo descarta la afirmación.
+    """
     por_id = {e.id: e for e in evidencias}
     aceptadas: list[AfirmacionPropuesta] = []
     descartadas: list[Descartada] = []
     for afirmacion in afirmaciones:
-        motivo = _motivo_descarte(afirmacion, por_id)
+        motivo = _motivo_descarte(afirmacion, por_id) or next(
+            (m for regla in reglas_extra if (m := regla(afirmacion, por_id)) is not None), None
+        )
         if motivo is None:
             aceptadas.append(afirmacion)
         else:

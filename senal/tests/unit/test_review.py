@@ -6,9 +6,21 @@ from pathlib import Path
 
 import pytest
 
-from senal.review import ESTADOS, RegistroRevisiones, Revision
+from senal.ingest import Noticia
+from senal.pipeline import Snapshot, construir_bandeja
+from senal.review import ESTADOS, RegistroRevisiones, Revision, ficha_contrato
 
 AHORA = datetime(2026, 10, 6, 15, 0, tzinfo=UTC)
+SNAPSHOT_BANCA = Snapshot(
+    noticias=(
+        Noticia("N-1", "Canal de Panamá limita tránsitos", "https://prensa.com/n1", "prensa.com",
+                "es", AHORA, None, AHORA, "gdelt_doc:logistica", "titular_metadatos"),
+    ),
+    indicadores=(),
+    eventos=(),
+    manifest={"fecha_corte_utc": AHORA.isoformat()},
+    corte=AHORA,
+)  # fmt: skip
 
 
 def test_estados_son_exactamente_los_del_reto() -> None:
@@ -71,3 +83,52 @@ def test_revision_guarda_los_ids_de_fuente_del_caso(tmp_path: Path) -> None:
     )
 
     assert json.loads(ruta.read_text(encoding="utf-8"))["ids_fuente"] == ["N-1", "N-2"]
+
+
+# --- TB13 · revisión del boletín bancario (extensión, ADR 0003) ---------------------
+
+
+def test_tb13_revision_de_boletin_no_pisa_la_editorial(tmp_path: Path) -> None:
+    registro = RegistroRevisiones(tmp_path / "reviews.jsonl")
+    registro.registrar(Revision("E-1", "aprobado_como_borrador", "Ana Editora", "", AHORA))
+    registro.registrar(
+        Revision("E-1", "descartado", "Beto Analista", "sin dato", AHORA, modalidad="banca")
+    )
+
+    assert registro.estado_actual("E-1") == "aprobado_como_borrador"
+    assert registro.estado_actual("E-1", "banca") == "descartado"
+    assert [r.revisor for r in registro.historial("E-1", "banca")] == ["Beto Analista"]
+    assert set(registro.ultimos()) == {"E-1"}
+    assert registro.ultimos("banca")["E-1"].estado == "descartado"
+
+
+def test_tb13_modalidad_invalida_se_rechaza(tmp_path: Path) -> None:
+    registro = RegistroRevisiones(tmp_path / "reviews.jsonl")
+    with pytest.raises(ValueError, match="modalidad"):
+        registro.registrar(Revision("E-1", "en_revision", "Ana", "", AHORA, modalidad="trading"))
+
+
+def test_tb13_lineas_previas_sin_modalidad_son_editoriales(tmp_path: Path) -> None:
+    ruta = tmp_path / "reviews.jsonl"
+    linea = {"id_caso": "E-7", "estado": "en_revision", "revisor": "Ana", "nota": "",
+             "fecha_utc": AHORA.isoformat(), "ids_fuente": []}  # fmt: skip
+    ruta.write_text(json.dumps(linea) + "\n", encoding="utf-8")
+
+    registro = RegistroRevisiones(ruta)
+
+    assert registro.estado_actual("E-7") == "en_revision"
+    assert registro.estado_actual("E-7", "banca") == "nuevo"
+
+
+def test_tb13_ficha_del_contrato_registra_la_modalidad_bancaria() -> None:
+    bandeja = construir_bandeja(SNAPSHOT_BANCA, None, None)
+    tema = bandeja.temas[0]
+    revision = Revision(tema.id_evento, "en_revision", "Beto", "", AHORA, modalidad="banca")
+
+    ficha = ficha_contrato(tema, None, revision)
+    editorial = ficha_contrato(tema, None, None)
+
+    assert ficha["modalidad"] == "banca_boletin"
+    assert ficha["estado_revision"] == "en_revision"
+    assert ficha["publicado"] is False
+    assert editorial["modalidad"] == "tvn_editorial"

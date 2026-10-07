@@ -12,17 +12,18 @@ import hashlib
 import io
 import json
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from senal import catalogo
+from senal import catalogo, sbp
 from senal.fuentes import parsear_gdelt, parsear_rss_tvn, parsear_usgs, parsear_worldbank
 from senal.ingest import (
     Exclusion,
     Indicador,
     Noticia,
+    SerieSBP,
     Ventana,
     completar_cuadricula,
     parsear_fecha,
@@ -54,6 +55,21 @@ COLUMNAS_INDICADORES = (
     "fecha_extraccion",
     "licencia",
 )
+COLUMNAS_SBP = (
+    "id_serie",
+    "periodo",
+    "nombre",
+    "sector",
+    "valor",
+    "unidad",
+    "valor_base",
+    "periodo_base",
+    "variacion_pct",
+    "cuadro",
+    "pagina_pdf",
+    "fuente_url",
+    "sha256_pdf",
+)
 COLUMNAS_EXCLUIDOS = ("tipo", "motivo", "campo", "referencia", "fila")
 # La revisión editorial es en español/inglés; otros idiomas se excluyen y se registran.
 IDIOMAS_SOPORTADOS = frozenset({"es", "en"})
@@ -67,6 +83,12 @@ TRANSFORMACIONES = (
     "Cuadrícula país × indicador × año completada con valor nulo",
     "Unidad del Banco Mundial derivada del nombre del indicador cuando 'unit' viene vacío",
 )
+TRANSFORMACIONES_SBP = (
+    f"SBP: tabla de crédito local por sector extraída con pypdf ({sbp.VERSION_PARSER}); "
+    "anclada por encabezado del mes, valores sin separador de miles, página 1-based del PDF",
+    "SBP: sumas de sectores validadas con tolerancia de redondeo ±0,5 por sumando",
+)
+LectorPdf = Callable[[Path], dict[int, str]]
 
 
 def _iso(momento: datetime | None) -> str:
@@ -129,6 +151,70 @@ def _eventos(raw: Path, registro: dict[str, Any]) -> list[dict[str, Any]]:
     for solicitud in _exitosas(registro, "usgs"):
         eventos.extend(parsear_usgs((raw / solicitud["archivo"]).read_text("utf-8")))
     return sorted(eventos, key=lambda e: str(e["id"]))
+
+
+def _series_sbp(
+    raw: Path, registro: dict[str, Any], leer_pdf: LectorPdf
+) -> tuple[list[SerieSBP], list[Exclusion]]:
+    series: list[SerieSBP] = []
+    excluidos: list[Exclusion] = []
+    base = raw.resolve()
+    for solicitud in _exitosas(registro, "sbp:"):
+        ruta = raw / solicitud["archivo"]
+        fila = {"archivo": str(solicitud["archivo"]), "url": solicitud["url"]}
+        # extraccion.json es local, pero no se lee nada fuera de raw/.
+        if not ruta.resolve().is_relative_to(base):
+            excluidos.append(Exclusion("ruta_fuera_de_raw", "archivo", fila))
+            continue
+        if not ruta.exists():
+            excluidos.append(Exclusion("pdf_no_disponible", "archivo", fila))
+            continue
+        try:
+            periodo = sbp.periodo_de_archivo(ruta.name)
+            paginas = leer_pdf(ruta)
+        except (ValueError, OSError):
+            excluidos.append(Exclusion("pdf_ilegible", "archivo", fila))
+            continue
+        nuevas, exclusiones = sbp.extraer_credito_local(
+            paginas,
+            periodo=periodo,
+            fuente_url=solicitud["url"],
+            sha256_pdf=solicitud.get("sha256") or "",
+        )
+        series.extend(nuevas)
+        excluidos.extend(exclusiones)
+    excluidos.extend(sbp.validar_sumas(series))
+    return sorted(series, key=lambda s: (s.periodo, s.id_serie)), excluidos
+
+
+def _fila_sbp(s: SerieSBP) -> tuple[object, ...]:
+    return (
+        s.id_serie,
+        s.periodo,
+        s.nombre,
+        s.sector,
+        s.valor,
+        s.unidad,
+        s.valor_base,
+        s.periodo_base,
+        s.variacion_pct,
+        s.cuadro,
+        s.pagina_pdf,
+        s.fuente_url,
+        s.sha256_pdf,
+    )
+
+
+def _reporte_sbp(series: Sequence[SerieSBP], excluidos: Sequence[Exclusion]) -> dict[str, Any]:
+    periodos = sorted({s.periodo for s in series if s.valor is not None})
+    return {
+        "filas": len(series),
+        "nulos": sum(s.valor is None for s in series),
+        "periodos": periodos,
+        "periodos_faltantes": len(catalogo.SBP_MESES) - len(periodos),
+        "inconsistencias": sum(e.motivo.startswith("suma_") for e in excluidos),
+        "excluidas_por_motivo": dict(sorted(Counter(e.motivo for e in excluidos).items())),
+    }
 
 
 def _geojson(eventos: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -222,8 +308,14 @@ def _reporte(
     }
 
 
-def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
-    """Construye ``processed/`` desde ``raw/`` y devuelve el manifest escrito."""
+def construir_snapshot(
+    raw: Path, salida: Path, *, leer_pdf: LectorPdf = sbp.leer_paginas_pdf
+) -> dict[str, Any]:
+    """Construye ``processed/`` desde ``raw/`` y devuelve el manifest escrito.
+
+    La fuente D (SBP) es opcional: sin solicitudes ``sbp:`` no se escribe
+    ``sbp_series.csv`` y el paquete editorial queda idéntico.
+    """
     registro = _cargar_registro(raw)
     corte = parsear_fecha(registro["fecha_corte_utc"])
     ventana = Ventana(
@@ -244,17 +336,27 @@ def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
         fecha_extraccion=corte,
     )
     eventos = _eventos(raw, registro)
-    excluidos = [_fila_exclusion("noticia", e) for e in excluidas_noticias] + [
-        _fila_exclusion("indicador", e) for e in indicadores_res.excluidos
-    ]
+    con_sbp = any(s["fuente"].startswith("sbp:") for s in registro["solicitudes"])
+    series_sbp, excluidas_sbp = _series_sbp(raw, registro, leer_pdf) if con_sbp else ([], [])
+    excluidos = (
+        [_fila_exclusion("noticia", e) for e in excluidas_noticias]
+        + [_fila_exclusion("indicador", e) for e in indicadores_res.excluidos]
+        + [_fila_exclusion("sbp", e) for e in excluidas_sbp]
+    )
 
+    reporte = _reporte(noticias, excluidas_noticias, indicadores, eventos)
     contenidos = {
         "noticias.csv": _csv(COLUMNAS_NOTICIAS, map(_fila_noticia, noticias)),
         "indicadores.csv": _csv(COLUMNAS_INDICADORES, map(_fila_indicador, indicadores)),
         "eventos.geojson": _json(_geojson(eventos)),
         "excluidos.csv": _csv(COLUMNAS_EXCLUIDOS, excluidos),
-        "reporte_calidad.json": _json(_reporte(noticias, excluidas_noticias, indicadores, eventos)),
     }
+    conteos_sbp: dict[str, int] = {}
+    if con_sbp:
+        contenidos["sbp_series.csv"] = _csv(COLUMNAS_SBP, map(_fila_sbp, series_sbp))
+        reporte["sbp"] = _reporte_sbp(series_sbp, excluidas_sbp)
+        conteos_sbp["sbp_series.csv"] = len(series_sbp)
+    contenidos["reporte_calidad.json"] = _json(reporte)
     salida.mkdir(parents=True, exist_ok=True)
     for nombre, contenido in contenidos.items():
         (salida / nombre).write_bytes(contenido)
@@ -277,13 +379,14 @@ def construir_snapshot(raw: Path, salida: Path) -> dict[str, Any]:
             "indicadores.csv": len(indicadores),
             "eventos.geojson": len(eventos),
             "excluidos.csv": len(excluidos),
+            **conteos_sbp,
         },
         "archivos": {n: hashlib.sha256(c).hexdigest() for n, c in sorted(contenidos.items())},
         "licencias": [
             {"ref": f.ref, "fuente": f.nombre, "url": f.url, "condiciones": f.condiciones}
             for f in catalogo.FUENTES
         ],
-        "transformaciones": list(TRANSFORMACIONES),
+        "transformaciones": [*TRANSFORMACIONES, *(TRANSFORMACIONES_SBP if con_sbp else ())],
         "desviaciones": [
             "D6 (ADR 0002): noticias de los últimos "
             f"{catalogo.VENTANA_NOTICIAS_DIAS} días antes del corte, no [2024-01-01, 2025-10-01); "
